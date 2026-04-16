@@ -1,5 +1,5 @@
 import React from 'react';
-import AdminLayout from '../../layouts/AdminLayout';
+import AdminLayout from '../../layouts/adminLayout';
 import GlassCard from '../../components/ui/glassCard';
 import PolicyBadge from '../../components/ui/policyBadge';
 import { BrainCircuit, AlertCircle, CheckCircle2, MessageSquare, ArrowRight } from 'lucide-react';

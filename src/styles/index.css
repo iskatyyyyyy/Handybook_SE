@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 1. GLOBAL DEFAULTS */
+:root {
+  --tup-green: #1B8E5F;
+  --tup-soft-green: #E9F5EF;
+  --tup-navy: #0A1D2D;
+  --tup-bg: #F8FAFB;
+}
+
+html {
+  /* Essential for Deep Linking feature */
+  scroll-behavior: smooth; 
+  /* Prevents content from being hidden under the sticky header */
+  scroll-padding-top: 100px; 
+}
+
+body {
+  @apply bg-tup-bg text-tup-navy antialiased;
+  /* Ensures the serene background is consistent across all pages */
+  background-color: var(--tup-bg);
+}
+
+/* 2. CUSTOM ANIMATIONS */
+
+/* Used for the Hance Chatbot Deep Linking highlight */
+@keyframes highlight-pulse {
+  0% { background-color: rgba(27, 142, 95, 0.1); box-shadow: 0 0 0 0 rgba(27, 142, 95, 0.2); }
+  50% { background-color: rgba(27, 142, 95, 0.3); box-shadow: 0 0 0 10px rgba(27, 142, 95, 0); }
+  100% { background-color: transparent; box-shadow: 0 0 0 0 rgba(27, 142, 95, 0); }
+}
+
+.highlight-pulse {
+  animation: highlight-pulse 2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 1rem;
+}
+
+/* Smooth fade-in for page transitions */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 3. GLASSMORPHISM UTILITIES */
+.glass-panel {
+  @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-sm;
+  /* Matches the 'handbook' border radius defined in your config */
+  border-radius: 2rem;
+}
+
+/* 4. SCROLLBAR STYLING (The Serenity Touch) */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-200 rounded-full hover:bg-tup-green/30 transition-colors;
+}
+
+/* 5. TIP: Prevent bounce on mobile for a native app feel */
+body, #root {
+  overflow-x: hidden;
+  height: 100%;
+}
