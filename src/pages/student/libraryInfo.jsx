@@ -6,7 +6,7 @@ import { LibraryInfo } from '../../constants/HandbookData';
 
 const LibraryInfoPage = () => {
   return (
-    <StudentLayout activePage="home">
+    <StudentLayout activePage="library">
       <div className="pb-10 animate-in fade-in duration-500">
         <header className="mb-8">
           <h1 className="text-3xl font-black text-tup-navy leading-tight">University Library</h1>

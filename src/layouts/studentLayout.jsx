@@ -1,22 +1,24 @@
-import React, { useState } from 'react'; // 1. Added useState
+import React, { useState } from 'react';
 import { Menu, Bell, X, Home, Book, Map, Settings, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+// ✅ CORRECTED PATH: Go up to src, then down to components
+import BottomNavigation from '../components/glass/bottomNavigation.jsx'; 
 
 const StudentLayout = ({ children, activePage }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // 2. State for toggle
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   const menuItems = [
-    { icon: Home, label: 'Home', path: '/' },
-    { icon: Book, label: 'Handbook', path: '/handbook' },
+    { icon: Home, label: 'Home', path: '/home' },
+    { icon: Book, label: 'Handbook', path: '/guide' },
     { icon: Map, label: 'Campus Map', path: '/map' },
-    { icon: Settings, label: 'Settings', path: '/settings' },
+    { icon: Settings, label: 'Settings', path: '/profile' },
   ];
 
   return (
     <div className="min-h-screen bg-tup-bg pb-24 font-sans text-tup-navy">
       
-      {/* 3. Sidebar Overlay (Dark background when menu is open) */}
+      {/* Sidebar Overlay */}
       {isSidebarOpen && (
         <div 
           className="fixed inset-0 z-[60] bg-tup-navy/40 backdrop-blur-sm transition-opacity"
@@ -24,7 +26,7 @@ const StudentLayout = ({ children, activePage }) => {
         />
       )}
 
-      {/* 4. The actual Sidebar Menu */}
+      {/* Sidebar Menu */}
       <aside className={`fixed top-0 left-0 z-[70] h-full w-72 bg-white shadow-2xl transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex items-center justify-between p-6 border-b border-gray-50">
           <p className="font-black text-tup-green">TUP HANDYBOOK</p>
@@ -44,7 +46,10 @@ const StudentLayout = ({ children, activePage }) => {
               {item.label}
             </button>
           ))}
-          <button className="flex w-full items-center gap-4 rounded-xl px-4 py-3 font-bold text-red-400 hover:bg-red-50 mt-10">
+          <button 
+            onClick={() => navigate('/login')}
+            className="flex w-full items-center gap-4 rounded-xl px-4 py-3 font-bold text-red-400 hover:bg-red-50 mt-10"
+          >
             <LogOut size={20} />
             Logout
           </button>
@@ -52,9 +57,8 @@ const StudentLayout = ({ children, activePage }) => {
       </aside>
 
       {/* Shared Header */}
-      <header className="sticky top-0 z-50 flex items-center justify-between bg-white/80 px-6 py-4 backdrop-blur-md">
+      <header className="sticky top-0 z-50 flex items-center justify-between bg-white/80 px-6 py-4 backdrop-blur-md border-b border-gray-100">
         <div className="flex items-center gap-4">
-          {/* 5. The Trigger (Added button wrapper and onClick) */}
           <button 
             onClick={() => setIsSidebarOpen(true)}
             className="rounded-lg p-1 active:scale-95 transition-transform"
@@ -76,6 +80,9 @@ const StudentLayout = ({ children, activePage }) => {
 
       {/* Dynamic Page Content */}
       <main className="px-6 pt-6">{children}</main>
+
+      {/* ✅ ADDED: The Navigation bar at the bottom */}
+      <BottomNavigation activePage={activePage} />
     </div>
   );
 };

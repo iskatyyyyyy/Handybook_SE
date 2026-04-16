@@ -1,10 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
+// Auth Page
+import LoginPage from './pages/auth/loginPage'; 
+
 // Student Pages
-import Home from './pages/student/Home';
+import Home from './pages/student/home';
 import Chatbot from './pages/student/chatbot';
-import GuidePage from './pages/student/GuidePage';
+import GuidePage from './pages/student/guidePage';
 
 // Admin Pages
 import AdminAnalytics from './pages/admin/adminAnalytics';
@@ -16,8 +19,12 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Auth Route */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<Navigate to="/login" />} />
+
         {/* Student Routes */}
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/chat" element={<Chatbot />} />
         <Route path="/guide" element={<GuidePage />} />
         
@@ -29,7 +36,7 @@ function App() {
         <Route path="/admin/settings" element={<SystemSettings />} />
         
         {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
   );
