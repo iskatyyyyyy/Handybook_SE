@@ -1,16 +1,40 @@
 import React from 'react';
-import { LayoutDashboard, FileEdit, MessageSquareText, Settings, LogOut, ShieldCheck } from 'lucide-react';
+import { 
+  LayoutDashboard, 
+  FileEdit, 
+  MessageSquareText, 
+  Settings, 
+  LogOut, 
+  ShieldCheck 
+} from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const AdminSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Updated paths to match the routes in App.jsx
   const menuItems = [
-    { name: 'Analytics', icon: <LayoutDashboard size={20} />, path: '/admin/analytics' },
-    { name: 'Content', icon: <FileEdit size={20} />, path: '/admin/content' },
-    { name: 'Chatbot', icon: <MessageSquareText size={20} />, path: '/admin/chatbot' },
-    { name: 'System', icon: <Settings size={20} />, path: '/admin/system' },
+    { 
+      name: 'Analytics', 
+      icon: <LayoutDashboard size={20} />, 
+      path: '/admin/analytics' 
+    },
+    { 
+      name: 'Content', 
+      icon: <FileEdit size={20} />, 
+      path: '/admin/content' 
+    },
+    { 
+      name: 'Chatbot', 
+      icon: <MessageSquareText size={20} />, 
+      path: '/admin/config' // Updated from /admin/chatbot
+    },
+    { 
+      name: 'System', 
+      icon: <Settings size={20} />, 
+      path: '/admin/settings' // Updated from /admin/system
+    },
   ];
 
   return (
@@ -36,7 +60,7 @@ const AdminSidebar = () => {
               onClick={() => navigate(item.path)}
               className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all font-bold text-sm ${
                 isActive 
-                ? 'bg-tup-soft-green text-tup-green' 
+                ? 'bg-tup-soft-green text-tup-green shadow-sm shadow-tup-green/5' 
                 : 'text-gray-400 hover:bg-gray-50 hover:text-tup-navy'
               }`}
             >
@@ -54,12 +78,15 @@ const AdminSidebar = () => {
              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Admin" />
           </div>
           <div className="overflow-hidden">
-            <p className="text-xs font-black truncate">Admin Felix</p>
+            <p className="text-xs font-black truncate text-tup-navy">Admin Felix</p>
             <p className="text-[10px] text-gray-400 font-bold uppercase">Superuser</p>
           </div>
         </div>
-        <button className="w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl text-red-400 font-bold text-sm hover:bg-red-50 transition-colors">
-          <LogOut size={20} />
+        <button 
+          onClick={() => navigate('/login')} // Redirect to login on logout
+          className="w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl text-red-400 font-bold text-sm hover:bg-red-50 transition-colors group"
+        >
+          <LogOut size={20} className="group-hover:-translate-x-1 transition-transform" />
           Logout
         </button>
       </div>

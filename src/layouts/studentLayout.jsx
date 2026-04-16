@@ -2,7 +2,7 @@ import React from 'react';
 import BottomNavigation from '../components/glass/bottomNavigation';
 import { Menu, Bell } from 'lucide-react';
 
-const StudentLayout = ({ children }) => {
+const StudentLayout = ({ children, activePage }) => {
   return (
     <div className="min-h-screen bg-tup-bg pb-24 font-sans text-tup-navy">
       {/* Shared Header */}
