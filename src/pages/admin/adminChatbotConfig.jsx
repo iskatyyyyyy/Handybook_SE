@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Bot, Save, RefreshCw, MessageSquarePlus, Zap, BrainCircuit } from 'lucide-react';
-import AdminSidebar from '../../components/layout/adminSidebar';
+import AdminSidebar from '../../layouts/adminSidebar';
 
 const AdminChatbotConfig = () => {
   const [temperature, setTemperature] = useState(0.7);
