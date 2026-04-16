@@ -1,34 +1,40 @@
 import React from 'react';
-import { Bot, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ExternalLink } from 'lucide-react';
 
-const ChatBubble = ({ message, isBot, source, time }) => {
+const ChatBubble = ({ message }) => {
+  const navigate = useNavigate();
+
+  const handleSourceClick = () => {
+    // Navigates to the guide page and appends the section ID as a URL hash
+    if (message.sectionId) {
+      navigate(`/guide#${message.sectionId}`);
+    }
+  };
+
   return (
-    <div className={`flex items-start gap-3 mb-6 ${isBot ? 'flex-row' : 'flex-row-reverse animate-fade-in'}`}>
-      {/* Avatar */}
-      <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-sm ${
-        isBot ? 'bg-tup-soft-green text-tup-green' : 'bg-tup-navy text-white'
+    <div className={`flex ${message.isBot ? 'justify-start' : 'justify-end'} mb-4 animate-in slide-in-from-bottom-2 duration-300`}>
+      <div className={`max-w-[85%] p-4 rounded-[1.5rem] shadow-sm ${
+        message.isBot 
+          ? 'bg-white border border-gray-100 text-tup-navy rounded-bl-none' 
+          : 'bg-tup-green text-white shadow-tup-green/10 rounded-br-none'
       }`}>
-        {isBot ? <Bot size={18} /> : <User size={18} />}
-      </div>
+        <p className="text-sm font-medium leading-relaxed">{message.text}</p>
+        
+        {/* Deep Link Button for Bot Responses */}
+        {message.isBot && message.source && (
+          <button 
+            onClick={handleSourceClick}
+            className="mt-3 flex items-center gap-1.5 text-[10px] font-black text-tup-green bg-tup-soft-green/50 px-2.5 py-1.5 rounded-lg hover:bg-tup-green hover:text-white transition-all active:scale-95 group"
+          >
+            <ExternalLink size={10} className="opacity-50 group-hover:opacity-100" />
+            VIEW SOURCE: {message.source.toUpperCase()}
+          </button>
+        )}
 
-      {/* Message Content */}
-      <div className={`max-w-[75%] space-y-1 ${!isBot && 'flex flex-col items-end'}`}>
-        <div className={`p-4 text-sm leading-relaxed shadow-sm ${
-          isBot 
-            ? 'bg-white/70 backdrop-blur-md border border-white/40 rounded-2xl rounded-tl-none text-tup-navy' 
-            : 'bg-tup-green text-white rounded-2xl rounded-tr-none'
-        }`}>
-          {message}
-          
-          {isBot && source && (
-            <div className="mt-3">
-              <span className="text-[10px] font-bold tracking-wider text-tup-green bg-tup-soft-green px-2 py-1 rounded-md uppercase">
-                Source: {source}
-              </span>
-            </div>
-          )}
-        </div>
-        <span className="text-[10px] text-gray-400 px-1">{time}</span>
+        <p className={`text-[9px] mt-2 font-bold opacity-30 ${message.isBot ? 'text-tup-navy' : 'text-white'}`}>
+          {message.time || "JUST NOW"}
+        </p>
       </div>
     </div>
   );
