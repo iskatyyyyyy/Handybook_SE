@@ -1,106 +1,131 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import StudentLayout from '../../layouts/studentLayout';
-import GlassCard from '../../components/ui/glassCard';
-import { Map as MapIcon, Navigation, Search, Info, Building2 } from 'lucide-react';
 
 const CampusMap = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeBuilding, setActiveBuilding] = useState("A");
 
-  // Building data based on handbook locations
+  // Actual TUP Building data from original code
   const buildings = [
-    { id: "A", name: "Administration Building", offices: ["Accounting Office", "Cashier's Office"] }, // 
-    { id: "B", name: "College of Arts & Science", offices: ["University Registrar"] }, // 
-    { id: "C", name: "University Library", details: "3 Floors of educational repositories" }, // [cite: 1378, 1381]
-    { id: "D", name: "IRTC Building", details: "Conference Hall and research facilities" }, // [cite: 1683]
-    { id: "E", name: "TUP Medical & Dental Clinic", details: "Routine health services" }, // [cite: 1362, 1363]
-    { id: "F", name: "IT Center", details: "Network and web development units" }, // [cite: 1371, 1377]
+    { id: "A", name: "Administration Building", offices: ["Accounting Office", "Cashier's Office"] },
+    { id: "B", name: "College of Arts & Science", offices: ["University Registrar"] },
+    { id: "C", name: "University Library", details: "3 Floors of educational repositories" }, 
+    { id: "D", name: "IRTC Building", details: "Conference Hall and research facilities" }, 
+    { id: "E", name: "TUP Medical & Dental Clinic", details: "Routine health services" }, 
+    { id: "F", name: "IT Center", details: "Network and web development units" }, 
   ];
 
+  // Original filtering logic
   const filteredBuildings = buildings.filter(b => 
     b.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     (b.offices && b.offices.some(o => o.toLowerCase().includes(searchQuery.toLowerCase())))
   );
 
+  // Automatically open the first result when searching
+  useEffect(() => {
+    if (filteredBuildings.length > 0 && searchQuery !== "") {
+      setActiveBuilding(filteredBuildings[0].id);
+    }
+  }, [searchQuery]);
+
   return (
-    <StudentLayout activePage="home">
-      <div className="pb-10 animate-in fade-in duration-500">
-        
-        {/* 1. HEADER SECTION */}
-        <header className="mb-6">
-          <p className="text-[10px] font-black text-tup-green uppercase tracking-[0.2em] mb-1">Campus Life</p>
-          <h1 className="text-3xl font-black text-tup-navy">Campus Map</h1>
-          <p className="text-sm text-gray-500 font-medium">Navigate TUP Manila grounds and facilities[cite: 542].</p>
+    <StudentLayout activePage="map">
+      <div className="max-w-6xl mx-auto pb-12">
+        <header className="mb-8">
+          <h1 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Campus Map</h1>
+          <p className="text-slate-500 text-lg max-w-4xl leading-relaxed">
+            Navigate TUP Manila grounds and facilities. Explore the interactive campus map to effortlessly locate buildings, amenities, and green spaces.
+          </p>
         </header>
 
-        {/* 2. INTERACTIVE MAP VIEWPORT */}
-        <div className="relative w-full aspect-video bg-tup-soft-green rounded-[2.5rem] border-4 border-white shadow-2xl overflow-hidden mb-8 group">
-          {/* Placeholder for the 3D visual representation mentioned in Fig 10 [cite: 541, 543] */}
-          <div className="absolute inset-0 flex items-center justify-center bg-tup-navy/5">
-            <MapIcon size={48} className="text-tup-green/20" />
-            <p className="absolute bottom-6 text-[10px] font-bold text-tup-navy/40 uppercase tracking-widest">
-              3D Campus Viewport 
-            </p>
+        {/* BEGIN: Map Visualization (Figma Layout) */}
+        <div className="relative bg-slate-50 rounded-3xl overflow-hidden mb-12 shadow-inner border border-slate-100">
+          <div className="absolute inset-0 flex items-center justify-center bg-slate-100/50 z-0">
+             <p className="text-sm font-bold text-slate-300 uppercase tracking-widest">3D Campus Viewport</p>
+          </div>
+          {/* Replace this src with your exported 3D map from Figma */}
+          <img 
+            alt="Campus Map Illustration" 
+            className="w-full h-auto object-contain block mx-auto py-10 px-4 relative z-10" 
+            src="https://lh3.googleusercontent.com/aida/ADBb0ugsit13p1v8b8ayVnfyYfKJo0GHOqhIywSP7f0Hgkx-j_-UW5Vm4oloKZghtb4fi9slypdsX7JqFw7NIVKjz8yL7_sczisJY4NWxVTri1jZOqevxUc-XrDO6iTdNbliwaF6x8HAaUWC4zPsgGqLCu8QZy0ZnfdeWjXQe6GAV4QrooksN-3ySYEf7u_eXCh_zhNSdQvCzwsbcJU3TV_yLfe_9sIHpsfUVUQqG9B8vUhE-nCMOXgxWWbv-7b6S0q02mMKv2gaXAGIFQ" 
+          />
+        </div>
+        {/* END: Map Visualization */}
+
+        {/* BEGIN: Legend Section */}
+        <section className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden mb-12">
+          
+          {/* Legend Header & Search Bar */}
+          <div className="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50">
+            <div className="flex items-center space-x-3">
+              <svg className="w-6 h-6 text-handy-dark-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <h2 className="text-xl font-bold text-handy-dark-red tracking-wide uppercase">Building Legend</h2>
+            </div>
+            
+            {/* Kept their search functionality active! */}
+            <div className="relative w-full sm:w-72">
+              <input 
+                type="text" 
+                placeholder="Search buildings or offices..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-4 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-handy-dark-red focus:border-transparent outline-none transition-all shadow-sm"
+              />
+            </div>
           </div>
           
-          {/* Map Controls */}
-          <div className="absolute top-4 right-4 flex flex-col gap-2">
-            <MapControl icon={<Navigation size={18} />} />
-            <MapControl icon={<Info size={18} />} />
-          </div>
-        </div>
-
-        {/* 3. SEARCH & LEGEND SECTION */}
-        <section>
-          <div className="relative mb-6">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search buildings or offices (e.g. Registrar)..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-gray-100 rounded-2xl py-4 pl-12 pr-4 shadow-sm outline-none focus:ring-2 focus:ring-tup-green/10 transition-all text-sm font-medium"
-            />
-          </div>
-
-          <div className="flex items-center justify-between mb-4 px-1">
-            <h3 className="text-xs font-black text-tup-navy uppercase tracking-widest">Building Legend [cite: 544]</h3>
-            <span className="text-[10px] font-bold text-gray-400">{filteredBuildings.length} Results</span>
-          </div>
-
-          <div className="space-y-3">
-            {filteredBuildings.map((building) => (
-              <GlassCard key={building.id} className="p-5 flex items-start gap-4 hover:border-tup-green/20 transition-colors group cursor-pointer">
-                <div className="w-12 h-12 rounded-2xl bg-tup-soft-green flex items-center justify-center text-tup-green font-black text-lg shadow-inner group-hover:bg-tup-green group-hover:text-white transition-all">
-                  {building.id}
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-bold text-tup-navy leading-tight">{building.name}</h4>
-                  {building.offices ? (
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {building.offices.map(office => (
-                        <span key={office} className="px-2 py-0.5 bg-gray-50 border border-gray-100 rounded-md text-[9px] font-bold text-gray-500 uppercase">
-                          {office}
-                        </span>
-                      ))}
+          {/* Legend Items Container */}
+          <div className="p-8 max-h-[500px] overflow-y-auto legend-scroll">
+            
+            {filteredBuildings.length === 0 ? (
+               <p className="text-center text-slate-400 font-medium py-10">No buildings or offices found matching "{searchQuery}"</p>
+            ) : (
+              <div className="space-y-6">
+                {filteredBuildings.map((building) => {
+                  const isActive = activeBuilding === building.id;
+                  
+                  return (
+                    <div 
+                      key={building.id}
+                      onClick={() => setActiveBuilding(building.id)}
+                      className={`flex gap-6 transition-opacity cursor-pointer ${isActive ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}
+                    >
+                      <div className="flex-shrink-0">
+                        <div className={`w-20 h-10 rounded-2xl flex items-center justify-center font-black transition-colors ${isActive ? 'bg-red-100 border border-red-800/30 text-red-900 shadow-sm' : 'bg-slate-100 border border-slate-300 text-slate-600'}`}>
+                          {building.id}
+                        </div>
+                      </div>
+                      
+                      {isActive ? (
+                        <div className="flex-grow p-6 bg-white border border-handy-dark-red rounded-3xl shadow-md transition-all">
+                          <h3 className="text-xl font-bold text-slate-900 mb-3">{building.name}</h3>
+                          
+                          {building.offices ? (
+                            <div className="flex flex-wrap gap-2">
+                              {building.offices.map(office => (
+                                <span key={office} className="px-3 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                  {office}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-slate-600 leading-relaxed">{building.details}</p>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex-grow p-1 border border-slate-100 rounded-2xl h-10 bg-slate-50 hover:bg-slate-100 transition-colors"></div>
+                      )}
                     </div>
-                  ) : (
-                    <p className="text-[11px] text-gray-400 font-medium mt-1">{building.details}</p>
-                  )}
-                </div>
-                <Building2 size={16} className="text-gray-200 mt-1" />
-              </GlassCard>
-            ))}
+                  );
+                })}
+              </div>
+            )}
           </div>
         </section>
+        {/* END: Legend Section */}
       </div>
     </StudentLayout>
   );
 };
-
-const MapControl = ({ icon }) => (
-  <button className="p-3 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-white text-tup-navy hover:text-tup-green active:scale-90 transition-all">
-    {icon}
-  </button>
-);
 
 export default CampusMap;

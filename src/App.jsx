@@ -8,8 +8,11 @@ import LoginPage from './pages/auth/loginPage';
 import Home from './pages/student/home';
 import Chatbot from './pages/student/chatbot';
 import GuidePage from './pages/student/guidePage';
-// NEW: Added library import
-import LibraryInfoPage from './pages/student/libraryInfo'; 
+import LibraryInfoPage from './pages/student/libraryInfo';
+import StudentServices from './pages/student/studentServices'; 
+import RulesOnConduct from './pages/student/rulesOnConduct';
+import CampusMap from './pages/student/campusMap';
+
 
 // Admin Pages
 import AdminAnalytics from './pages/admin/adminAnalytics';
@@ -28,8 +31,11 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/chat" element={<Chatbot />} />
         <Route path="/guide" element={<GuidePage />} />
-        {/* NEW: Added library route */}
         <Route path="/library-info" element={<LibraryInfoPage />} />
+        
+        <Route path="/services" element={<StudentServices />} />
+        <Route path="/rules" element={<RulesOnConduct />} />
+        <Route path="/map" element={<CampusMap />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={<Navigate to="/admin/analytics" />} />

@@ -72,3 +72,60 @@ body, #root {
   overflow-x: hidden;
   height: 100%;
 }
+
+/* Handybook Custom Colors */
+.bg-handy-dark-red { background-color: #8B0000; }
+.bg-handy-light-red { background-color: #FEE2E2; }
+.text-handy-dark-red { color: #8B0000; }
+.border-handy-dark-red { border-color: #8B0000; }
+.hover-bg-handy-red:hover { background-color: #720000; }
+
+/* Hide scrollbar for trending slider */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Student Services Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #E5E7EB;
+  border-radius: 10px;
+}
+
+/* Timeline specific styles */
+.timeline-line {
+  position: absolute;
+  left: 2.5rem; /* Adjusted for React layout padding */
+  top: 2.5rem;
+  bottom: 2.5rem;
+  width: 2px;
+  background-color: #E5E7EB;
+  z-index: 0;
+}
+.step-active {
+  background-color: #8B0000;
+  color: white;
+}
+.step-inactive {
+  background-color: #D1D5DB;
+  color: white;
+}
+
+/* Campus Map Legend Scrollbar */
+.legend-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.legend-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+.legend-scroll::-webkit-scrollbar-thumb {
+  background: #8B0000; /* Using your custom handy-dark-red */
+  border-radius: 10px;
+}
