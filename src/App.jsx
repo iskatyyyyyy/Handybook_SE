@@ -19,6 +19,7 @@ import AdminAnalytics from './pages/admin/adminAnalytics';
 import ContentManagement from './pages/admin/contentManagement';
 import AdminChatbotConfig from './pages/admin/adminChatbotConfig';
 import SystemSettings from './pages/admin/systemSettings';
+import AdminTrainingLogs from './pages/admin/adminTrainingLogs';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/guide" element={<GuidePage />} />
         <Route path="/library-info" element={<LibraryInfoPage />} />
         
+        // Newly added routes as per my trial to adapt the wireframe from figma
         <Route path="/services" element={<StudentServices />} />
         <Route path="/rules" element={<RulesOnConduct />} />
         <Route path="/map" element={<CampusMap />} />
@@ -43,6 +45,9 @@ function App() {
         <Route path="/admin/content" element={<ContentManagement />} />
         <Route path="/admin/config" element={<AdminChatbotConfig />} />
         <Route path="/admin/settings" element={<SystemSettings />} />
+
+        // Newly added
+        <Route path="/admin/logs" element={<AdminTrainingLogs />} />
         
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/login" />} />
