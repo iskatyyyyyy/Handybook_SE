@@ -4,13 +4,12 @@ import StudentLayout from '../../layouts/studentLayout';
 const Home = () => {
   return (
     <StudentLayout activePage="home">
-      {/* Hero Banner from Figma */}
-      <section className="relative bg-handy-dark-red rounded-[32px] p-12 text-white shadow-2xl mb-12 overflow-hidden">
+      {/* Hero Banner */}
+      <section className="relative bg-handy-dark-red rounded-3xl px-8 py-8 text-white shadow-xl mb-8 overflow-hidden">
         <div className="max-w-2xl relative z-10">
-          {/* dummy data name */}
-          <h1 className="text-5xl font-extrabold leading-tight mb-4">Good morning, Andrea!</h1>
-          <p className="text-white/80 font-medium mb-10">2013 Handbook Version | Last Updated: Today</p>
-          <button className="bg-white text-handy-dark-red px-8 py-3 rounded-xl font-bold hover:bg-gray-100 transition-colors shadow-sm">
+          <h1 className="text-3xl font-extrabold leading-tight mb-2">Good morning, Andrea!</h1>
+          <p className="text-white/80 text-sm font-medium mb-6">2013 Handbook Version | Last Updated: Today</p>
+          <button className="bg-white text-handy-dark-red px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-gray-100 transition-colors shadow-sm">
             View Handbook
           </button>
         </div>
@@ -19,7 +18,7 @@ const Home = () => {
 
       <div className="flex gap-8">
         {/* Left Column (Most Viewed & Trending) */}
-        <div className="flex-1 space-y-12">
+        <div className="flex-1 space-y-10">
           
           <section>
             <div className="flex items-center justify-between mb-6">
