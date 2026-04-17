@@ -2,7 +2,7 @@ import React from 'react';
 import AdminLayout from '../../layouts/adminLayout';
 
 const AdminTrainingLogs = () => {
-  // Original mock data from your group's code
+  // Mock data
   const logs = [
     { id: 1, query: "Can I appeal for a grade change after the 1-week deadline?", status: "Escalated", confidence: "42%", time: "10 mins ago" },
     { id: 2, query: "What are the specific requirements for the BSET program in Visayas?", status: "Pending", confidence: "58%", time: "1 hr ago" },

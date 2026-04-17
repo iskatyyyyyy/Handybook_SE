@@ -2,14 +2,14 @@ import React from 'react';
 import StudentLayout from '../../layouts/studentLayout';
 
 const RulesOnConduct = () => {
-  // Actual TUP Major Offenses from original code
+  // Mock TUP Major Offenses
   const majorOffenses = [
     { title: "Liquor and Prohibited Drugs", first: "15 days Suspension", second: "30 days Suspension", third: "1 sem Suspension" },
     { title: "Possession of Prohibited Drugs", first: "Dismissal", second: "-", third: "-" },
     { title: "Illegal Assemblies/Rallies", first: "15 days Suspension", second: "30 days Suspension", third: "1 sem Suspension" }
   ];
 
-  // Actual TUP Minor Offenses from original code
+  // Mock TUP Minor Offenses 
   const minorOffenses = [
     { title: "Loitering/Disturbance", first: "Warning/Apology", second: "10-20 hrs Community Service", third: "30-50 hrs Community Service" },
     { title: "Dress Code Violation", first: "Warning/Apology", second: "10-20 hrs Community Service", third: "30-50 hrs Community Service" }

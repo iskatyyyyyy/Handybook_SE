@@ -7,7 +7,7 @@ const Home = () => {
       {/* Hero Banner from Figma */}
       <section className="relative bg-handy-dark-red rounded-[32px] p-12 text-white shadow-2xl mb-12 overflow-hidden">
         <div className="max-w-2xl relative z-10">
-          {/* Maintained the group's dummy data name */}
+          {/* dummy data name */}
           <h1 className="text-5xl font-extrabold leading-tight mb-4">Good morning, Andrea!</h1>
           <p className="text-white/80 font-medium mb-10">2013 Handbook Version | Last Updated: Today</p>
           <button className="bg-white text-handy-dark-red px-8 py-3 rounded-xl font-bold hover:bg-gray-100 transition-colors shadow-sm">

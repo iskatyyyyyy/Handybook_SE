@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Mail, Lock, ShieldCheck, Eye, EyeOff, User, ShieldAlert } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Mail, Lock, ShieldCheck, Eye, EyeOff, User, ShieldAlert } from 'lucide-react';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
-  // DEMO HANDLERS
+  // DEMO HANDLERS 
   const handleStudentLogin = (e) => {
     e.preventDefault();
     navigate('/home'); 
@@ -18,50 +18,115 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-tup-navy">
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-tup-green/20 rounded-full blur-[120px]" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-tup-green/10 rounded-full blur-[100px]" />
-
-      <div className="relative z-10 w-full max-w-[400px] px-6 py-12 m-4 bg-white/10 backdrop-blur-2xl border border-white/20 rounded-handbook shadow-2xl flex flex-col items-center">
-        <div className="mb-10 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-tup-green rounded-2xl shadow-lg shadow-tup-green/30">
-            <ShieldCheck className="text-white" size={32} />
-          </div>
-          <h1 className="text-3xl font-black text-white tracking-tight">Handybook</h1>
-          <p className="text-white/60 text-sm font-medium mt-1 uppercase">Digital Student Handbook</p>
+    <div className="min-h-screen flex font-sans bg-white">
+      
+      {/* BEGIN: Left Side - Branding */}
+      <div className="hidden lg:flex w-1/2 bg-handy-dark-red p-12 flex-col justify-between relative overflow-hidden">
+        
+        {/* Abstract Background Design Elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
+          <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white blur-3xl"></div>
+          <div className="absolute top-1/2 right-0 w-64 h-64 rounded-full bg-white blur-3xl"></div>
         </div>
 
-        <form className="w-full space-y-5">
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-white/50 uppercase tracking-widest ml-1">Student ID / Email</label>
-            <div className="relative group">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-tup-green transition-colors" size={20} />
-              <input type="text" placeholder="e.g. TUPM-21-0000" className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white outline-none focus:ring-2 focus:ring-tup-green/30 transition-all" />
-            </div>
+        <div className="relative z-10">
+          <div className="w-16 h-16 bg-white text-handy-dark-red rounded-2xl flex items-center justify-center font-extrabold text-xl mb-8 shadow-xl">
+            <ShieldCheck size={32} />
+          </div>
+          <h1 className="text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 tracking-tight">
+            TUP Manila <br/> Handybook.
+          </h1>
+          <p className="text-red-100 text-lg max-w-md leading-relaxed font-medium">
+            Your centralized digital guide to university policies, campus facilities, and student services.
+          </p>
+        </div>
+
+        <div className="relative z-10">
+          <p className="text-red-200 text-sm font-bold tracking-wider uppercase">
+            © 2026 Technological University of the Philippines.
+          </p>
+        </div>
+      </div>
+      {/* END: Left Side */}
+
+      {/* BEGIN: Right Side - Login Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 bg-slate-50 relative">
+        
+        <div className="w-full max-w-md bg-white p-10 rounded-[2rem] shadow-xl border border-slate-100 relative z-10">
+          
+          <div className="mb-10 text-center lg:text-left">
+            <h2 className="text-3xl font-extrabold text-slate-900 mb-2 tracking-tight">Welcome back</h2>
+            <p className="text-slate-500 font-medium">Please enter your credentials to continue.</p>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-white/50 uppercase tracking-widest ml-1">Password</label>
-            <div className="relative group">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-tup-green transition-colors" size={20} />
-              <input type={showPassword ? "text" : "password"} placeholder="••••••••" className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white outline-none focus:ring-2 focus:ring-tup-green/30 transition-all" />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white">
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          <div className="space-y-5">
+            
+            {/* Student ID / Email Input */}
+            <div className="space-y-2">
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                Student ID / Email
+              </label>
+              <div className="relative group">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-handy-dark-red transition-colors" size={20} />
+                <input 
+                  type="text" 
+                  placeholder="e.g. TUPM-21-0000" 
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-700 outline-none focus:ring-2 focus:ring-handy-dark-red/30 focus:border-handy-dark-red transition-all font-medium placeholder:font-normal" 
+                />
+              </div>
+            </div>
+
+            {/* Password Input with Toggle */}
+            <div className="space-y-2">
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                Password
+              </label>
+              <div className="relative group">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-handy-dark-red transition-colors" size={20} />
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  placeholder="••••••••" 
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-12 text-slate-700 outline-none focus:ring-2 focus:ring-handy-dark-red/30 focus:border-handy-dark-red transition-all font-medium placeholder:font-normal" 
+                />
+                <button 
+                  type="button" 
+                  onClick={() => setShowPassword(!showPassword)} 
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-handy-dark-red transition-colors"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              <div className="flex justify-end mt-2">
+                <span className="text-[11px] font-bold text-handy-dark-red hover:text-red-900 cursor-pointer transition-colors">
+                  Forgot password?
+                </span>
+              </div>
+            </div>
+
+            {/* DEMO BUTTONS */}
+            <div className="space-y-3 pt-4">
+              <button 
+                type="button" 
+                onClick={handleStudentLogin} 
+                className="w-full bg-handy-dark-red text-white py-4 rounded-xl font-bold text-sm shadow-lg shadow-red-900/20 flex items-center justify-center gap-2 hover:bg-red-900 active:scale-[0.98] transition-all"
+              >
+                Sign In as Student <User size={18} />
+              </button>
+              
+              <button 
+                type="button" 
+                onClick={handleAdminLogin} 
+                className="w-full bg-white text-slate-600 border-2 border-slate-200 py-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:border-handy-dark-red hover:text-handy-dark-red active:scale-[0.98] transition-all"
+              >
+                Sign In as Admin <ShieldAlert size={18} />
               </button>
             </div>
           </div>
 
-          {/* DEMO BUTTONS */}
-          <div className="space-y-3 pt-4">
-            <button type="button" onClick={handleStudentLogin} className="w-full bg-tup-green text-white py-4 rounded-2xl font-black shadow-lg shadow-tup-green/20 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all">
-              Sign In as Student <User size={20} />
-            </button>
-            <button type="button" onClick={handleAdminLogin} className="w-full bg-white/10 text-white border border-white/20 py-4 rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-white/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
-              Sign In as Admin <ShieldAlert size={20} />
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
+      {/* END: Right Side */}
+
     </div>
   );
 };

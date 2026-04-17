@@ -16,7 +16,7 @@ const AdminAnalytics = () => {
         </button>
       </div>
 
-      {/* BEGIN: QuickStats (Using original data) */}
+      {/* BEGIN: QuickStats (Using mock data) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {/* Stat Card 1: Total Queries */}
         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
@@ -70,7 +70,7 @@ const AdminAnalytics = () => {
       {/* BEGIN: ChartsRow */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         
-        {/* Most Viewed Sections (Using original data) */}
+        {/* Most Viewed Sections (Using mock data) */}
         <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
           <div className="flex justify-between items-center mb-10">
             <h3 className="font-bold text-lg">Most Viewed Sections</h3>
@@ -142,7 +142,7 @@ const AdminAnalytics = () => {
         </div>
       </div>
 
-      {/* BEGIN: InteractionsTable (Using original unanswered query) */}
+      {/* BEGIN: InteractionsTable (Using mock query) */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-8">
         <div className="p-6 border-b border-slate-100 flex justify-between items-center">
           <h3 className="font-bold text-lg">Recent Escalations & Unanswered</h3>
@@ -159,7 +159,7 @@ const AdminAnalytics = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {/* Data from original UnansweredCard */}
+              {/* Mock data from original UnansweredCard */}
               <tr className="hover:bg-slate-50/30 transition-colors bg-red-50/10">
                 <td className="px-6 py-4 text-sm font-bold text-gray-900">
                   "How do I appeal for a grade modification after the deadline?"

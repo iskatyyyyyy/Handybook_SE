@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 const StudentLayout = ({ children, activePage }) => {
   const navigate = useNavigate();
 
-  // Helper function to check active state for your new red sidebar
   const getSidebarLinkClass = (pageName) => {
     const baseClass = "flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors cursor-pointer ";
     return activePage === pageName 
@@ -13,10 +12,12 @@ const StudentLayout = ({ children, activePage }) => {
   };
 
   return (
-    <div className="bg-gray-50 text-gray-900 min-h-screen flex font-sans">
-      {/* LEFT SIDEBAR (From your Figma) */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col h-screen sticky top-0">
-        <div className="p-6 flex items-center space-x-3">
+    // Outer Shell: Fixed to screen height
+    <div className="bg-[#F9F9F9] text-gray-900 h-screen flex font-sans overflow-hidden">
+      
+      {/* LEFT SIDEBAR: Full height, internal scroll */}
+      <aside className="w-64 h-full bg-white border-r border-gray-200 flex flex-col shrink-0 overflow-y-auto">
+        <div className="p-6 flex items-center space-x-3 shrink-0">
           <div className="bg-handy-dark-red text-white p-1 rounded-lg text-xs font-bold w-8 h-8 flex items-center justify-center">LOGO</div>
           <span className="text-xl font-bold tracking-tight">Handybook</span>
         </div>
@@ -50,7 +51,7 @@ const StudentLayout = ({ children, activePage }) => {
           </div>
         </nav>
 
-        <div className="p-4 border-t border-gray-100 space-y-3">
+        <div className="p-4 border-t border-gray-100 space-y-3 shrink-0">
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2">Resources</p>
           <button onClick={() => navigate('/chat')} className="w-full bg-handy-dark-red text-white flex items-center justify-center space-x-2 py-3 rounded-xl shadow-lg hover-bg-handy-red transition-all">
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path clipRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" fillRule="evenodd"></path></svg>
@@ -62,11 +63,10 @@ const StudentLayout = ({ children, activePage }) => {
         </div>
       </aside>
 
-      {/* MAIN CONTENT AREA */}
-      <main className="flex-1 flex flex-col min-w-0 bg-[#F9F9F9]">
+      <main className="flex-1 flex flex-col h-full overflow-hidden">
         
-        {/* TOP HEADER (Search moved here based on your Figma) */}
-        <header className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-8">
+        {/* TOP HEADER: Fixed to top */}
+        <header className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-8 shrink-0">
           <div className="relative w-full max-w-lg">
             <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
@@ -87,8 +87,7 @@ const StudentLayout = ({ children, activePage }) => {
           </div>
         </header>
 
-        {/* Dynamic Content wrapper */}
-        <div className="p-8 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto p-8">
           {children}
         </div>
       </main>

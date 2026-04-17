@@ -5,7 +5,7 @@ const CampusMap = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeBuilding, setActiveBuilding] = useState("A");
 
-  // Actual TUP Building data from original code
+  // Mock Data
   const buildings = [
     { id: "A", name: "Administration Building", offices: ["Accounting Office", "Cashier's Office"] },
     { id: "B", name: "College of Arts & Science", offices: ["University Registrar"] },
@@ -43,11 +43,11 @@ const CampusMap = () => {
           <div className="absolute inset-0 flex items-center justify-center bg-slate-100/50 z-0">
              <p className="text-sm font-bold text-slate-300 uppercase tracking-widest">3D Campus Viewport</p>
           </div>
-          {/* Replace this src with your exported 3D map from Figma */}
+          {/* Image muna */}
           <img 
             alt="Campus Map Illustration" 
             className="w-full h-auto object-contain block mx-auto py-10 px-4 relative z-10" 
-            src="https://lh3.googleusercontent.com/aida/ADBb0ugsit13p1v8b8ayVnfyYfKJo0GHOqhIywSP7f0Hgkx-j_-UW5Vm4oloKZghtb4fi9slypdsX7JqFw7NIVKjz8yL7_sczisJY4NWxVTri1jZOqevxUc-XrDO6iTdNbliwaF6x8HAaUWC4zPsgGqLCu8QZy0ZnfdeWjXQe6GAV4QrooksN-3ySYEf7u_eXCh_zhNSdQvCzwsbcJU3TV_yLfe_9sIHpsfUVUQqG9B8vUhE-nCMOXgxWWbv-7b6S0q02mMKv2gaXAGIFQ" 
+            src="https://kommodo.ai/i/LeNkQcwb07LUmpveVEDF" 
           />
         </div>
         {/* END: Map Visualization */}
