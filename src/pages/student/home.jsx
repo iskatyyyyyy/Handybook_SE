@@ -1,7 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import StudentLayout from '../../layouts/studentLayout';
 
 const Home = () => {
+  const navigate = useNavigate();
+  
   return (
     <StudentLayout activePage="home">
       {/* Hero Banner */}
@@ -9,7 +12,9 @@ const Home = () => {
         <div className="max-w-2xl relative z-10">
           <h1 className="text-3xl font-extrabold leading-tight mb-2">Good morning, Andrea!</h1>
           <p className="text-white/80 text-sm font-medium mb-6">2013 Handbook Version | Last Updated: Today</p>
-          <button className="bg-white text-handy-dark-red px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-gray-100 transition-colors shadow-sm">
+          <button 
+            onClick={ () => { navigate('/preview-handbook'); }}
+            className="bg-white text-handy-dark-red px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-gray-100 transition-colors shadow-sm">
             View Handbook
           </button>
         </div>
