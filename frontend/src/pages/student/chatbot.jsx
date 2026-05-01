@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StudentLayout from '../../layouts/studentLayout';
+import Markdown from 'react-markdown'
 
 /**
  * HOLLOW CHATBOT COMPONENT
@@ -26,6 +27,8 @@ const Chatbot = () => {
   const handleSend = async () => {
     if (!inputText.trim() || isTyping) return;
 
+    const currentQuery = inputText;
+
     const userMessage = {
       text: inputText,
       isBot: false,
@@ -36,11 +39,40 @@ const Chatbot = () => {
     setInputText("");
     setIsTyping(true);
 
-    /**
-     * TODO: Replace this placeholder with a fetch() call to your 
-     * Node.js backend (e.g., POST /api/chat).[cite: 1]
-     */
-    console.log("Connecting to backend for query:", inputText);
+    
+    try {
+      const response = await fetch('http://localhost:3000/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: currentQuery }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Hance is currently out of the office.');
+      }
+
+      const data = await response.json();
+
+      // Add Hance's response to the chat[cite: 1, 9]
+      const botMessage = {
+        text: data.reply,
+        isBot: true,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      setMessages(prev => [...prev, botMessage]);
+      } catch (error) {
+        // Error handling to keep the UI from getting stuck[cite: 1, 9]
+        setMessages(prev => [...prev, {
+          text: "I'm having trouble connecting to my brain. Please check if the backend server is running.",
+          isBot: true,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }]);
+      } finally {
+        setIsTyping(false);
+      }
   };
 
   const handleKeyDown = (e) => {
@@ -94,7 +126,11 @@ const Chatbot = () => {
                 {/* Text Bubble */}
                 <div className={`space-y-2 ${msg.isBot ? '' : 'text-right'}`}>
                   <div className={`px-6 py-4 rounded-2xl shadow-sm ${msg.isBot ? 'bg-white border border-gray-100 rounded-tl-none' : 'bg-tup-green text-white rounded-tr-none'}`}>
-                    <p className="leading-relaxed">{msg.text}</p>
+                    {/* Using a div with whitespace-pre-wrap to handle manual line breaks 
+                        and Markdown to handle bolding and bullet points */}
+                    <div className="whitespace-pre-wrap leading-relaxed">
+                      <Markdown>{msg.text}</Markdown>
+                    </div>
                   </div>
                   <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
                     {msg.isBot ? 'Handybook AI' : 'Student'}
