@@ -120,7 +120,7 @@ const Home = () => {
               ))}
             </div>
             
-            <button className="mt-auto w-full border-2 border-handy-dark-red text-handy-dark-red py-3 rounded-xl font-bold hover:bg-handy-dark-red hover:text-white transition-all">
+            <button className="mt-auto w-full border-2 border-handy-dark-red text-handy-dark-red py-3 rounded-xl font-bold hover:bg-handy-dark-red hover:text-orange-400 transition-all">
               Explore all FAQs
             </button>
           </div>

@@ -1,32 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import StudentLayout from '../../layouts/studentLayout';
 
 const CampusMap = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeBuilding, setActiveBuilding] = useState("A");
+  // Removed activeBuilding state and the associated useEffect
 
   // Mock Data
   const buildings = [
-    { id: "A", name: "Administration Building", offices: ["Accounting Office", "Cashier's Office"] },
-    { id: "B", name: "College of Arts & Science", offices: ["University Registrar"] },
-    { id: "C", name: "University Library", details: "3 Floors of educational repositories" }, 
+    { id: "A", name: "Administration Building", offices: ["University Library", "University Registrar"] },
+    { id: "B", name: "College of Liberal Arts & Science", offices: ["Office of Student Affairs", "University Clinic", "TUP Museum"] },
+    { id: "C", name: "TUP Centennial Grounds", details: "Main student plaza featuring an event stage and covered multi-purpose sports courts." }, 
     { id: "D", name: "IRTC Building", details: "Conference Hall and research facilities" }, 
     { id: "E", name: "TUP Medical & Dental Clinic", details: "Routine health services" }, 
     { id: "F", name: "IT Center", details: "Network and web development units" }, 
   ];
 
-  // Original filtering logic
+  // Original filtering logic (Kept intact)
   const filteredBuildings = buildings.filter(b => 
     b.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     (b.offices && b.offices.some(o => o.toLowerCase().includes(searchQuery.toLowerCase())))
   );
-
-  // Automatically open the first result when searching
-  useEffect(() => {
-    if (filteredBuildings.length > 0 && searchQuery !== "") {
-      setActiveBuilding(filteredBuildings[0].id);
-    }
-  }, [searchQuery]);
 
   return (
     <StudentLayout activePage="map">
@@ -43,7 +36,6 @@ const CampusMap = () => {
           <div className="absolute inset-0 flex items-center justify-center bg-slate-100/50 z-0">
              <p className="text-sm font-bold text-slate-300 uppercase tracking-widest">3D Campus Viewport</p>
           </div>
-          {/* Image muna */}
           <img 
             alt="Campus Map Illustration" 
             className="w-full h-auto object-contain block mx-auto py-10 px-4 relative z-10" 
@@ -62,7 +54,6 @@ const CampusMap = () => {
               <h2 className="text-xl font-bold text-handy-dark-red tracking-wide uppercase">Building Legend</h2>
             </div>
             
-            {/* Kept their search functionality active! */}
             <div className="relative w-full sm:w-72">
               <input 
                 type="text" 
@@ -80,44 +71,36 @@ const CampusMap = () => {
             {filteredBuildings.length === 0 ? (
                <p className="text-center text-slate-400 font-medium py-10">No buildings or offices found matching "{searchQuery}"</p>
             ) : (
-              <div className="space-y-6">
-                {filteredBuildings.map((building) => {
-                  const isActive = activeBuilding === building.id;
-                  
-                  return (
-                    <div 
-                      key={building.id}
-                      onClick={() => setActiveBuilding(building.id)}
-                      className={`flex gap-6 transition-opacity cursor-pointer ${isActive ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}
-                    >
-                      <div className="flex-shrink-0">
-                        <div className={`w-20 h-10 rounded-2xl flex items-center justify-center font-black transition-colors ${isActive ? 'bg-red-100 border border-red-800/30 text-red-900 shadow-sm' : 'bg-slate-100 border border-slate-300 text-slate-600'}`}>
-                          {building.id}
-                        </div>
+              <div className="space-y-5">
+                {filteredBuildings.map((building) => (
+                  // Removed click handlers and opacity changes
+                  <div key={building.id} className="flex gap-6 items-start group">
+                    
+                    {/* Consistent Building Letter Badge */}
+                    <div className="flex-shrink-0 mt-1">
+                      <div className="w-16 h-12 rounded-2xl flex items-center justify-center font-black text-lg bg-red-50 border border-red-100 text-handy-dark-red shadow-sm group-hover:bg-red-100 transition-colors">
+                        {building.id}
                       </div>
+                    </div>
+                    
+                    {/* Consistent Details Card */}
+                    <div className="flex-grow p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                      <h3 className="text-lg font-bold text-slate-900 mb-1">{building.name}</h3>
                       
-                      {isActive ? (
-                        <div className="flex-grow p-6 bg-white border border-handy-dark-red rounded-3xl shadow-md transition-all">
-                          <h3 className="text-xl font-bold text-slate-900 mb-3">{building.name}</h3>
-                          
-                          {building.offices ? (
-                            <div className="flex flex-wrap gap-2">
-                              {building.offices.map(office => (
-                                <span key={office} className="px-3 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 uppercase tracking-wider">
-                                  {office}
-                                </span>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="text-slate-600 leading-relaxed">{building.details}</p>
-                          )}
+                      {building.offices ? (
+                        <div className="flex flex-wrap gap-2 mt-3">
+                          {building.offices.map(office => (
+                            <span key={office} className="px-3 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 uppercase tracking-wider">
+                              {office}
+                            </span>
+                          ))}
                         </div>
                       ) : (
-                        <div className="flex-grow p-1 border border-slate-100 rounded-2xl h-10 bg-slate-50 hover:bg-slate-100 transition-colors"></div>
+                        <p className="text-slate-500 text-sm leading-relaxed mt-1">{building.details}</p>
                       )}
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </div>
             )}
           </div>

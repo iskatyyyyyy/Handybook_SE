@@ -1,7 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import StudentLayout from '../../layouts/studentLayout';
+import { Check } from 'lucide-react'; // Added Check icon for completed steps
 
 const StudentServices = () => {
+  // Tracks the current active step in the linear process (0 to 4)
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const graduationSteps = [
+    {
+      title: "Pre-Registration",
+      desc: "Log in to the student portal and complete the necessary preliminary forms and data updates.",
+      action: "Go to Portal"
+    },
+    {
+      title: "Physical Document Verification",
+      desc: "Present your original documents, 2x2 pictures, and completed forms to the Office of the Registrar."
+    },
+    {
+      title: "Assessment of Fees",
+      desc: "Wait for your total fees to be calculated by the accounting office based on your records."
+    },
+    {
+      title: "Final Application Completion",
+      desc: "Submit the final payment receipt to claim your graduation stub."
+    }
+  ];
+
+  const handleStepClick = (index) => {
+    // Rule 1: If clicking the *current* available step, mark it as done (move forward)
+    if (index === currentStep) {
+      setCurrentStep(prev => prev + 1);
+    } 
+    // Rule 2: If clicking the *most recently completed* step, undo it (move backward)
+    else if (index === currentStep - 1) {
+      setCurrentStep(prev => prev - 1);
+    }
+    // All other clicks are ignored to enforce strict linear progression
+  };
+
   return (
     <StudentLayout activePage="services">
       {/* BEGIN: Available Offices Section */}
@@ -79,63 +115,58 @@ const StudentServices = () => {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
               <span className="text-[10px] font-bold uppercase tracking-widest">Office of the Registrar</span>
             </div>
-            <h3 className="text-3xl font-bold mb-2">Graduation Application Process</h3>
-            <p className="text-gray-500 text-sm">Follow these steps to complete your application for graduation.</p>
+            <h3 className="text-3xl font-bold mb-2">Graduation Application Checklist</h3>
+            <p className="text-gray-500 text-sm">Keep track of your personal progress. Click a step to mark it as complete.</p>
           </div>
           
           {/* Timeline Body */}
           <div className="p-10 relative">
-            <div className="timeline-line hidden sm:block"></div>
-            <div className="space-y-12 relative">
+            <div className="timeline-line hidden sm:block absolute left-[56px] top-10 bottom-10 w-0.5 bg-gray-100 -z-10"></div>
+            <div className="space-y-12 relative z-0">
               
-              {/* Step 1 */}
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 relative">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 z-10 step-active shadow-md">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path clipRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fillRule="evenodd"></path></svg>
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-xl font-bold mb-3">1. Pre-Registration</h4>
-                  <p className="text-gray-500 text-sm mb-4 leading-relaxed">
-                    Log in to the student portal and complete the necessary preliminary forms and data updates.
-                  </p>
-                  <button className="px-6 py-2 bg-red-50 text-handy-dark-red text-sm font-bold rounded-lg hover:bg-red-100 transition-colors">
-                    Go to Portal
-                  </button>
-                </div>
-              </div>
+              {graduationSteps.map((step, index) => {
+                const isCompleted = index < currentStep;
+                const isCurrent = index === currentStep;
+                const isLocked = index > currentStep;
+                
+                // Determine if this specific item is interactable based on your rules
+                const isClickable = isCurrent || index === currentStep - 1;
 
-              {/* Step 2 (Selected State) */}
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 relative">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 z-10 bg-handy-dark-red text-white font-bold text-xs shadow-md">2</div>
-                <div className="flex-1 p-6 bg-red-50/50 rounded-2xl border border-red-100 sm:-mt-6">
-                  <h4 className="text-xl font-bold mb-3">2. Physical Document Verification</h4>
-                  <p className="text-gray-500 text-sm leading-relaxed">
-                    Present your original documents, 2x2 pictures, and completed forms to the Office of the Registrar.
-                  </p>
-                </div>
-              </div>
-
-              {/* Step 3 */}
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 relative">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 z-10 step-inactive font-bold text-xs">3</div>
-                <div className="flex-1">
-                  <h4 className="text-xl font-bold text-gray-400 mb-2">3. Assessment of Fees</h4>
-                  <p className="text-gray-400 text-sm leading-relaxed">
-                    Wait for your total fees to be calculated by the accounting office based on your records.
-                  </p>
-                </div>
-              </div>
-
-              {/* Step 4 */}
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 relative">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 z-10 step-inactive font-bold text-xs">4</div>
-                <div className="flex-1">
-                  <h4 className="text-xl font-bold text-gray-400 mb-2">4. Final Application Completion</h4>
-                  <p className="text-gray-400 text-sm">
-                    Submit the final payment receipt to claim your graduation stub.
-                  </p>
-                </div>
-              </div>
+                return (
+                  <div 
+                    key={index} 
+                    onClick={() => handleStepClick(index)}
+                    className={`flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 relative group ${isClickable ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'}`}
+                  >
+                    {/* Status Circle */}
+                    <div 
+                      className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 z-10 shadow-md transition-all duration-300 
+                        ${isCompleted ? 'bg-green-500 text-white hover:bg-red-500' // Hovering a completed step shows red to imply 'undo'
+                        : isCurrent ? 'bg-handy-dark-red text-white ring-4 ring-red-50' 
+                        : 'bg-gray-100 text-gray-400 border border-gray-200'}`}
+                    >
+                      {isCompleted ? <Check size={16} /> : <span className="font-bold text-xs">{index + 1}</span>}
+                    </div>
+                    
+                    {/* Content Box */}
+                    <div className={`flex-1 transition-all duration-300 ${isCurrent ? 'p-6 bg-red-50/50 rounded-2xl border border-red-100 sm:-mt-6' : ''}`}>
+                      <h4 className={`text-xl font-bold mb-2 ${isCompleted ? 'text-gray-900 line-through decoration-gray-300' : isLocked ? 'text-gray-400' : 'text-slate-900'}`}>
+                        {index + 1}. {step.title}
+                      </h4>
+                      <p className={`text-sm leading-relaxed ${isLocked ? 'text-gray-400' : 'text-gray-500'}`}>
+                        {step.desc}
+                      </p>
+                      
+                      {/* Action Button (Only on Step 1 if it has an action and isn't locked) */}
+                      {step.action && !isLocked && (
+                        <button className="mt-4 px-6 py-2 bg-red-50 text-handy-dark-red text-sm font-bold rounded-lg hover:bg-red-100 transition-colors">
+                          {step.action}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
 
             </div>
           </div>

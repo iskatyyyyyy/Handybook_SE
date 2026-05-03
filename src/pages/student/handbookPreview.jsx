@@ -84,7 +84,7 @@ const HandbookPreview = () => {
                 className="ml-2 flex items-center space-x-2 px-4 py-2 bg-[#FEEBEB] hover:bg-[#fcdede] text-handy-dark-red text-sm font-bold rounded-xl transition-colors border border-red-100"
               >
                 <MessageSquare size={16} />
-                <span>Ask AI</span>
+                <span>Ask Hance</span>
               </button>
             )}
           </div>

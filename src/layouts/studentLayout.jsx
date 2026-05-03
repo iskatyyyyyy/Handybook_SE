@@ -58,10 +58,7 @@ const StudentLayout = ({ children, activePage }) => {
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2">Resources</p>
             <button onClick={() => navigate('/chat')} className="w-full bg-handy-dark-red text-white flex items-center justify-center space-x-2 py-3 rounded-xl shadow-lg hover:bg-red-800 transition-all">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path clipRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" fillRule="evenodd"></path></svg>
-              <span className="font-bold text-sm">Ask HandyBook AI</span>
-            </button>
-            <button className="w-full bg-white text-gray-700 border border-gray-200 flex items-center justify-center space-x-2 py-3 rounded-xl hover:bg-gray-50 transition-all">
-               <span className="font-semibold text-sm">Download Handbook</span>
+              <span className="font-bold text-sm">Ask Hance</span>
             </button>
           </div>
         </aside>
@@ -112,7 +109,7 @@ const StudentLayout = ({ children, activePage }) => {
                     </button>
                     <div className="h-px bg-gray-100 my-1"></div>
                     <button 
-                      onClick={() => { /* Handle Logout */ setIsDropdownOpen(false); }} 
+                      onClick={() => { navigate('/login'); setIsDropdownOpen(false); }} 
                       className="w-full text-left px-4 py-2 hover:bg-red-50 text-sm font-medium text-red-600 transition-colors"
                     >
                       Logout
@@ -145,8 +142,6 @@ const StudentLayout = ({ children, activePage }) => {
             
             <div className="p-5 space-y-2">
               <button className="w-full text-left p-3 rounded-xl hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors border border-transparent hover:border-gray-100">Privacy & Security</button>
-              <button className="w-full text-left p-3 rounded-xl hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors border border-transparent hover:border-gray-100">Notification Preferences</button>
-              <button className="w-full text-left p-3 rounded-xl hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors border border-transparent hover:border-gray-100">App Preferences</button>
               <button className="w-full text-left p-3 rounded-xl hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors border border-transparent hover:border-gray-100">Accessibility</button>
               <button className="w-full text-left p-3 rounded-xl hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors border border-transparent hover:border-gray-100">Support & About</button>
             </div>
