@@ -1,171 +1,122 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import StudentLayout from '../../layouts/studentLayout';
+import { 
+  Book, 
+  History, 
+  Calendar, 
+  GraduationCap, 
+  ScrollText, 
+  UserPlus, 
+  ArrowRightLeft, 
+  ListOrdered, 
+  Award, 
+  UserMinus,
+  Sparkles
+} from 'lucide-react';
 
 const GuidePage = () => {
+  const navigate = useNavigate();
+
+  // Mock Data for Topics to keep the JSX clean
+  const topics = [
+    { id: 1, title: "Academic Programs", desc: "Undergraduate and graduate degrees, majors, and specializations", icon: <Book size={20} /> },
+    { id: 2, title: "Graduation", desc: "Final requirements, application forms, and ceremony participation", icon: <GraduationCap size={20} /> },
+    { id: 3, title: "Academic Policies", desc: "Attendance, course credits, integrity, and student conduct codes", icon: <ScrollText size={20} /> },
+    { id: 4, title: "Sample", desc: "Final requirements, application forms, and ceremony participation", icon: <GraduationCap size={20} /> },
+    { id: 5, title: "Admission", desc: "Attendance, course credits, integrity, and student conduct codes", icon: <UserPlus size={20} /> },
+    { id: 6, title: "Graduation", desc: "Final requirements, application forms, and ceremony participation", icon: <GraduationCap size={20} /> },
+    { id: 7, title: "Transfer Credits", desc: "Policy for credit transfers from other institutions and internal shifts.", icon: <ArrowRightLeft size={20} /> },
+    { id: 8, title: "Graduation", desc: "Final requirements, application forms, and ceremony participation", icon: <GraduationCap size={20} /> },
+    { id: 9, title: "Grading System", desc: "GPA calculation, grade scales, and honor roll criteria details.", icon: <ListOrdered size={20} /> },
+    { id: 10, title: "Graduation", desc: "Final requirements, application forms, and ceremony participation", icon: <GraduationCap size={20} /> },
+    { id: 11, title: "Scholarships", desc: "Available financial aid, merit-based grants, and eligibility.", icon: <Award size={20} /> },
+    { id: 12, title: "Graduation", desc: "Final requirements, application forms, and ceremony participation", icon: <GraduationCap size={20} /> },
+    { id: 13, title: "Leave of Absence", desc: "Policies for temporary withdrawal and returning student.", icon: <UserMinus size={20} /> },
+    { id: 14, title: "Graduation", desc: "Final requirements, application forms, and ceremony participation", icon: <GraduationCap size={20} /> },
+  ];
+
   return (
     <StudentLayout activePage="guide">
-      {/* BEGIN: Hero Search Section */}
-      <section className="bg-white px-8 py-16 text-center border-b border-gray-100 rounded-t-3xl" data-purpose="hero-search">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-4">How can we help you today?</h1>
-          <p className="text-gray-500 text-lg mb-10 max-w-2xl mx-auto">
-            Access everything you need to know about university policies, academic requirements, and student procedures in one place.
-          </p>
-
-          <div className="relative flex items-center mb-6" data-purpose="search-input-group">
-            <div className="absolute left-4 text-gray-400">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 animate-in fade-in duration-500">
+        
+        {/* MAIN TOPICS CARD */}
+        <section className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col">
+          
+          {/* Header Area */}
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-8">
+            <div className="flex gap-4">
+              <div className="bg-red-50 text-handy-dark-red p-2.5 rounded-xl shrink-0 h-fit">
+                <Book size={24} />
+              </div>
+              <div>
+                <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 mb-1 tracking-tight">Handbook Topics</h1>
+                <p className="text-[13px] font-medium text-slate-500 max-w-2xl leading-relaxed">
+                  Access everything you need to know about university policies, academic requirements, and student procedures in one place
+                </p>
+              </div>
             </div>
-            <input 
-              className="w-full pl-12 pr-32 py-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-handy-dark-red shadow-inner" 
-              placeholder="Search for policies, programs, or requirements..." 
-              type="text"
-            />
-            <button className="absolute right-2 bg-handy-dark-red text-white px-6 py-2 rounded-lg font-medium shadow-md hover:bg-red-900 transition-colors">
-              Search
+            
+            {/* Version Metadata */}
+            <div className="flex flex-col gap-1.5 shrink-0 bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div className="flex items-center gap-2 text-[10px] font-bold text-slate-700">
+                <History size={12} className="text-handy-dark-red" />
+                <span>Version: <span className="text-slate-500">2013 Handbook</span></span>
+              </div>
+              <div className="flex items-center gap-2 text-[10px] font-bold text-slate-700">
+                <Calendar size={12} className="text-handy-dark-red" />
+                <span>Last Update: <span className="text-slate-500">10/10/2013</span></span>
+              </div>
+            </div>
+          </div>
+
+          {/* Scrollable Topics Grid */}
+          <div className="max-h-[500px] overflow-y-auto custom-scrollbar pr-3">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4">
+              {topics.map((topic) => (
+                <div 
+                  key={topic.id} 
+                  className="flex items-center gap-4 p-4 rounded-xl border border-slate-100 hover:border-red-100 hover:shadow-sm transition-all cursor-pointer group bg-white hover:bg-slate-50/50"
+                >
+                  <div className="bg-handy-dark-red text-white p-3 rounded-lg shrink-0 group-hover:bg-red-900 transition-colors shadow-sm">
+                    {topic.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-[13px] font-bold text-slate-900 mb-0.5">{topic.title}</h3>
+                    <p className="text-[11px] font-medium text-slate-500 leading-snug">{topic.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* BOTTOM CTA CARD */}
+        <section className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 mb-1 tracking-tight">
+              Still can't find what you're looking for?
+            </h2>
+            <p className="text-[13px] font-medium text-slate-500">
+              Try contacting our Student Affairs Office or use our AI for assistance
+            </p>
+          </div>
+          
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button className="px-5 py-2.5 bg-white border-2 border-handy-dark-red text-handy-dark-red text-sm font-bold rounded-lg hover:bg-red-50 transition-colors shadow-sm">
+              Contact Support
+            </button>
+            <button 
+              onClick={() => navigate('/chat')}
+              className="px-5 py-2.5 bg-handy-dark-red text-white text-sm font-bold rounded-lg hover:bg-red-900 transition-colors shadow-sm flex items-center gap-2"
+            >
+              <Sparkles size={16} />
+              Ask Handybook AI
             </button>
           </div>
+        </section>
 
-          <div className="flex items-center justify-center gap-3 text-xs font-medium uppercase tracking-wider text-gray-400 flex-wrap">
-            <span>Popular:</span>
-            <a className="px-3 py-1 bg-red-50 text-handy-dark-red rounded-full border border-red-100 hover:bg-red-100 transition-colors" href="#">Graduation Requirements</a>
-            <a className="px-3 py-1 bg-red-50 text-handy-dark-red rounded-full border border-red-100 hover:bg-red-100 transition-colors" href="#">Leave of Absence</a>
-            <a className="px-3 py-1 bg-red-50 text-handy-dark-red rounded-full border border-red-100 hover:bg-red-100 transition-colors" href="#">Scholarships</a>
-          </div>
-        </div>
-      </section>
-      {/* END: Hero Search Section */}
-
-      {/* BEGIN: Handbook Topics Grid */}
-      <section className="py-10" data-purpose="handbook-topics">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-2xl font-bold text-gray-900">Handbook Topics</h2>
-            <a className="text-sm font-bold text-handy-dark-red flex items-center gap-1 hover:underline cursor-pointer">
-              View all Topics 
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
-            </a>
-          </div>
-          <p className="text-gray-500 mb-10">Select a category to view detailed guidelines and procedures.</p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            {/* Card: Academic Programs */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md border border-gray-50 hover:-translate-y-1 transition-all cursor-pointer">
-              <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mb-6">
-                <svg className="w-6 h-6 text-handy-dark-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Academic Programs</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                Overview of undergraduate and graduate degrees, majors, and specializations.
-              </p>
-            </div>
-
-            {/* Card: Academic Policies */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md border border-gray-50 hover:-translate-y-1 transition-all cursor-pointer">
-              <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mb-6">
-                <svg className="w-6 h-6 text-handy-dark-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Academic Policies</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                Rules on attendance, course credits, integrity, and student conduct codes.
-              </p>
-            </div>
-
-            {/* Card: Admission */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md border border-gray-50 hover:-translate-y-1 transition-all cursor-pointer">
-              <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center mb-6">
-                <div className="w-6 h-6 bg-gray-200 rounded-sm"></div>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Admission</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                Entry requirements, application deadlines, and enrollment procedures for new students.
-              </p>
-            </div>
-
-            {/* Card: Transfer Credit */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md border border-gray-50 hover:-translate-y-1 transition-all cursor-pointer">
-              <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mb-6">
-                <svg className="w-6 h-6 text-handy-dark-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 11l5-5m0 0l5 5m-5-5v12" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Transfer Credit</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                Guidelines for credit transfers from other institutions and internal shifts.
-              </p>
-            </div>
-
-            {/* Card: Grading System */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md border border-gray-50 hover:-translate-y-1 transition-all cursor-pointer">
-              <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center mb-6">
-                <div className="w-6 h-6 bg-gray-200 rounded-sm"></div>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Grading System</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                GPA calculation, grade scales, and honor roll criteria details.
-              </p>
-            </div>
-
-            {/* Card: Scholarships */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md border border-gray-50 hover:-translate-y-1 transition-all cursor-pointer">
-              <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mb-6">
-                <svg className="w-6 h-6 text-handy-dark-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Scholarships</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                Available financial aid, merit-based grants, and application eligibility.
-              </p>
-            </div>
-
-            {/* Card: Leave of Absence */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md border border-gray-50 hover:-translate-y-1 transition-all cursor-pointer">
-              <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mb-6">
-                <svg className="w-6 h-6 text-handy-dark-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Leave of Absence</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                Procedures for temporary withdrawal and returning student policies.
-              </p>
-            </div>
-
-            {/* Card: Graduation */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md border border-gray-50 hover:-translate-y-1 transition-all cursor-pointer">
-              <div className="w-12 h-12 bg-handy-dark-red rounded-xl flex items-center justify-center mb-6">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 3m0 0V3m0 0l6.232 6.232l-3.536 3.536m-2.696-2.696a2.5 2.5 0 10-3.536 3.536" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Graduation</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                Final requirements, application forms, and ceremony participation info.
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-      {/* END: Handbook Topics Grid */}
-
-      {/* BEGIN: Support CTA Section */}
-      <section className="py-10 mb-10" data-purpose="support-cta">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-[#F8F1F1] rounded-3xl p-10 flex flex-col md:flex-row items-center justify-between gap-8 border border-red-50">
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold text-gray-900 mb-3">Still can't find what you're looking for?</h2>
-              <p className="text-gray-600">
-                Contact our Student Affairs office or visit our physical desk at TUP Manila.
-              </p>
-            </div>
-            <div className="flex items-center gap-4 shrink-0">
-              <button className="px-8 py-3 bg-white border border-handy-dark-red text-handy-dark-red font-bold rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
-                Contact Support
-              </button>
-              <button className="px-8 py-3 bg-handy-dark-red text-white font-bold rounded-xl hover:opacity-90 transition-opacity shadow-lg">
-                Ask a Question
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* END: Support CTA Section */}
-
+      </div>
     </StudentLayout>
   );
 };

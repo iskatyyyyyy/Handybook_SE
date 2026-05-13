@@ -1,130 +1,207 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StudentLayout from '../../layouts/studentLayout';
+import { 
+  Sparkles, 
+  ChevronRight, 
+  ChevronDown, 
+  HelpCircle, 
+  TrendingUp, 
+  Shirt, 
+  Monitor, 
+  Copy 
+} from 'lucide-react';
 
 const Home = () => {
   const navigate = useNavigate();
   
+  // State to handle the open/close of the FAQ accordion
+  const [openFaq, setOpenFaq] = useState(3); // Defaulting the 4th item to open to match Figma design
+
   return (
     <StudentLayout activePage="home">
-      {/* Hero Banner */}
-      <section className="relative bg-handy-dark-red rounded-3xl px-8 py-8 text-white shadow-xl mb-8 overflow-hidden">
-        <div className="max-w-2xl relative z-10">
-          <h1 className="text-3xl font-extrabold leading-tight mb-2">Good morning, Andrea!</h1>
-          <p className="text-white/80 text-sm font-medium mb-6">2013 Handbook Version | Last Updated: Today</p>
-          <button 
-            onClick={ () => { navigate('/preview-handbook'); }}
-            className="bg-white text-handy-dark-red px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-gray-100 transition-colors shadow-sm">
-            View Handbook
-          </button>
-        </div>
-        <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 bg-gradient-to-l from-white to-transparent"></div>
-      </section>
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 animate-in fade-in duration-500">
+        
+        {/* 1. HERO SECTION */}
+        <section className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-1 flex items-center gap-2 tracking-tight">
+              Hello there, Andrea <span className="text-2xl sm:text-3xl">👋</span>
+            </h1>
+            <p className="text-sm font-medium text-slate-500">Let's find what you are looking for today!</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <button 
+              onClick={() => navigate('/preview-handbook')}
+              className="px-5 py-2.5 bg-white border-2 border-handy-dark-red text-handy-dark-red text-sm font-bold rounded-lg hover:bg-red-50 transition-colors shadow-sm"
+            >
+              View Handbook
+            </button>
+            <button 
+              onClick={() => navigate('/chat')}
+              className="px-5 py-2.5 bg-handy-dark-red text-white text-sm font-bold rounded-lg hover:bg-red-900 transition-colors shadow-sm flex items-center gap-2"
+            >
+              <Sparkles size={16} />
+              Ask Handybook AI
+            </button>
+          </div>
+        </section>
 
-      <div className="flex gap-8">
-        {/* Left Column (Most Viewed & Trending) */}
-        <div className="flex-1 space-y-10">
+        {/* 2. MOST VIEWED SECTION */}
+        <section className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm">
+          <h2 className="text-base font-extrabold text-slate-900 mb-5 tracking-tight">Most Viewed</h2>
           
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">Most Viewed</h2>
-              <span className="text-handy-dark-red font-bold hover:underline cursor-pointer">View all</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {/* Card 1 */}
+            <div className="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
+              <div className="h-28 overflow-hidden bg-slate-100">
+                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=400&auto=format&fit=crop" alt="Graduation" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+              <div className="p-4 bg-white border-t border-slate-50">
+                <h3 className="text-sm font-bold text-slate-900 mb-0.5">Academic Honors</h3>
+                <p className="text-[11px] font-medium text-slate-500">Honors & Awards</p>
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
+              <div className="h-28 overflow-hidden bg-slate-100">
+                <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?q=80&w=400&auto=format&fit=crop" alt="Checklist" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+              <div className="p-4 bg-white border-t border-slate-50">
+                <h3 className="text-sm font-bold text-slate-900 mb-0.5">Grading System</h3>
+                <p className="text-[11px] font-medium text-slate-500">Evaluation Criteria</p>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
+              <div className="h-28 overflow-hidden bg-slate-100">
+                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=400&auto=format&fit=crop" alt="Writing" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+              <div className="p-4 bg-white border-t border-slate-50">
+                <h3 className="text-sm font-bold text-slate-900 mb-0.5">Registration</h3>
+                <p className="text-[11px] font-medium text-slate-500">Registration Process & Policy</p>
+              </div>
+            </div>
+
+            {/* Card 4 */}
+            <div className="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
+              <div className="h-28 overflow-hidden bg-slate-100">
+                <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=400&auto=format&fit=crop" alt="Lecture" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+              <div className="p-4 bg-white border-t border-slate-50">
+                <h3 className="text-sm font-bold text-slate-900 mb-0.5">Academic Programs</h3>
+                <p className="text-[11px] font-medium text-slate-500">Different courses and programs</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. BOTTOM GRID (Trending & FAQs) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 pb-6">
+          
+          {/* Trending Suggestions */}
+          <section className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-red-50 text-handy-dark-red p-2 rounded-lg">
+                <TrendingUp size={18} />
+              </div>
+              <h2 className="text-base font-extrabold text-slate-900 tracking-tight">Trending Suggestions</h2>
             </div>
             
-            <div className="grid grid-cols-3 gap-6">
-              {/* Card 1 */}
-              <div className="bg-white p-2 rounded-2xl border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition-shadow">
-                <div className="bg-[#F8F8F8] h-32 rounded-xl flex items-center justify-center mb-4">
-                  <div className="w-12 h-12 rounded-full border-2 border-handy-dark-red flex items-center justify-center">
-                    <svg className="w-6 h-6 text-handy-dark-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
-                  </div>
+            <div className="space-y-3">
+              {/* Item 1 */}
+              <div className="flex items-center gap-4 p-4 rounded-xl border border-slate-100 hover:border-red-100 hover:shadow-sm transition-all cursor-pointer group bg-slate-50/50 hover:bg-white">
+                <div className="bg-handy-dark-red text-white p-2.5 rounded-lg shrink-0 group-hover:bg-red-900 transition-colors shadow-sm">
+                  <Shirt size={20} />
                 </div>
-                <div className="px-2 pb-4 text-center sm:text-left">
-                  <h3 className="font-bold text-gray-900">Academic Honors</h3>
-                  <p className="text-xs text-gray-500 mt-1">Honors & Awards</p>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900 mb-0.5">Dress Code Policy</h4>
+                  <p className="text-[11px] font-medium text-slate-500">Guidelines and policy for proper attire</p>
                 </div>
               </div>
               
-              {/* Card 2 */}
-              <div className="bg-white p-2 rounded-2xl border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition-shadow">
-                <div className="bg-[#F8F8F8] h-32 rounded-xl flex items-center justify-center mb-4">
-                  <div className="w-12 h-12 flex items-center justify-center">
-                    <svg className="w-10 h-10 text-handy-dark-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
-                  </div>
+              {/* Item 2 */}
+              <div className="flex items-center gap-4 p-4 rounded-xl border border-slate-100 hover:border-red-100 hover:shadow-sm transition-all cursor-pointer group bg-slate-50/50 hover:bg-white">
+                <div className="bg-handy-dark-red text-white p-2.5 rounded-lg shrink-0 group-hover:bg-red-900 transition-colors shadow-sm">
+                  <Monitor size={20} />
                 </div>
-                <div className="px-2 pb-4 text-center sm:text-left">
-                  <h3 className="font-bold text-gray-900">Grading System</h3>
-                  <p className="text-xs text-gray-500 mt-1">Evaluation Criteria</p>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900 mb-0.5">IT Resources</h4>
+                  <p className="text-[11px] font-medium text-slate-500">How to access and use IT resources</p>
                 </div>
               </div>
 
-              {/* Card 3 */}
-              <div className="bg-white p-2 rounded-2xl border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition-shadow">
-                <div className="bg-[#F8F8F8] h-32 rounded-xl flex items-center justify-center mb-4">
-                  <div className="w-12 h-12 flex items-center justify-center">
-                    <svg className="w-10 h-10 text-handy-dark-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
-                  </div>
+              {/* Item 3 */}
+              <div className="flex items-center gap-4 p-4 rounded-xl border border-slate-100 hover:border-red-100 hover:shadow-sm transition-all cursor-pointer group bg-slate-50/50 hover:bg-white">
+                <div className="bg-handy-dark-red text-white p-2.5 rounded-lg shrink-0 group-hover:bg-red-900 transition-colors shadow-sm">
+                  <Copy size={20} />
                 </div>
-                <div className="px-2 pb-4 text-center sm:text-left">
-                  <h3 className="font-bold text-gray-900">Registration</h3>
-                  <p className="text-xs text-gray-500 mt-1">Registration</p>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900 mb-0.5">Sample Header</h4>
+                  <p className="text-[11px] font-medium text-slate-500">Sample description text</p>
+                </div>
+              </div>
+
+              {/* Item 4 */}
+              <div className="flex items-center gap-4 p-4 rounded-xl border border-slate-100 hover:border-red-100 hover:shadow-sm transition-all cursor-pointer group bg-slate-50/50 hover:bg-white">
+                <div className="bg-handy-dark-red text-white p-2.5 rounded-lg shrink-0 group-hover:bg-red-900 transition-colors shadow-sm">
+                  <Copy size={20} />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900 mb-0.5">Sample Header</h4>
+                  <p className="text-[11px] font-medium text-slate-500">Sample description text</p>
                 </div>
               </div>
             </div>
           </section>
 
-          <section>
-            <div className="flex items-center space-x-3 mb-6">
-              <svg className="w-6 h-6 text-handy-dark-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
-              <h2 className="text-2xl font-bold text-gray-800">Trending Suggestions</h2>
-            </div>
-            <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
-              <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-start space-x-4 min-w-[320px] cursor-pointer">
-                <div className="bg-[#FEEBEB] p-4 rounded-xl text-handy-dark-red">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path clipRule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" fillRule="evenodd"></path></svg>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-1">Dress Code Policy</h4>
-                  <p className="text-xs text-gray-500 leading-relaxed">Updated guidelines for laboratory sessions and formal events.</p>
-                </div>
+          {/* Frequently Asked Questions */}
+          <section className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-handy-dark-red text-white p-1.5 rounded-full shadow-sm">
+                <HelpCircle size={16} />
               </div>
-              <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-start space-x-4 min-w-[320px] cursor-pointer">
-                <div className="bg-[#EBF1FE] p-4 rounded-xl text-blue-600">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path clipRule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" fillRule="evenodd"></path></svg>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-1">IT Resources</h4>
-                  <p className="text-xs text-gray-500 leading-relaxed">How to access campus-wide high speed Wi-Fi networks?</p>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-
-        {/* Right Sidebar (FAQ) */}
-        <aside className="w-80 space-y-6">
-          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 flex flex-col h-full">
-            <div className="flex items-center space-x-3 mb-8">
-              <div className="w-8 h-8 rounded-full border-2 border-handy-dark-red flex items-center justify-center">
-                <svg className="w-4 h-4 text-handy-dark-red" fill="currentColor" viewBox="0 0 20 20"><path clipRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" fillRule="evenodd"></path></svg>
-              </div>
-              <h3 className="text-lg font-extrabold text-gray-900">Frequently Asked</h3>
+              <h2 className="text-base font-extrabold text-slate-900 tracking-tight">Frequently Asked Questions</h2>
             </div>
             
-            <div className="space-y-1 mb-8">
-              {['How to drop a subject?', 'Where is the UITC office?', 'Lost ID replacement', 'Lost COR', 'How to apply for a LOA?'].map((q, i) => (
-                <button key={i} className="w-full flex items-center justify-between py-4 text-left border-b border-gray-50 hover:bg-gray-50 transition-colors px-2 rounded-lg group">
-                  <span className="text-sm font-semibold text-gray-700">{q}</span>
-                  <svg className="w-4 h-4 text-gray-300 group-hover:text-handy-dark-red transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
-                </button>
+            <div className="flex-1 flex flex-col justify-start">
+              {[
+                { id: 0, question: "How to drop a subject?" },
+                { id: 1, question: "Where is the UITC Office?" },
+                { id: 2, question: "How can I replace my lost ID?" },
+                { id: 3, question: "How can I get a replacement for my lost COR?", answer: "Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit quisque faucibus ex. Adipiscing elit quisque faucibus ex sapien vitae pellentesque." },
+                { id: 4, question: "How to apply for LOA?" },
+                { id: 5, question: "Sample question here" },
+              ].map((faq) => (
+                <div key={faq.id} className="border-b border-slate-100 last:border-0">
+                  <button 
+                    onClick={() => setOpenFaq(openFaq === faq.id ? null : faq.id)}
+                    className="w-full py-4 flex items-center gap-3 text-left group outline-none"
+                  >
+                    <div className="text-handy-dark-red shrink-0 transition-transform duration-200">
+                      {openFaq === faq.id ? <ChevronDown size={18} strokeWidth={2.5} /> : <ChevronRight size={18} strokeWidth={2.5} />}
+                    </div>
+                    <span className="text-[13px] font-bold text-slate-900 group-hover:text-handy-dark-red transition-colors">
+                      {faq.question}
+                    </span>
+                  </button>
+                  
+                  {/* Expanded Content */}
+                  {openFaq === faq.id && faq.answer && (
+                    <div className="pb-5 pl-8 pr-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                      <p className="text-[11px] leading-relaxed text-slate-500 font-medium">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
-            
-            <button className="mt-auto w-full border-2 border-handy-dark-red text-handy-dark-red py-3 rounded-xl font-bold hover:bg-handy-dark-red hover:text-orange-400 transition-all">
-              Explore all FAQs
-            </button>
-          </div>
-        </aside>
+          </section>
+
+        </div>
       </div>
     </StudentLayout>
   );

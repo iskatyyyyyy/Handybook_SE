@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, ShieldCheck, Eye, EyeOff, User, ShieldAlert } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ShieldAlert } from 'lucide-react';
+
+// Imported Assets
+import loginIllustration from '../../assets/images/rafiki.svg';
+import handybookLogo from '../../assets/images/Handybook-Logo1.svg';
+import tupLogo from '../../assets/images/tupLogo.svg';
+import handybookLogoExtd from '../../assets/images/Group_44.svg';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -18,107 +24,106 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex font-sans bg-white">
+    // Main container now uses the dark red background
+    <div className="min-h-screen flex font-sans bg-handy-dark-red overflow-hidden">
       
-      {/* BEGIN: Left Side - Branding */}
-      <div className="hidden lg:flex w-1/2 bg-handy-dark-red p-12 flex-col justify-between relative overflow-hidden">
+      {/* BEGIN: Left Side - White Panel */}
+      <div className="hidden lg:flex w-1/2 bg-white p-12 flex-col justify-center items-center relative rounded-r-[2.5rem] shadow-[10px_0_30px_rgba(0,0,0,0.1)] z-10">
         
-        {/* Abstract Background Design Elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
-          <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white blur-3xl"></div>
-          <div className="absolute top-1/2 right-0 w-64 h-64 rounded-full bg-white blur-3xl"></div>
+        {/* Top Left Logo */}
+        <div className="absolute top-10 left-10">
+          <img src={handybookLogoExtd} alt="Handybook Logo" className="h-14 object-contain" />
         </div>
 
-        <div className="relative z-10">
-          <div className="w-16 h-16 bg-white text-handy-dark-red rounded-2xl flex items-center justify-center font-extrabold text-xl mb-8 shadow-xl">
-            <ShieldCheck size={32} />
-          </div>
-          <h1 className="text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 tracking-tight">
-            TUP Manila <br/> Handybook.
-          </h1>
-          <p className="text-red-100 text-lg max-w-md leading-relaxed font-medium">
-            Your centralized digital guide to university policies, campus facilities, and student services.
-          </p>
-        </div>
+        {/* Center Illustration */}
+        <img 
+          src={loginIllustration} 
+          alt="Students exploring campus" 
+          className="w-full max-w-[400px] mb-12 object-contain"
+        />
 
-        <div className="relative z-10">
-          <p className="text-red-200 text-sm font-bold tracking-wider uppercase">
-            © 2026 Technological University of the Philippines.
-          </p>
-        </div>
+        {/* Typography */}
+        <h2 className="text-2xl xl:text-3xl font-extrabold text-slate-900 max-w-lg text-center leading-snug">
+          The TUP-Manila centralized digital guide to <span className="text-handy-dark-red">university policies, campus facilities, and student services.</span>
+        </h2>
       </div>
       {/* END: Left Side */}
 
       {/* BEGIN: Right Side - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 bg-slate-50 relative">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 relative">
         
-        <div className="w-full max-w-md bg-white p-10 rounded-[2rem] shadow-xl border border-slate-100 relative z-10">
+        {/* White Login Card */}
+        <div className="w-full max-w-md bg-white p-10 sm:p-12 rounded-[2rem] shadow-2xl relative z-10">
           
-          <div className="mb-10 text-center lg:text-left">
-            <h2 className="text-3xl font-extrabold text-slate-900 mb-2 tracking-tight">Welcome back</h2>
-            <p className="text-slate-500 font-medium">Please enter your credentials to continue.</p>
+          {/* Card Header & TUP Logo */}
+          <div className="mb-8 text-center flex flex-col items-center">
+            <img src={tupLogo} alt="TUP Logo" className="h-[72px] w-[72px] mb-6 object-contain" />
+            <h2 className="text-2xl font-extrabold text-slate-900 mb-2 tracking-tight">Welcome Back!</h2>
+            <p className="text-slate-500 font-medium text-[13px]">Please enter your TUP Manila credentials to continue</p>
           </div>
 
           <div className="space-y-5">
             
-            {/* Student ID / Email Input */}
-            <div className="space-y-2">
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
-                Student ID / Email
+            {/* Student ID Input */}
+            <div className="space-y-1.5">
+              <label className="block text-[11px] font-extrabold text-slate-900 ml-1">
+                Student ID
               </label>
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-handy-dark-red transition-colors" size={20} />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-handy-dark-red transition-colors" size={16} />
                 <input 
                   type="text" 
-                  placeholder="e.g. TUPM-21-0000" 
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-700 outline-none focus:ring-2 focus:ring-handy-dark-red/30 focus:border-handy-dark-red transition-all font-medium placeholder:font-normal" 
+                  placeholder="e.g TUP-21-0000" 
+                  className="w-full bg-white border border-slate-200 rounded-lg py-3 pl-10 pr-4 text-slate-700 outline-none focus:ring-2 focus:ring-handy-dark-red/30 focus:border-handy-dark-red transition-all text-sm font-medium placeholder:font-normal placeholder:text-slate-400" 
                 />
               </div>
             </div>
 
             {/* Password Input with Toggle */}
-            <div className="space-y-2">
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+            <div className="space-y-1.5">
+              <label className="block text-[11px] font-extrabold text-slate-900 ml-1">
                 Password
               </label>
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-handy-dark-red transition-colors" size={20} />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-handy-dark-red transition-colors" size={16} />
                 <input 
                   type={showPassword ? "text" : "password"} 
                   placeholder="••••••••" 
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-12 text-slate-700 outline-none focus:ring-2 focus:ring-handy-dark-red/30 focus:border-handy-dark-red transition-all font-medium placeholder:font-normal" 
+                  className="w-full bg-white border border-slate-200 rounded-lg py-3 pl-10 pr-10 text-slate-700 outline-none focus:ring-2 focus:ring-handy-dark-red/30 focus:border-handy-dark-red transition-all text-sm font-medium placeholder:font-normal placeholder:text-slate-400" 
                 />
                 <button 
                   type="button" 
                   onClick={() => setShowPassword(!showPassword)} 
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-handy-dark-red transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-handy-dark-red transition-colors p-1"
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-              <div className="flex justify-end mt-2">
-                <span className="text-[11px] font-bold text-handy-dark-red hover:text-red-900 cursor-pointer transition-colors">
+              <div className="flex justify-start mt-1.5">
+                <span className="text-[10px] font-extrabold text-handy-dark-red hover:text-red-900 cursor-pointer transition-colors ml-1">
                   Forgot password?
                 </span>
               </div>
             </div>
 
             {/* DEMO BUTTONS */}
-            <div className="space-y-3 pt-4">
+            <div className="space-y-3 pt-6">
+              {/* Main Sign In (Student) */}
               <button 
                 type="button" 
                 onClick={handleStudentLogin} 
-                className="w-full bg-handy-dark-red text-white py-4 rounded-xl font-bold text-sm shadow-lg shadow-red-900/20 flex items-center justify-center gap-2 hover:bg-red-900 active:scale-[0.98] transition-all"
+                className="w-full bg-[#8A1515] text-white py-3.5 rounded-xl font-bold text-sm shadow-md hover:bg-[#6e1010] active:scale-[0.98] transition-all"
               >
-                Sign In as Student <User size={18} />
+                Sign in
               </button>
               
+              {/* Secondary Admin Login */}
               <button 
                 type="button" 
                 onClick={handleAdminLogin} 
-                className="w-full bg-white text-slate-600 border-2 border-slate-200 py-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:border-handy-dark-red hover:text-handy-dark-red active:scale-[0.98] transition-all"
+                className="w-full bg-white text-slate-500 border border-slate-200 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:border-handy-dark-red hover:text-handy-dark-red active:scale-[0.98] transition-all"
               >
-                Sign In as Admin <ShieldAlert size={18} />
+                Sign in as Admin <ShieldAlert size={14} />
               </button>
             </div>
           </div>

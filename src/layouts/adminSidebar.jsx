@@ -1,94 +1,93 @@
 import React from 'react';
-import { 
-  LayoutDashboard, 
-  FileEdit, 
-  MessageSquareText, 
-  Settings, 
-  LogOut, 
-  ShieldCheck 
-} from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { 
+  BarChart2, 
+  Bot, 
+  Sparkles, 
+  BookOpen, 
+  User, 
+  LogOut 
+} from 'lucide-react';
+
+import handybookLogoExtd from '../assets/images/Group_44.svg';
 
 const AdminSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Updated paths to match the routes in App.jsx
-  const menuItems = [
-    { 
-      name: 'Analytics', 
-      icon: <LayoutDashboard size={20} />, 
-      path: '/admin/analytics' 
-    },
-    { 
-      name: 'Content', 
-      icon: <FileEdit size={20} />, 
-      path: '/admin/content' 
-    },
-    { 
-      name: 'Chatbot', 
-      icon: <MessageSquareText size={20} />, 
-      path: '/admin/config' // Updated from /admin/chatbot
-    },
-    { 
-      name: 'System', 
-      icon: <Settings size={20} />, 
-      path: '/admin/settings' // Updated from /admin/system
-    },
-  ];
+  // Helper to dynamically check the current route for active styling
+  const getSidebarLinkClass = (path) => {
+    // Basic check to see if the current URL includes the path
+    const isActive = location.pathname.includes(path);
+    const baseClass = "flex items-center space-x-3 px-3 py-2 rounded-lg transition-all cursor-pointer text-[13px] ";
+    
+    return isActive 
+      ? baseClass + "bg-handy-dark-red text-white shadow-sm font-semibold" 
+      : baseClass + "text-slate-500 hover:bg-slate-50 hover:text-handy-dark-red font-medium";
+  };
+
+  // Helper for non-page action links
+  const actionLinkClass = "flex items-center space-x-3 px-3 py-2 rounded-lg transition-all cursor-pointer text-[13px] text-slate-500 hover:bg-slate-50 hover:text-handy-dark-red font-medium";
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-100 flex flex-col p-6 z-50">
-      {/* Brand Logo Area */}
-      <div className="flex items-center gap-3 mb-12 px-2">
-        <div className="h-10 w-10 bg-tup-green rounded-xl flex items-center justify-center shadow-lg shadow-tup-green/20">
-          <ShieldCheck className="text-white" size={24} />
-        </div>
-        <div>
-          <h2 className="text-sm font-black text-tup-navy leading-none uppercase tracking-tighter">Handybook</h2>
-          <p className="text-[10px] text-tup-green font-bold uppercase tracking-widest mt-1">Admin Portal</p>
-        </div>
+    <aside className="w-60 h-full bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col shrink-0 relative z-20">
+      
+      {/* Logo Area */}
+      <div className="px-5 py-5 flex items-center shrink-0 border-b border-slate-50">
+        <img src={handybookLogoExtd} alt="Handybook Logo" className="h-7 object-contain"/>
       </div>
 
-      {/* Navigation Links */}
-      <nav className="flex-1 space-y-2">
-        {menuItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          return (
-            <button
-              key={item.name}
-              onClick={() => navigate(item.path)}
-              className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all font-bold text-sm ${
-                isActive 
-                ? 'bg-tup-soft-green text-tup-green shadow-sm shadow-tup-green/5' 
-                : 'text-gray-400 hover:bg-gray-50 hover:text-tup-navy'
-              }`}
-            >
-              {item.icon}
-              {item.name}
-            </button>
-          );
-        })}
-      </nav>
+      {/* Navigation Area */}
+      <div className="flex-1 flex flex-col px-3 py-5 overflow-y-auto custom-scrollbar">
+        
+        <div className="space-y-6">
+          {/* Main Navigation */}
+          <nav className="space-y-0.5">
+            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-3 mb-2">Main Navigation</p>
+            
+            <div onClick={() => navigate('/admin/analytics')} className={getSidebarLinkClass('/admin/analytics')}>
+              <BarChart2 className="w-[18px] h-[18px]" />
+              <span>Analytical Dashboard</span>
+            </div>
+            
+            {/* Navigates to logs, assuming your logs page is set up on this route */}
+            <div onClick={() => navigate('/admin/logs')} className={getSidebarLinkClass('/admin/logs')}>
+              <Bot className="w-[18px] h-[18px]" />
+              <span>AI Training and Logs</span>
+            </div>
+          </nav>
 
-      {/* Admin Profile & Logout */}
-      <div className="pt-6 border-t border-gray-50">
-        <div className="flex items-center gap-3 mb-6 px-2">
-          <div className="h-10 w-10 rounded-full bg-gray-100 border-2 border-white shadow-sm overflow-hidden">
-             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Admin" />
-          </div>
-          <div className="overflow-hidden">
-            <p className="text-xs font-black truncate text-tup-navy">Admin Felix</p>
-            <p className="text-[10px] text-gray-400 font-bold uppercase">Superuser</p>
-          </div>
+          {/* Resources Navigation */}
+          <nav className="space-y-0.5">
+            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-3 mb-2">Resources</p>
+            
+            <div onClick={() => navigate('/chat')} className={actionLinkClass}>
+              <Sparkles className="w-[18px] h-[18px]" />
+              <span>Handybook AI</span>
+            </div>
+
+            <div onClick={() => navigate('/preview-handbook')} className={actionLinkClass}>
+              <BookOpen className="w-[18px] h-[18px]" />
+              <span>Student Handbook</span>
+            </div>
+          </nav>
         </div>
-        <button 
-          onClick={() => navigate('/login')} // Redirect to login on logout
-          className="w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl text-red-400 font-bold text-sm hover:bg-red-50 transition-colors group"
-        >
-          <LogOut size={20} className="group-hover:-translate-x-1 transition-transform" />
-          Logout
-        </button>
+
+        {/* Account Settings Navigation (Pushed to bottom) */}
+        <nav className="space-y-0.5 mt-auto pt-6">
+          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-3 mb-2">Account Settings</p>
+          
+          <div onClick={() => navigate('/admin/profile')} className={getSidebarLinkClass('/admin/profile')}>
+            <User className="w-[18px] h-[18px]" />
+            <span>User Profile</span>
+          </div>
+
+          <div onClick={() => navigate('/login')} className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-all cursor-pointer text-[13px] text-slate-500 hover:bg-red-50 hover:text-red-600 font-semibold">
+            <LogOut className="w-[18px] h-[18px]" />
+            <span>Logout Account</span>
+          </div>
+        </nav>
+
       </div>
     </aside>
   );

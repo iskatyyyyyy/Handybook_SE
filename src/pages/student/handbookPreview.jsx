@@ -1,25 +1,21 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import StudentLayout from '../../layouts/studentLayout';
+import AdminLayout from '../../layouts/adminLayout'; // Imported AdminLayout
 import { 
   Download, 
-  Printer, 
-  Share2, 
-  MessageSquare, 
-  BookOpen, 
-  ChevronRight, 
-  Info,
-  X,
-  Send,
-  ArrowLeft
+  Sparkles,
+  List
 } from 'lucide-react';
 
 const HandbookPreview = () => {
-  // State to toggle the AI side-panel
   const navigate = useNavigate();
-  const [isAIOpen, setIsAIOpen] = useState(false);
+  const location = useLocation(); // Hook to read current URL
 
-  // Mock Data for the Table of Contents
+  // Determine which layout to use based on the URL path
+  const isAdminRoute = location.pathname.includes('/admin');
+  const Layout = isAdminRoute ? AdminLayout : StudentLayout;
+
   const tableOfContents = [
     { title: "University Profile", page: 4 },
     { title: "Academic Information", page: 12 },
@@ -29,98 +25,47 @@ const HandbookPreview = () => {
     { title: "Rules on Conduct", page: 56 },
     { title: "Disciplinary Actions", page: 68 },
     { title: "Campus Facilities", page: 80 },
+    { title: "Student Organizations", page: 85 },
+    { title: "Emergency Protocols", page: 92 },
+    { title: "University Directory", page: 98 },
   ];
 
-  // Placeholder Google Drive Preview Link (Replace with actual TUP link)
+  // Placeholder Google Drive Preview Link
   const drivePreviewLink = "https://drive.google.com/file/d/1xDY2-kVcGStG6QVktrHPMs3jv8HPA2p_/preview";
 
   return (
-    <StudentLayout activePage="home">
-      {/* Kept your original vertical spacing classes */}
-      <div className="h-full flex flex-col pb-4 animate-in fade-in duration-500">
+    // Replaced <StudentLayout> with the dynamic <Layout> component
+    <Layout activePage="handbook">
+      <div className="h-full flex flex-col pb-4 sm:pb-5 animate-in fade-in duration-500 max-w-7xl mx-auto w-full">
         
-        {/* 1. ACTION BAR & VERSION INFO */}
-        <header className="flex items-center justify-between bg-white p-4 rounded-2xl border border-gray-100 shadow-sm mb-4 shrink-0">
-          <div className="flex items-center space-x-4">
-            <button 
-              onClick={() => navigate(-1)}
-              className="p-2 -ml-2 text-gray-400 hover:text-handy-dark-red hover:bg-red-50 rounded-xl transition-all"
-              title="Go Back"
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <div className="bg-handy-dark-red/10 p-2.5 rounded-xl text-handy-dark-red">
-              <BookOpen size={24} />
-            </div>
-            <div>
-              <h1 className="text-xl font-extrabold text-gray-900 leading-tight">2013 Revised Student Handbook</h1>
-              <div className="flex items-center space-x-2 mt-1">
-                <span className="bg-green-100 text-green-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">Official</span>
-                <span className="text-xs font-medium text-gray-500 flex items-center gap-1">
-                  <Info size={12} /> Last Updated: April 2026
-                </span>
-              </div>
-            </div>
+        {/* 1. HEADER CARD */}
+        <header className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3 sm:mb-4 shrink-0">
+          <div>
+            <h1 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight mb-0.5">2013 Revised Student Handbook</h1>
+            <p className="text-[12px] font-medium text-slate-500">Last updated at April 2025</p>
           </div>
-
-          <div className="flex items-center space-x-3">
-            <button className="flex items-center space-x-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 text-sm font-bold rounded-xl transition-colors border border-gray-200">
-              <Share2 size={16} />
-              <span>Share</span>
+          
+          <div className="flex flex-wrap items-center gap-3">
+            <button className="px-4 py-2 bg-white border border-handy-dark-red text-handy-dark-red text-[12px] font-bold rounded-lg hover:bg-red-50 transition-colors shadow-sm flex items-center gap-2">
+              <Download size={14} />
+              Download Handbook
             </button>
-            <button className="flex items-center space-x-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 text-sm font-bold rounded-xl transition-colors border border-gray-200">
-              <Printer size={16} />
-              <span>Print</span>
+            <button 
+              // Contextual navigation: send admin to /admin/chat, student to /chat
+              onClick={() => navigate(isAdminRoute ? '/admin/chat' : '/chat')}
+              className="px-4 py-2 bg-handy-dark-red text-white text-[12px] font-bold rounded-lg hover:bg-red-900 transition-colors shadow-sm flex items-center gap-2"
+            >
+              <Sparkles size={14} />
+              Ask Handybook AI
             </button>
-            <button className="flex items-center space-x-2 px-4 py-2 bg-handy-dark-red hover:bg-red-800 text-white text-sm font-bold rounded-xl shadow-sm transition-colors">
-              <Download size={16} />
-              <span>Download PDF</span>
-            </button>
-            
-            {/* AI Toggle Button */}
-            {!isAIOpen && (
-              <button 
-                onClick={() => setIsAIOpen(true)}
-                className="ml-2 flex items-center space-x-2 px-4 py-2 bg-[#FEEBEB] hover:bg-[#fcdede] text-handy-dark-red text-sm font-bold rounded-xl transition-colors border border-red-100"
-              >
-                <MessageSquare size={16} />
-                <span>Ask Hance</span>
-              </button>
-            )}
           </div>
         </header>
 
         {/* 2. MAIN SPLIT LAYOUT */}
-        <div className="flex-1 flex gap-4 overflow-hidden">
+        <div className="flex-1 flex flex-col lg:flex-row gap-3 sm:gap-4 overflow-hidden">
           
-          {/* Left Sidebar: Quick Jump TOC */}
-          <aside className="w-64 bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col shrink-0 overflow-hidden">
-            <div className="p-4 border-b border-gray-50 bg-gray-50/50">
-              <h3 className="font-extrabold text-gray-900 text-sm uppercase tracking-wider">Quick Jump</h3>
-              <p className="text-xs text-gray-500 mt-1">Table of Contents</p>
-            </div>
-            <div className="flex-1 overflow-y-auto p-2 space-y-1 custom-scrollbar">
-              {tableOfContents.map((item, index) => (
-                <button 
-                  key={index}
-                  className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 text-left group transition-colors"
-                >
-                  <span className="text-sm font-semibold text-gray-700 group-hover:text-handy-dark-red transition-colors">
-                    {item.title}
-                  </span>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-[10px] font-black text-gray-400 bg-gray-100 px-2 py-1 rounded-md">
-                      PG {item.page}
-                    </span>
-                    <ChevronRight size={14} className="text-gray-300 group-hover:text-handy-dark-red opacity-0 group-hover:opacity-100 transition-all transform -translate-x-2 group-hover:translate-x-0" />
-                  </div>
-                </button>
-              ))}
-            </div>
-          </aside>
-
-          {/* Center: PDF Iframe Viewer */}
-          <main className="flex-1 bg-gray-200 rounded-2xl overflow-hidden shadow-inner relative border border-gray-200">
+          {/* Left: PDF Iframe Viewer */}
+          <main className="flex-1 bg-[#1E1E1E] rounded-2xl overflow-hidden shadow-sm relative border border-slate-200">
             <iframe 
               src={drivePreviewLink} 
               className="w-full h-full border-0"
@@ -129,51 +74,39 @@ const HandbookPreview = () => {
             ></iframe>
           </main>
 
-          {/* Right Sidebar: HandyBook AI (Collapsible) */}
-          {isAIOpen && (
-            <aside className="w-80 bg-white rounded-2xl border border-gray-100 shadow-lg flex flex-col shrink-0 overflow-hidden animate-in slide-in-from-right-8 duration-300">
-              {/* FIXED AI Header: White background, dark text, visible close button */}
-              <div className="p-4 border-b border-gray-100 bg-white flex justify-between items-center">
-                <div className="flex items-center space-x-2 text-handy-dark-red">
-                  <MessageSquare size={18} />
-                  <h3 className="font-bold text-sm text-gray-900">HandyBook AI</h3>
-                </div>
-                
-                <button 
-                  onClick={() => setIsAIOpen(false)}
-                  className="flex items-center space-x-1 text-gray-500 hover:text-red-600 transition-colors bg-gray-50 hover:bg-red-50 px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-gray-100"
-                >
-                  <X size={14} />
-                  <span>Close</span>
-                </button>
+          {/* Right Sidebar: Table of Contents */}
+          <aside className="w-full lg:w-72 bg-white rounded-2xl border border-slate-100 shadow-sm flex flex-col shrink-0 overflow-hidden">
+            
+            <div className="p-5 border-b border-slate-50 flex items-center gap-3 shrink-0">
+              <div className="bg-red-50 text-handy-dark-red p-2 rounded-lg">
+                <List size={18} />
               </div>
-              
-              {/* AI Chat Area */}
-              <div className="flex-1 p-4 overflow-y-auto bg-gray-50/50 flex flex-col gap-4">
-                <div className="bg-white border border-gray-100 p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-gray-700 self-start max-w-[85%]">
-                  Hi Andrea! I'm reading the handbook alongside you. Need help summarizing a policy or finding specific rules?
-                </div>
-              </div>
-
-              {/* AI Input Area */}
-              <div className="p-4 border-t border-gray-50 bg-white">
-                <div className="relative">
-                  <input 
-                    type="text" 
-                    placeholder="Ask about the handbook..." 
-                    className="w-full bg-gray-50 border border-gray-200 focus:border-handy-dark-red focus:ring-1 focus:ring-handy-dark-red rounded-xl py-3 pl-4 pr-12 text-sm transition-all"
-                  />
-                  <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-handy-dark-red text-white rounded-lg hover:bg-red-800 transition-colors">
-                    <Send size={14} />
+              <h3 className="font-extrabold text-slate-900 text-[14px] tracking-tight">Table of Contents</h3>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-3 custom-scrollbar">
+              <div className="space-y-0.5">
+                {tableOfContents.map((item, index) => (
+                  <button 
+                    key={index}
+                    className="w-full flex items-center gap-3 py-2 px-3 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors group text-left outline-none"
+                  >
+                    <div className="w-[22px] h-[22px] rounded-full bg-[#FEEBEB] text-handy-dark-red flex items-center justify-center text-[10px] font-bold shrink-0 group-hover:bg-handy-dark-red group-hover:text-white transition-colors">
+                      {item.page}
+                    </div>
+                    <span className="text-[12px] font-semibold text-slate-700 group-hover:text-handy-dark-red leading-snug transition-colors">
+                      {item.title}
+                    </span>
                   </button>
-                </div>
+                ))}
               </div>
-            </aside>
-          )}
+            </div>
+            
+          </aside>
 
         </div>
       </div>
-    </StudentLayout>
+    </Layout>
   );
 };
 

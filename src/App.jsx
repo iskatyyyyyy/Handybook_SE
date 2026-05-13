@@ -50,6 +50,8 @@ function App() {
         <Route path="/admin/content" element={<ContentManagement />} />
         <Route path="/admin/config" element={<AdminChatbotConfig />} />
         <Route path="/admin/settings" element={<SystemSettings />} />
+        <Route path="/admin/chat" element={<Chatbot />} />
+        <Route path="/admin/preview-handbook" element={<HandbookPreview />} />
 
         {/* Newly added */}
         <Route path="/admin/logs" element={<AdminTrainingLogs />} />

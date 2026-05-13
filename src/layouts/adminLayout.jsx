@@ -1,97 +1,144 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { 
+  BarChart2, 
+  Bot, 
+  Sparkles, 
+  BookOpen, 
+  User, 
+  LogOut,
+  Search,
+  Bell
+} from 'lucide-react';
+
+// Import the extended Handybook logo for the sidebar
+import handybookLogoExtd from '../assets/images/Group_44.svg';
 
 const AdminLayout = ({ children, activePage }) => {
   const navigate = useNavigate();
 
-  // Helper for active link styling
+  // Helper for active link styling - Compact padding and sizing
   const getSidebarLinkClass = (pageName) => {
-    const baseClass = "flex items-center gap-3 px-3 py-2 rounded-md transition-colors ";
+    const baseClass = "flex items-center space-x-3 px-3 py-2 rounded-lg transition-all cursor-pointer text-[13px] ";
     return activePage === pageName 
-      ? baseClass + "bg-red-50 border-r-4 border-handy-dark-red text-handy-dark-red font-medium" 
-      : baseClass + "text-slate-500 hover:bg-slate-50 font-medium";
+      ? baseClass + "bg-handy-dark-red text-white shadow-sm font-semibold" 
+      : baseClass + "text-slate-500 hover:bg-slate-50 hover:text-handy-dark-red font-medium";
   };
 
+  // Helper for non-page action links
+  const actionLinkClass = "w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all cursor-pointer text-[13px] text-slate-500 hover:bg-slate-50 hover:text-handy-dark-red font-medium";
+
   return (
-    // Outer Shell: Fixed to screen height, hides outer scrolling
-    <div className="flex h-screen overflow-hidden bg-[#F9FAFB] text-slate-800 font-sans">
+    // OUTER SHELL: Light gray background, viewport height, p-4 gap-4, Poppins font
+    <div 
+      className="bg-[#F4F6F8] text-slate-900 h-screen flex overflow-hidden p-3 sm:p-4 gap-3 sm:gap-4"
+      style={{ fontFamily: "'Poppins', sans-serif" }}
+    >
       
-      {/* Sidebar: Takes full height of container, scrolls internally if menu gets too long */}
-      <aside className="w-64 h-full bg-white border-r border-slate-200 flex flex-col shrink-0 overflow-y-auto">
-        <div className="p-6 flex items-center gap-3 shrink-0">
-          <div className="w-10 h-10 bg-handy-dark-red rounded flex items-center justify-center text-white font-bold text-xs">LOGO</div>
-          <div>
-            <h1 className="font-bold text-sm leading-tight">Handybook</h1>
-            <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Admin Portal</p>
-          </div>
+      {/* SIDEBAR: w-60, rounded-2xl, floating card design */}
+      <aside className="w-60 h-full bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col shrink-0 relative z-20">
+        
+        {/* Logo Area */}
+        <div className="px-5 py-5 flex items-center shrink-0 border-b border-slate-50">
+          <img src={handybookLogoExtd} alt="Handybook Logo" className="h-12 object-contain"/>
         </div>
 
-        <nav className="flex-1 px-4 py-4 space-y-2">
-          <button onClick={() => navigate('/admin/analytics')} className={`w-full ${getSidebarLinkClass('analytics')}`}>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-            <span className="text-sm">Analytics Dashboard</span>
-          </button>
+        {/* Scrollable Navigation Area */}
+        <div className="flex-1 flex flex-col px-3 py-5 overflow-y-auto custom-scrollbar">
           
-          <button onClick={() => navigate('/admin/logs')} className={`w-full ${getSidebarLinkClass('logs')}`}>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-            <span className="text-sm">AI Training/Logs</span>
-          </button>
+          <div className="space-y-6">
+            {/* Main Navigation */}
+            <nav className="space-y-0.5">
+              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-3 mb-2">Main Navigation</p>
+              
+              <button onClick={() => navigate('/admin/analytics')} className={`w-full ${getSidebarLinkClass('analytics')}`}>
+                <BarChart2 className="w-[18px] h-[18px]" />
+                <span>Analytical Dashboard</span>
+              </button>
+              
+              <button onClick={() => navigate('/admin/logs')} className={`w-full ${getSidebarLinkClass('logs')}`}>
+                <Bot className="w-[18px] h-[18px]" />
+                <span>AI Training and Logs</span>
+              </button>
+            </nav>
 
-          <div className="pt-6 pb-2 px-3">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Resources</span>
+            {/* Resources Navigation */}
+            <nav className="space-y-0.5">
+              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-3 mb-2">Resources</p>
+              
+              <button onClick={() => navigate('/admin/chat')} className={actionLinkClass}>
+                <Sparkles className="w-[18px] h-[18px]" />
+                <span>Handybook AI</span>
+              </button>
+              
+              <button onClick={() => navigate('/admin/preview-handbook')} className={actionLinkClass}>
+                <BookOpen className="w-[18px] h-[18px]" />
+                <span>Student Handbook</span>
+              </button>
+            </nav>
           </div>
-          
-          <button className="w-full flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-50 rounded-md">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-            <span className="text-sm font-medium">Ask Handybook AI</span>
-          </button>
-          
-          <button className="w-full flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-50 rounded-md">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            <span className="text-sm font-medium">Download Handbook</span>
-          </button>
-        </nav>
 
-        <div className="p-4 bg-slate-50 m-4 rounded-xl shrink-0">
-          <p className="text-[10px] text-slate-500 font-bold mb-2">System Status</p>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-500"></span>
-            <span className="text-xs font-semibold">AI Model Active</span>
-          </div>
+          {/* Account Settings Navigation (Pushed to bottom) */}
+          <nav className="space-y-0.5 mt-auto pt-6">
+            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-3 mb-2">Account Settings</p>
+            
+            <button onClick={() => navigate('/admin/profile')} className={`w-full ${getSidebarLinkClass('profile')}`}>
+              <User className="w-[18px] h-[18px]" />
+              <span>User Profile</span>
+            </button>
+
+            <button onClick={() => navigate('/login')} className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all cursor-pointer text-[13px] text-slate-500 hover:bg-red-50 hover:text-red-600 font-semibold outline-none">
+              <LogOut className="w-[18px] h-[18px]" />
+              <span>Logout Account</span>
+            </button>
+          </nav>
+          
         </div>
       </aside>
 
-      {/* Main Content Area: Takes remaining width, scrolls vertically */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden">
+      {/* MAIN CONTENT AREA */}
+      <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
         
-        {/* Top Header: Stays fixed at the top of the main area */}
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
-          <div className="flex-1 max-w-2xl">
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-              </span>
-              <input className="block w-full pl-10 pr-3 py-2 border-none bg-slate-100 rounded-lg text-sm focus:ring-1 focus:ring-handy-dark-red outline-none" placeholder="Search for logs, sections, or users..." type="text"/>
-            </div>
+        {/* TOP HEADER: Shorter height (h-14), rounded-2xl */}
+        <header className="h-14 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between px-5 shrink-0 mb-3 sm:mb-4">
+          
+          {/* Search Bar - Slim padding and squared-off rounded-lg corners */}
+          <div className="relative w-full max-w-sm">
+            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <Search className="h-3.5 w-3.5" />
+            </span>
+            <input 
+              className="block w-full bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-handy-dark-red focus:bg-white rounded-lg py-1.5 pl-9 pr-3 text-[13px] font-medium text-slate-700 transition-all outline-none placeholder:text-slate-400" 
+              placeholder="Search for logs, sections, or users..." 
+              type="text"
+            />
           </div>
-          <div className="flex items-center gap-6 ml-4">
-            <button className="text-slate-400 hover:text-slate-600 relative">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+          
+          {/* Right Header Controls (Bell + Admin Profile) */}
+          <div className="flex items-center gap-5 ml-4">
+            
+            {/* Notification Bell */}
+            <button className="text-slate-400 hover:text-slate-600 relative transition-colors outline-none">
+              <Bell className="w-[18px] h-[18px]" />
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
-            <div className="flex items-center gap-3 border-l pl-6 border-slate-200">
-              <div className="text-right">
-                <p className="text-sm font-bold leading-none">Admin User</p>
+            
+            {/* Admin Profile */}
+            <div className="flex items-center gap-3 pl-5 border-l border-slate-100">
+              <div className="hidden sm:block text-right">
+                <p className="text-[13px] font-semibold text-slate-900 leading-tight">Admin User</p>
                 <p className="text-[10px] text-slate-400 font-medium">Super Administrator</p>
               </div>
-              <div className="w-10 h-10 rounded-full border-2 border-slate-100 bg-gray-200 overflow-hidden">
+              <div className="h-8 w-8 rounded-full border-2 border-red-100 bg-red-50 overflow-hidden cursor-pointer hover:ring-2 hover:ring-red-200 transition-all shrink-0">
                 <img alt="Admin Avatar" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEYJcUvbHdw0Q7cJSE8KSS9x7Gr7H_7KZ75VR6mD4_hmYyXnPSuoztKJj1bqY3NljnO_NcUmrd0WWIn6YrvTlB0Q9Ey_bUWGNWfIPD4bWf80ykPS9dwOpFVXjIQLzfjbmSw_Yea5rGK8kzQ1eZFwntanSJyYLL1_Xb2_Afmy3srIbBjeu71DkUz0uGlA3cbqSQ8mNnYawW9xCTau-H35smh8o3C7GQR-BsOptOWxyxyA-0LnJBgYq5G2tCtTKVXqfhUZDRZtHIjEE"/>
               </div>
             </div>
+            
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50">
+        {/* PAGE CONTENT CONTAINER */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 pb-2">
           {children}
         </div>
       </main>
