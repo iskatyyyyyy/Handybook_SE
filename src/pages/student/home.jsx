@@ -12,6 +12,11 @@ import {
   Copy 
 } from 'lucide-react';
 
+import Courses from '../../assets/stock/courses.svg';
+import Grading from '../../assets/stock/grading.svg';
+import Graduate from '../../assets/stock/graduate-image.svg';
+import Registration from '../../assets/stock/registration.svg';
+
 const Home = () => {
   const navigate = useNavigate();
   
@@ -55,7 +60,7 @@ const Home = () => {
             {/* Card 1 */}
             <div className="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
               <div className="h-28 overflow-hidden bg-slate-100">
-                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=400&auto=format&fit=crop" alt="Graduation" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src={Graduate} alt="Graduation" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
               <div className="p-4 bg-white border-t border-slate-50">
                 <h3 className="text-sm font-bold text-slate-900 mb-0.5">Academic Honors</h3>
@@ -66,7 +71,7 @@ const Home = () => {
             {/* Card 2 */}
             <div className="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
               <div className="h-28 overflow-hidden bg-slate-100">
-                <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?q=80&w=400&auto=format&fit=crop" alt="Checklist" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src={Grading} alt="Checklist" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
               <div className="p-4 bg-white border-t border-slate-50">
                 <h3 className="text-sm font-bold text-slate-900 mb-0.5">Grading System</h3>
@@ -77,7 +82,7 @@ const Home = () => {
             {/* Card 3 */}
             <div className="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
               <div className="h-28 overflow-hidden bg-slate-100">
-                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=400&auto=format&fit=crop" alt="Writing" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src={Registration} alt="Writing" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
               <div className="p-4 bg-white border-t border-slate-50">
                 <h3 className="text-sm font-bold text-slate-900 mb-0.5">Registration</h3>
@@ -88,7 +93,7 @@ const Home = () => {
             {/* Card 4 */}
             <div className="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
               <div className="h-28 overflow-hidden bg-slate-100">
-                <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=400&auto=format&fit=crop" alt="Lecture" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src={Courses} alt="Lecture" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
               <div className="p-4 bg-white border-t border-slate-50">
                 <h3 className="text-sm font-bold text-slate-900 mb-0.5">Academic Programs</h3>
