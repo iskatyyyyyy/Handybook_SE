@@ -58,6 +58,8 @@ const Chatbot = () => {
     }
   };
 
+  const isConversationStarted = messages.length > 1;
+
   return (
     <Layout activePage="chat">
       <div className="flex flex-col h-[calc(100vh-130px)] max-w-5xl mx-auto w-full animate-in fade-in duration-500">
@@ -86,22 +88,27 @@ const Chatbot = () => {
             </div>
           )}
 
+
+
           {/* Scrollable Chat Area */}
           <div className="flex-1 overflow-y-auto p-6 sm:p-10 custom-scrollbar flex flex-col">
             
-            <div className="flex flex-col items-center justify-center text-center mt-4 mb-12 shrink-0">
-              <div className="w-16 h-16 bg-handy-dark-red rounded-full flex items-center justify-center text-white mb-4 shadow-sm">
-                <Sparkles size={28} />
-              </div>
-              <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight mb-1">Handybook AI Assistant</h2>
-              <p className="text-[13px] font-medium text-slate-500">Ask me about grades, attendance policies, or shifting procedures.</p>
-            </div>
+          {/* HIDE INTRODUCTION ONCE CHAT STARTS */}
+              {!isConversationStarted && (
+                <div className="flex flex-col items-center justify-center text-center mt-4 mb-12 shrink-0 animate-out fade-out duration-500">
+                  <div className="w-16 h-16 bg-handy-dark-red rounded-full flex items-center justify-center text-white mb-4 shadow-sm">
+                    <Sparkles size={28} />
+                  </div>
+                  <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight mb-1">Handybook AI Assistant</h2>
+                  <p className="text-[13px] font-medium text-slate-500">Ask me about grades, attendance policies, or shifting procedures.</p>
+                </div>
+              )}
 
             {/* Conversation History */}
-            <div className="space-y-6 flex-1 flex flex-col pb-4">
-              {messages.map((msg, index) => (
-                <ChatBubble key={index} message={msg} />
-              ))}
+            <div className="space-y-8 flex-1 flex flex-col pb-4">
+                {messages.map((msg, index) => (
+                  <ChatBubble key={index} message={msg} />
+                ))}
 
               {isTyping && (
                 <div className="flex gap-3 max-w-[85%] sm:max-w-[75%] animate-in fade-in slide-in-from-bottom-2">

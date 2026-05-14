@@ -19,24 +19,17 @@ app.use(express.json());
  */
 app.post('/api/chat', async (req, res) => {
   const { message } = req.body;
-
-  if (!message) {
-    return res.status(400).json({ error: "Message is required" });
-  }
-
-  console.log(`Incoming request: "${message}"`);
-
+  
   try {
-    // Call the RAG logic we built in chatHance.mjs[cite: 1, 8]
-    const aiResponse = await askHance(message);
+    const hanceData = await askHance(message);
     
-    res.json({ reply: aiResponse });
+    // Log the full metadata object for auditing
+    console.log("📡 API DATA SENT:", JSON.stringify(hanceData, null, 2));
+    
+    res.json(hanceData); 
   } catch (error) {
     console.error("Server Error:", error.message);
-    res.status(500).json({ 
-      error: "Hance is currently unavailable. Please try again later.",
-      details: error.message 
-    });
+    res.status(500).json({ error: "Brain offline" });
   }
 });
 

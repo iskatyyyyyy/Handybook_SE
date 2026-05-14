@@ -1,7 +1,14 @@
 import { useState } from 'react';
 
 export const useChatUI = () => {
-  const [messages, setMessages] = useState([]);
+
+  const [messages, setMessages] = useState([
+    {
+      text: "👋 Hello Andrea! I am Hance, your official TUP Manila AI Assistant. How can I help you navigate the student handbook today?",
+      isBot: true,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }
+  ]);
   const [isTyping, setIsTyping] = useState(false);
 
   const sendMessage = async (text) => {

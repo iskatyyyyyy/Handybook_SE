@@ -11,7 +11,6 @@ export async function askHance(question) {
     const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     
-    // 1. Convert question to vector (Retrieval phase)
     const embedModel = genAI.getGenerativeModel({ model: "gemini-embedding-001" });
     const embedResult = await embedModel.embedContent({
       content: { parts: [{ text: question }] },
@@ -20,43 +19,87 @@ export async function askHance(question) {
     });
     const queryVector = embedResult.embedding.values;
 
-    // 2. Fetch context from Supabase
     const { data: matches, error } = await supabase.rpc('match_handbook_sections', {
       query_embedding: queryVector,
       match_threshold: 0.5,
-      match_count: 5, // We'll take 5 chunks for better context
+      match_count: 5,
     });
 
     if (error) throw error;
 
-    // 3. Assemble the context string
     const contextText = matches.map(m => m.content).join("\n\n---\n\n");
 
-    // 4. Generation Phase[cite: 1]
-    const chatModel = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+    const chatModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
+    // Refined for Strict CommonMark compliance
     const systemPrompt = `
-      You are "Hance," the TUP Manila AI Assistant.
-      
-      FORMATTING RULES:
-      - Use ### for Section Headings.
-      - Use **bold** for rules or offenses.
-      - Use - for bullet points.
-      - Use double line breaks between paragraphs.
+      You are "Hance," the official TUP Manila AI Assistant. 
+      Your goal is to provide a response that is visually structured, professional, and easy to read.
+
+      ### **COMMONMARK STRUCTURE RULES**
+      - Use only valid markdown syntax.
+      - Never write placeholder words like "CONTEXT".
+      - Use blank lines between paragraphs.
+      - Use "##" for major headings.
+      - Use "###" for subheadings.
+      - Use "-" for bullet lists.
+      - Use "---" only as a standalone horizontal rule.
+      - Do not manually align text with spaces.
+      - Do not use HTML.
+      - Do not write consecutive single-line sentences unless using a list.
+      - Keep related sentences inside proper paragraphs.
+      - Avoid excessive bold formatting.
+
+      ### **RESPONSE ARCHITECTURE**
+      - Start with a Level 2 Header (##) that titles the answer.
+      - If a section contains penalties or steps, use a list.
+      - Use a horizontal rule (---) before "Sanctions" or "Disciplinary Action" sections to provide a clear visual break.
+      - Keep the tone helpful but concise. No greetings.
 
       CONTEXT: ${contextText}
     `;
 
-    const result = await chatModel.generateContent([systemPrompt, question]);
-    const response = await result.response;
-    const finalAnswer = response.text();
-    
-    console.log(`\n🤖 Hance: ${response.text()}`);
-    return finalAnswer;
+    function normalizeMarkdown(text) {
+      return text
+        // Remove stray CONTEXT artifacts
+        .replace(/\bCONTEXT\b/g, '')
 
-  } catch (err) {
-    console.error("💥 Chat failed:", err.message);
-    throw err;
+        // Normalize Windows line endings
+        .replace(/\r\n/g, '\n')
+
+        // Prevent triple+ newlines
+        .replace(/\n{3,}/g, '\n\n')
+
+        // Ensure headers have spacing before them
+        .replace(/\n(#{1,6}\s)/g, '\n\n$1')
+
+        // Ensure lists have spacing before them
+        .replace(/\n([-*]\s)/g, '\n\n$1')
+
+        // Ensure horizontal rules are isolated
+        .replace(/\n?---\n?/g, '\n\n---\n\n')
+
+        // Trim excess whitespace
+        .trim();
+    }
+
+    const result = await chatModel.generateContent([systemPrompt, question]);
+    const rawText = result.response.text();
+    const textResponse = normalizeMarkdown(rawText);
+
+    
+
+    console.log("\n--- RAW COMMONMARK OUTPUT ---");
+    console.log(textResponse);
+    console.log("-----------------------------\n");
+
+    return {
+      reply: textResponse,
+      source: matches[0]?.metadata?.source || "TUP Handbook",
+      sectionId: matches[0]?.metadata?.sectionId || null 
+    };
+  } catch (error) {
+    console.error("Hance Error:", error);
+    return { reply: "I encountered an error retrieving that information.", source: null };
   }
 }
-
