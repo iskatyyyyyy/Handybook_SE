@@ -59,21 +59,21 @@ const LoginPage = () => {
           <div className="mb-8 text-center flex flex-col items-center">
             <img src={tupLogo} alt="TUP Logo" className="h-[72px] w-[72px] mb-6 object-contain" />
             <h2 className="text-2xl font-extrabold text-slate-900 mb-2 tracking-tight">Welcome Back!</h2>
-            <p className="text-slate-500 font-medium text-[13px]">Please enter your TUP Manila credentials to continue</p>
+            <p className="text-slate-500 font-medium text-[13px]">Please enter your credentials to continue</p>
           </div>
 
           <div className="space-y-5">
             
-            {/* Student ID Input */}
+            {/* Student Input */}
             <div className="space-y-1.5">
               <label className="block text-[11px] font-extrabold text-slate-900 ml-1">
-                Student ID
+                Email
               </label>
               <div className="relative group">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-handy-dark-red transition-colors" size={16} />
                 <input 
                   type="text" 
-                  placeholder="e.g TUP-21-0000" 
+                  placeholder="e.g sample@email.com" 
                   className="w-full bg-white border border-slate-200 rounded-lg py-3 pl-10 pr-4 text-slate-700 outline-none focus:ring-2 focus:ring-handy-dark-red/30 focus:border-handy-dark-red transition-all text-sm font-medium placeholder:font-normal placeholder:text-slate-400" 
                 />
               </div>
