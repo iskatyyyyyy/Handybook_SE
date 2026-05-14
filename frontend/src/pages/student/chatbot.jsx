@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import StudentLayout from '../../layouts/studentLayout';
 import AdminLayout from '../../layouts/adminLayout'; // Imported AdminLayout
+import ChatBubble from '../../components/chat/chatBubble'; // Import your component
 import { useChatUI } from '../../hooks/useChatUI'; 
 import { Sparkles, Send } from 'lucide-react';
 
@@ -58,34 +59,12 @@ const Chatbot = () => {
 
             {/* Conversation History */}
             <div className="space-y-6 flex-1 flex flex-col pb-4">
-              
-              {messages.map((msg, index) => {
-                const isAi = msg.isBot;
+              {messages.map((msg, index) => (
+                /* This replaces all the manual div/p logic with your intelligent component */
+                <ChatBubble key={index} message={msg} />
+              ))}
 
-                return isAi ? (
-                  /* AI Message Layout */
-                  <div key={index} className="flex gap-3 max-w-[85%] sm:max-w-[75%] animate-in fade-in slide-in-from-bottom-2">
-                    <div className="w-8 h-8 rounded-full bg-handy-dark-red flex items-center justify-center shrink-0 mt-1 shadow-sm text-white">
-                      <Sparkles size={14} />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <span className="text-[11px] font-extrabold text-slate-900 ml-1">Hance</span>
-                      <div className="bg-white border border-slate-200 text-slate-700 px-5 py-3.5 rounded-2xl rounded-tl-sm shadow-sm">
-                        <p className="text-[13px] font-medium leading-relaxed">{msg.text || msg.content}</p>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  /* User Message Layout */
-                  <div key={index} className="flex justify-end w-full animate-in fade-in slide-in-from-bottom-2">
-                    <div className="bg-handy-dark-red text-white px-5 py-3.5 rounded-2xl rounded-tr-sm shadow-sm max-w-[85%] sm:max-w-[75%]">
-                      <p className="text-[13px] font-medium leading-relaxed">{msg.text || msg.content}</p>
-                    </div>
-                  </div>
-                );
-              })}
-
-              {/* AI Typing Indicator */}
+              {/* Keep your Typing Indicator logic below the map */}
               {isTyping && (
                 <div className="flex gap-3 max-w-[85%] sm:max-w-[75%] animate-in fade-in slide-in-from-bottom-2">
                   <div className="w-8 h-8 rounded-full bg-handy-dark-red flex items-center justify-center shrink-0 mt-1 shadow-sm text-white">
@@ -101,8 +80,6 @@ const Chatbot = () => {
                   </div>
                 </div>
               )}
-              
-              {/* Invisible div to anchor the auto-scroll */}
               <div ref={chatEndRef} />
             </div>
           </div>

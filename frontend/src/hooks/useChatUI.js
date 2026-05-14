@@ -1,32 +1,41 @@
 import { useState } from 'react';
-import { FrequentlyAskedQuestions } from '../constants/handbookData';
 
 export const useChatUI = () => {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
 
-  const sendMessage = (text) => {
-    const userMessage = { text, isBot: false, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+  const sendMessage = async (text) => {
+    const userMessage = { 
+      text, 
+      isBot: false, 
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+    };
     setMessages(prev => [...prev, userMessage]);
-
     setIsTyping(true);
 
-    // Simulate Hance "thinking"
-    setTimeout(() => {
-      const match = FrequentlyAskedQuestions.find(faq => 
-        text.toLowerCase().includes(faq.question.toLowerCase().split(' ')[0])
-      );
+    try {
+      const response = await fetch('http://localhost:3000/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text }),
+      });
+
+      const data = await response.json();
 
       const botMessage = {
-        text: match ? match.answer : "I'm not sure about that. Would you like me to escalate this to the Registrar?",
+        text: data.reply,
         isBot: true,
-        source: match ? match.source : null,
+        source: data.source,
+        sectionId: data.sectionId,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
 
       setMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      setMessages(prev => [...prev, { text: "Connection error.", isBot: true }]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   return { messages, isTyping, sendMessage };

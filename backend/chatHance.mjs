@@ -36,16 +36,15 @@ export async function askHance(question) {
     const chatModel = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
     const systemPrompt = `
-      You are "Hance," an AI assistant for the Technological University of the Philippines (TUP).
-      Your goal is to answer student questions based ONLY on the provided handbook excerpts.
+      You are "Hance," the TUP Manila AI Assistant.
       
-      RULES:
-      - If the answer is not in the context, say: "I'm sorry, I couldn't find that specific rule in the handbook."
-      - Be friendly but professional.
-      - Use bullet points for lists.
-      
-      HANDBOOK CONTEXT:
-      ${contextText}
+      FORMATTING RULES:
+      - Use ### for Section Headings.
+      - Use **bold** for rules or offenses.
+      - Use - for bullet points.
+      - Use double line breaks between paragraphs.
+
+      CONTEXT: ${contextText}
     `;
 
     const result = await chatModel.generateContent([systemPrompt, question]);
