@@ -1,24 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import StudentLayout from '../../layouts/studentLayout';
-import AdminLayout from '../../layouts/adminLayout'; // Imported AdminLayout
-import ChatBubble from '../../components/chat/chatBubble'; // Import your component
+import AdminLayout from '../../layouts/adminLayout'; 
+import ChatBubble from '../../components/chat/chatBubble'; 
 import { useChatUI } from '../../hooks/useChatUI'; 
-import { Sparkles, Send } from 'lucide-react';
+import { Sparkles, Send, ArrowLeft, BookOpen } from 'lucide-react';
 
 const Chatbot = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // Hook to read current URL
+  const location = useLocation(); 
   
-  // Determine which layout to use based on the URL path
+  // 1. STATEFUL REDIRECTION PARAMETERS
+  const [searchParams] = useSearchParams();
+  const topicId = searchParams.get('topicId');
+  const contextName = searchParams.get('context');
+  
   const isAdminRoute = location.pathname.includes('/admin');
   const Layout = isAdminRoute ? AdminLayout : StudentLayout;
 
-  // Keep the exact hook for logic
   const { messages, isTyping, sendMessage } = useChatUI();
   
   const [inputText, setInputText] = useState("");
   const chatEndRef = useRef(null);
+
+  // 2. SMART UX: Pre-fill input based on the Handbook context
+  useEffect(() => {
+    // Only pre-fill if they came from a specific topic and haven't sent a message yet
+    if (contextName && messages.length === 0) {
+      setInputText(`Can you explain more about the policies on ${contextName}?`);
+    }
+  }, [contextName, messages.length]);
 
   // Auto-scroll to bottom when new messages arrive or typing status changes
   useEffect(() => {
@@ -36,19 +47,48 @@ const Chatbot = () => {
     if (e.key === 'Enter') handleSend();
   };
 
+  // 3. RETURN NAVIGATION LOGIC
+  const handleReturnToHandbook = () => {
+    if (topicId) {
+      // Return to handbook and automatically open the specific drawer
+      navigate(`/guide?topicId=${topicId}`);
+    } else {
+      // Fallback if they accessed the chat directly
+      navigate('/guide');
+    }
+  };
+
   return (
-    // Replaced <StudentLayout> with the dynamic <Layout> component
     <Layout activePage="chat">
-      {/* Container carefully calculated to fill the remaining screen height inside the layout */}
       <div className="flex flex-col h-[calc(100vh-130px)] max-w-5xl mx-auto w-full animate-in fade-in duration-500">
         
-        {/* Main White Chat Card */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 flex-1 flex flex-col overflow-hidden relative">
           
+          {/* CONTEXTUAL HEADER: Only shows if the user came from a handbook topic */}
+          {topicId && (
+            <div className="bg-slate-50 border-b border-slate-100 px-6 py-4 flex items-center justify-between shrink-0">
+              <button 
+                onClick={handleReturnToHandbook}
+                className="flex items-center gap-2 text-slate-500 hover:text-handy-dark-red transition-colors font-bold text-[12px] uppercase tracking-widest"
+              >
+                <ArrowLeft size={16} />
+                Back to Handbook
+              </button>
+              
+              {contextName && (
+                <div className="hidden sm:flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
+                  <BookOpen size={14} className="text-handy-dark-red" />
+                  <span className="text-[11px] font-bold text-slate-600 truncate max-w-[250px]">
+                    Topic: {contextName}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Scrollable Chat Area */}
           <div className="flex-1 overflow-y-auto p-6 sm:p-10 custom-scrollbar flex flex-col">
             
-            {/* Top Intro Section (Static at the top of the chat history) */}
             <div className="flex flex-col items-center justify-center text-center mt-4 mb-12 shrink-0">
               <div className="w-16 h-16 bg-handy-dark-red rounded-full flex items-center justify-center text-white mb-4 shadow-sm">
                 <Sparkles size={28} />
@@ -60,11 +100,9 @@ const Chatbot = () => {
             {/* Conversation History */}
             <div className="space-y-6 flex-1 flex flex-col pb-4">
               {messages.map((msg, index) => (
-                /* This replaces all the manual div/p logic with your intelligent component */
                 <ChatBubble key={index} message={msg} />
               ))}
 
-              {/* Keep your Typing Indicator logic below the map */}
               {isTyping && (
                 <div className="flex gap-3 max-w-[85%] sm:max-w-[75%] animate-in fade-in slide-in-from-bottom-2">
                   <div className="w-8 h-8 rounded-full bg-handy-dark-red flex items-center justify-center shrink-0 mt-1 shadow-sm text-white">
