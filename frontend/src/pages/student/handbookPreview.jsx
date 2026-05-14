@@ -18,6 +18,15 @@ const HandbookPreview = () => {
   // State to toggle the AI side-panel
   const navigate = useNavigate();
   const [isAIOpen, setIsAIOpen] = useState(false);
+  const { messages, isTyping, sendMessage } = useChatUI();
+  const [sidebarInput, setSidebarInput] = useState("");
+
+  const handleSidebarSend = () => {
+    if (sidebarInput.trim() && !isTyping) {
+      sendMessage(sidebarInput);
+      setSidebarInput("");
+    }
+  };
 
   // Mock Data for the Table of Contents
   const tableOfContents = [

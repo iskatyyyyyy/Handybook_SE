@@ -2,16 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StudentLayout from '../../layouts/studentLayout';
 import { useChatUI } from '../../hooks/useChatUI'; 
+import ChatBubble from '../../components/chat/chatBubble'; // Import component
 
 const Chatbot = () => {
   const navigate = useNavigate();
-  // We keep their exact hook for all the logic!
   const { messages, isTyping, sendMessage } = useChatUI();
-  
-  // Local state for our new custom input field
   const [inputText, setInputText] = useState("");
-
-  console.log("My messages look like this: ", messages);
 
   const handleSend = () => {
     if (inputText.trim() && !isTyping) {
@@ -45,67 +41,26 @@ const Chatbot = () => {
         </div>
 
         {/* 2. Dynamic Message Area */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-8 scroll-smooth pb-40">
-          
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth pb-40">
           {messages.length === 0 ? (
-            /* Empty State */
+            /* Existing Empty State UI */
             <div className="flex flex-col items-center justify-center h-full text-center space-y-6 animate-in fade-in zoom-in duration-500">
               <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center border-4 border-white shadow-inner">
                 <svg className="w-10 h-10 text-handy-dark-red" fill="currentColor" viewBox="0 0 20 20"><path clipRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" fillRule="evenodd"></path></svg>
               </div>
-              <div>
-                <h2 className="text-3xl font-black text-gray-900">How can I help you, Andrea?</h2>
-                <p className="text-sm text-gray-500 font-medium mt-2">Ask me about grades, attendance policies, or shifting procedures.</p>
-              </div>
+              <h2 className="text-3xl font-black text-gray-900">How can I help you, Andrea?</h2>
+              <p className="text-sm text-gray-500 font-medium mt-2">Ask me about grades, attendance policies, or shifting procedures.</p>
             </div>
           ) : (
-            /* Conversation History Mapping */
-            messages.map((msg, index) => {
-              // Assuming their hook uses 'sender' or 'role' to differentiate AI vs User. 
-              // Adjust "msg.sender === 'ai'" if their property is named differently (like msg.isAi or msg.role)
-              const isAi = msg.isBot;
-
-              return isAi ? (
-                /* AI Bubble */
-                <div key={index} className="flex gap-4 max-w-3xl animate-in fade-in slide-in-from-bottom-2">
-                  <div className="w-10 h-10 rounded-xl bg-handy-dark-red flex items-center justify-center flex-shrink-0 shadow-sm text-white font-bold text-[10px]">
-                    AI
-                  </div>
-                  <div className="space-y-2">
-                    <div className="bg-white border border-gray-100 shadow-sm px-6 py-4 rounded-2xl rounded-tl-none">
-                      <p className="text-gray-800 leading-relaxed">{msg.text || msg.content}</p>
-                    </div>
-                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest pl-2">HandyBook AI</span>
-                  </div>
-                </div>
-              ) : (
-                /* User Bubble */
-                <div key={index} className="flex gap-4 max-w-3xl ml-auto flex-row-reverse animate-in fade-in slide-in-from-bottom-2">
-                  <div className="w-10 h-10 rounded-full border-2 border-orange-200 overflow-hidden flex-shrink-0 bg-white">
-                    <img alt="User Profile" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0ug3laCN5NwE-oe_wVIRnJAomvNOG8LGvVYNnJ7MuW7X4lh1ixIR_YuDeemvJk-ak-WHESnOH4muPotSXkcmztHamqFr7-ZnN9EFocUXIKC52MwZoGcvC--cS3tiwVRBCEmfM6FD6DWEeZy0eHqYGVOljvD8MAEdfuQXfYqhFEHHgWy7DU2XqFL5Y6uoEHdWlBazyzG3bTC65jiTbjIZ57CBBxPywt3Cu1V9E8-AqFZBnMk4P00thKgBaY4bRmwUcEUrHUN8glvuhQ" />
-                  </div>
-                  <div className="space-y-2 text-right">
-                    <div className="bg-[#B96A6A] text-white px-6 py-4 rounded-2xl rounded-tr-none shadow-md">
-                      <p className="leading-relaxed">{msg.text || msg.content}</p>
-                    </div>
-                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest pr-2">Andrea</span>
-                  </div>
-                </div>
-              );
-            })
+            /* Mapping to the ChatBubble component */
+            messages.map((msg, index) => (
+              <ChatBubble key={index} message={msg} />
+            ))
           )}
 
-          {/* Typing Indicator */}
           {isTyping && (
-            <div className="flex gap-4 max-w-3xl animate-in fade-in">
-              <div className="w-10 h-10 rounded-xl bg-handy-dark-red/50 flex items-center justify-center flex-shrink-0 shadow-sm text-white font-bold text-[10px] animate-pulse">
-                AI
-              </div>
-              <div className="bg-white border border-gray-100 shadow-sm px-6 py-4 rounded-2xl rounded-tl-none flex items-center gap-1">
-                <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce"></span>
-                <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce delay-75"></span>
-                <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce delay-150"></span>
-              </div>
+            <div className="flex gap-2 p-4 italic text-gray-400 text-[10px] animate-pulse">
+              Hance is reading the handbook...
             </div>
           )}
         </div>

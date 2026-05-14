@@ -10,15 +10,6 @@ const FallbackLibraryData = {
   sections: ["Circulation Section", "Filipiniana Section", "Reference Section", "Periodical Section"]
 };
 
-// Try to import, but catch if it fails
-let LibraryData = FallbackLibraryData;
-try {
-  const { LibraryInfo } = require('../../constants/HandbookData');
-  if (LibraryInfo) LibraryData = LibraryInfo;
-} catch (e) {
-  console.warn("Library constants not found, using fallback data.");
-}
-
 const LibraryInfoPage = () => {
   return (
     <StudentLayout activePage="library">

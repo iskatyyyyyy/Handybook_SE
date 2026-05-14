@@ -9,22 +9,10 @@ import {
   BarChart3,
   Clock 
 } from 'lucide-react';
-import { ResidencyRules, GeneralPolicies } from '../../constants/handbookPolicies';
 
 const EnrollmentStatus = () => {
-  // Mock data representing a 4-year Computer Science student
-  const studentEnrollment = {
-    classification: "Undergraduate", // [cite: 1113]
-    status: "Regular",
-    yearLevel: "3rd Year",
-    semester: "2nd Semester",
-    currentUnits: 21, // [cite: 1135]
-    yearsSpent: 3,
-    totalAbsences: 8, // Aggregate across subjects
-  };
-
-  // Find the specific residency limit for a 4-year course
-  const residencyLimit = ResidencyRules.find(r => r.course === "4-year course")?.maxResidency || "6 years"; // 
+  
+  const residencyLimit = "6 years";
 
   return (
     <StudentLayout activePage="profile">

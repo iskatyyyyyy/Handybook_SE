@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
+import ReactMarkdown from 'react-markdown'; // Import the library
 
 const ChatBubble = ({ message }) => {
   const navigate = useNavigate();
 
   const handleSourceClick = () => {
-    // Navigates to the guide page and appends the section ID as a URL hash
     if (message.sectionId) {
       navigate(`/guide#${message.sectionId}`);
     }
@@ -19,9 +19,11 @@ const ChatBubble = ({ message }) => {
           ? 'bg-white border border-gray-100 text-tup-navy rounded-bl-none' 
           : 'bg-tup-green text-white shadow-tup-green/10 rounded-br-none'
       }`}>
-        <p className="text-sm font-medium leading-relaxed">{message.text}</p>
+        {/* Use ReactMarkdown for formatting */}
+        <div className="text-sm font-medium leading-relaxed prose prose-sm max-w-none">
+          <ReactMarkdown>{message.text}</ReactMarkdown>
+        </div>
         
-        {/* Deep Link Button for Bot Responses */}
         {message.isBot && message.source && (
           <button 
             onClick={handleSourceClick}
