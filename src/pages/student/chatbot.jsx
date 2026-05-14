@@ -69,7 +69,7 @@ const Chatbot = () => {
                       <Sparkles size={14} />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <span className="text-[11px] font-extrabold text-slate-900 ml-1">Handybook AI</span>
+                      <span className="text-[11px] font-extrabold text-slate-900 ml-1">Hance</span>
                       <div className="bg-white border border-slate-200 text-slate-700 px-5 py-3.5 rounded-2xl rounded-tl-sm shadow-sm">
                         <p className="text-[13px] font-medium leading-relaxed">{msg.text || msg.content}</p>
                       </div>
@@ -92,7 +92,7 @@ const Chatbot = () => {
                     <Sparkles size={14} />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <span className="text-[11px] font-extrabold text-slate-900 ml-1">Handybook AI</span>
+                    <span className="text-[11px] font-extrabold text-slate-900 ml-1">Hance</span>
                     <div className="bg-[#F4F6F8] px-5 py-4 rounded-2xl rounded-tl-sm flex items-center gap-1.5 w-fit">
                       <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
                       <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>

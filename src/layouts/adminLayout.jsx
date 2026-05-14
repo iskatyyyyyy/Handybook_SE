@@ -68,12 +68,12 @@ const AdminLayout = ({ children, activePage }) => {
               
               <button onClick={() => navigate('/admin/chat')} className={actionLinkClass}>
                 <Sparkles className="w-[18px] h-[18px]" />
-                <span>Handybook AI</span>
+                <span>Ask Hance</span>
               </button>
               
               <button onClick={() => navigate('/admin/preview-handbook')} className={actionLinkClass}>
                 <BookOpen className="w-[18px] h-[18px]" />
-                <span>Student Handbook</span>
+                <span>Download Handbook</span>
               </button>
             </nav>
           </div>

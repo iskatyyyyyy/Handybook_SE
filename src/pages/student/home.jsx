@@ -47,7 +47,7 @@ const Home = () => {
               className="px-5 py-2.5 bg-handy-dark-red text-white text-sm font-bold rounded-lg hover:bg-red-900 transition-colors shadow-sm flex items-center gap-2"
             >
               <Sparkles size={16} />
-              Ask Handybook AI
+              Ask Hance
             </button>
           </div>
         </section>
