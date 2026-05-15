@@ -116,7 +116,7 @@ const GuidePage = () => {
             <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
               <div className="space-y-8">
                 <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl flex gap-3 items-start shadow-sm">
-                  <Sparkles className="text-blue-500 shrink-0" size={18} />
+                  <Sparkles className="text-blue-500 shrink-0 mt-0.5" size={18} />
                   <p className="text-[12px] text-blue-800 font-medium leading-relaxed">
                     This section is summarized for clarity. Use <strong>"Ask Hance"</strong> for specific rule clarifications.
                   </p>
@@ -152,9 +152,9 @@ const GuidePage = () => {
                         <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4 tracking-tighter">Expansion Milestones</h5>
                         <ul className="space-y-4">
                           {activeTopic.content.milestones?.map((item, i) => (
-                            <li key={i} className="flex gap-3 text-[12px] text-slate-600 font-medium leading-snug">
+                            <li key={i} className="flex items-start gap-3 text-[12px] text-slate-600 font-medium leading-snug">
                               <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 shrink-0"></div>
-                              <span className="font-bold text-slate-900">{item.date}: </span>{item.desc}
+                              <div className="flex-1"><span className="font-bold text-slate-900">{item.date}: </span>{item.desc}</div>
                             </li>
                           ))}
                         </ul>
@@ -195,7 +195,7 @@ const GuidePage = () => {
                           {activeTopic.content.seal?.symbolism?.map((item, i) => (
                             <div key={i} className="flex items-start gap-4 p-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/[0.08] transition-colors shadow-sm">
                               <div className="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(239,68,68,0.5)]"></div>
-                              <div>
+                              <div className="flex-1">
                                 <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest mb-1 tracking-tighter">{item.element}</p>
                                 <p className="text-[12px] text-slate-300 leading-relaxed font-medium">{item.meaning}</p>
                               </div>
@@ -247,9 +247,9 @@ const GuidePage = () => {
                                     <h6 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">{prog.level}</h6>
                                     <ul className="space-y-2.5">
                                       {prog.list.map((item, iIdx) => (
-                                        <li key={iIdx} className="text-[12px] text-slate-600 flex gap-3 leading-relaxed">
+                                        <li key={iIdx} className="text-[12px] text-slate-600 flex items-start gap-3 leading-relaxed">
                                           <div className="w-1.5 h-1.5 bg-red-400 rounded-full mt-1.5 shrink-0" />
-                                          {item}
+                                          <div className="flex-1">{item}</div>
                                         </li>
                                       ))}
                                     </ul>
@@ -281,9 +281,9 @@ const GuidePage = () => {
                                     <h6 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{detail.level}</h6>
                                     <ul className="space-y-2">
                                       {detail.list.map((item, iIdx) => (
-                                        <li key={iIdx} className="text-[12px] text-slate-600 flex gap-2 leading-relaxed">
-                                          <div className="w-1 h-1 bg-red-300 rounded-full mt-2 shrink-0" />
-                                          {item}
+                                        <li key={iIdx} className="text-[12px] text-slate-600 flex items-start gap-2 leading-relaxed">
+                                          <div className="w-1 h-1 bg-red-300 rounded-full mt-1.5 shrink-0" />
+                                          <div className="flex-1">{item}</div>
                                         </li>
                                       ))}
                                     </ul>
@@ -317,9 +317,9 @@ const GuidePage = () => {
                                     {req.isList ? (
                                       <ul className="mt-2 space-y-2 ml-4">
                                         {req.items.map((item, iIdx) => (
-                                          <li key={iIdx} className="flex gap-2 text-slate-600 leading-snug">
-                                            <div className="w-1 h-1 bg-red-300 rounded-full mt-1.5 shrink-0" />
-                                            {item}
+                                          <li key={iIdx} className="flex items-start gap-3 text-slate-600 leading-snug">
+                                            <div className="w-1.5 h-1.5 bg-red-400 rounded-full mt-1.5 shrink-0" />
+                                            <div className="flex-1">{item}</div>
                                           </li>
                                         ))}
                                       </ul>
@@ -342,15 +342,15 @@ const GuidePage = () => {
                             <div key={pIdx} className="bg-slate-50 border border-slate-200 rounded-xl p-5">
                               <h6 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">{policy.type}</h6>
                               <div className="space-y-3">
-                                <div className="flex gap-3">
+                                <div className="flex items-start gap-3">
                                   <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 shrink-0" />
-                                  <p className="text-[12px] text-slate-700 font-medium">
+                                  <p className="flex-1 text-[12px] text-slate-700 font-medium">
                                     <span className="font-bold">Policy: </span>{policy.policy}
                                   </p>
                                 </div>
-                                <div className="flex gap-3">
+                                <div className="flex items-start gap-3">
                                   <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0" />
-                                  <p className="text-[12px] text-slate-500 italic">
+                                  <p className="flex-1 text-[12px] text-slate-500 italic">
                                     <span className="font-bold not-italic">Requirement: </span>{policy.requirement}
                                   </p>
                                 </div>
@@ -437,13 +437,13 @@ const GuidePage = () => {
                           <h4 className="font-bold text-sm tracking-tighter">Definition of a Credit Unit</h4>
                         </div>
                         <ul className="space-y-4">
-                          <li className="flex gap-3 text-[12px] text-slate-300 leading-relaxed">
+                          <li className="flex items-start gap-3 text-[12px] text-slate-300 leading-relaxed">
                             <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 shrink-0" />
-                            <p><span className="font-bold text-white">Standard:</span> {activeTopic.content.creditUnits.standard}</p>
+                            <div className="flex-1"><span className="font-bold text-white">Standard:</span> {activeTopic.content.creditUnits.standard}</div>
                           </li>
-                          <li className="flex gap-3 text-[12px] text-slate-300 leading-relaxed">
+                          <li className="flex items-start gap-3 text-[12px] text-slate-300 leading-relaxed">
                             <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 shrink-0" />
-                            <p><span className="font-bold text-white">Total:</span> {activeTopic.content.creditUnits.total}</p>
+                            <div className="flex-1"><span className="font-bold text-white">Total:</span> {activeTopic.content.creditUnits.total}</div>
                           </li>
                         </ul>
                       </div>
@@ -540,12 +540,12 @@ const GuidePage = () => {
                                 <h5 className="text-[11px] font-bold text-handy-dark-red uppercase tracking-widest mb-5 flex items-center gap-2">
                                   <Sparkles size={14} className="text-red-400" />
                                   {section.eligibility ? "Eligibility & General Rules" : "Academic Conditions"}
-                                5</h5>
+                                </h5>
                                 <div className="space-y-4">
                                   {(section.eligibility || section.conditions).map((item, iIdx) => (
-                                    <div key={iIdx} className="flex gap-4 items-start">
-                                      <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-2 shrink-0" />
-                                      <p className="text-[12.5px] text-slate-600 leading-relaxed font-medium">{item}</p>
+                                    <div key={iIdx} className="flex items-start gap-3">
+                                      <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 shrink-0" />
+                                      <div className="flex-1 text-[12.5px] text-slate-600 leading-relaxed font-medium">{item}</div>
                                     </div>
                                   ))}
                                 </div>
@@ -590,7 +590,7 @@ const GuidePage = () => {
 
                                         <div className="space-y-8 relative">
                                           {sub.process.map((step, stIdx) => (
-                                            <div key={stIdx} className="flex gap-6 relative">
+                                            <div key={stIdx} className="flex items-start gap-6 relative">
                                               <div className="flex flex-col items-center">
                                                 <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center text-[13px] font-black text-white z-10 border-4 border-slate-900 shadow-lg">
                                                   {stIdx + 1}
@@ -615,15 +615,15 @@ const GuidePage = () => {
                                       <h5 className="text-[11px] font-bold text-handy-dark-red uppercase tracking-widest mb-3">{sub.name}</h5>
                                       <div className="space-y-4 text-[12.5px] text-slate-600 leading-relaxed font-medium">
                                         {sub.condition && (
-                                          <div className="flex gap-3">
+                                          <div className="flex items-start gap-3">
                                             <div className="w-1.5 h-1.5 rounded-full bg-handy-dark-red mt-1.5 shrink-0" />
-                                            <p><span className="font-bold text-slate-800">Condition: </span>{sub.condition}</p>
+                                            <div className="flex-1"><span className="font-bold text-slate-800">Condition: </span>{sub.condition}</div>
                                           </div>
                                         )}
                                         {sub.approval && (
-                                          <div className="flex gap-3">
+                                          <div className="flex items-start gap-3">
                                             <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0" />
-                                            <p><span className="font-bold text-slate-800">Approval Process: </span>{sub.approval}</p>
+                                            <div className="flex-1"><span className="font-bold text-slate-800">Approval Process: </span>{sub.approval}</div>
                                           </div>
                                         )}
                                       </div>
@@ -650,7 +650,7 @@ const GuidePage = () => {
 
                                 <div className="space-y-8 relative">
                                   {section.procedure.map((step, stIdx) => (
-                                    <div key={stIdx} className="flex gap-6 relative">
+                                    <div key={stIdx} className="flex items-start gap-6 relative">
                                       <div className="flex flex-col items-center">
                                         <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center text-[13px] font-black text-white z-10 border-4 border-slate-900 shadow-lg">
                                           {stIdx + 1}
@@ -659,7 +659,7 @@ const GuidePage = () => {
                                           <div className="w-0.5 h-full bg-red-900/30 absolute top-9" />
                                         )}
                                       </div>
-                                      <div className="pb-4">
+                                      <div className="pb-4 pt-1.5 flex-1">
                                         <p className="text-[13.5px] font-bold text-white mb-1.5 tracking-tight">{step.step}</p>
                                         <p className="text-[11.5px] text-slate-400 leading-relaxed font-medium">{step.detail}</p>
                                       </div>
@@ -711,7 +711,7 @@ const GuidePage = () => {
                           
                           <div className="space-y-8 relative">
                             {activeTopic.content.crossRegistration[0].process.map((step, sIdx) => (
-                              <div key={sIdx} className="flex gap-5 relative">
+                              <div key={sIdx} className="flex items-start gap-5 relative">
                                 <div className="flex flex-col items-center">
                                   <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-[12px] font-bold z-10 border-4 border-slate-900 shadow-lg">
                                     {sIdx + 1}
@@ -720,7 +720,7 @@ const GuidePage = () => {
                                     <div className="w-0.5 h-full bg-red-900/30 absolute top-8" />
                                   )}
                                 </div>
-                                <div className="pb-2">
+                                <div className="pb-2 pt-1 flex-1">
                                   <p className="text-[13px] font-bold text-white mb-1 tracking-tight">{step.step}</p>
                                   <p className="text-[11px] text-slate-400 leading-snug">{step.detail}</p>
                                 </div>
@@ -795,12 +795,12 @@ const GuidePage = () => {
                           <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Special Grade Remarks (All Levels)</h5>
                           <div className="flex flex-col gap-3">
                             {activeTopic.content.gradingSystem.remarks.map((remark, idx) => (
-                              <div className="flex items-start gap-3 text-[12px]">
+                              <div key={idx} className="flex items-start gap-3 text-[12px]">
                                 <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 shrink-0" />
-                                <p className="text-slate-700 leading-snug">
+                                <div className="flex-1 text-slate-700 leading-snug">
                                   <span className="font-bold mr-1">{remark.mark} = {remark.meaning}</span>
                                   {remark.note && <span className="text-slate-500 italic block mt-0.5">{remark.note}</span>}
-                                </p>
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -820,9 +820,9 @@ const GuidePage = () => {
                           <p className="text-[12px] text-amber-700/80 mb-5 leading-relaxed font-medium">{activeTopic.content.delinquency.probation.description}</p>
                           <ul className="space-y-4">
                             {activeTopic.content.delinquency.probation.conditions.map((cond, idx) => (
-                              <li key={idx} className="flex gap-3 text-[12px] text-amber-900 leading-snug">
+                              <li key={idx} className="flex items-start gap-3 text-[12px] text-amber-900 leading-snug">
                                 <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
-                                <p><span className="font-bold">{cond.label}:</span> {cond.detail}</p>
+                                <div className="flex-1"><span className="font-bold">{cond.label}:</span> {cond.detail}</div>
                               </li>
                             ))}
                           </ul>
@@ -850,12 +850,12 @@ const GuidePage = () => {
                           <h6 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Conditions for Dismissal</h6>
                           <div className="space-y-4">
                             {activeTopic.content.delinquency.dismissal.conditions.map((cond, idx) => (
-                              <div key={idx} className="flex gap-4 items-start">
-                                <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-2 shrink-0" />
-                                <p className="text-[12.5px] text-slate-300 leading-relaxed">
+                              <div key={idx} className="flex items-start gap-3">
+                                <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 shrink-0" />
+                                <div className="flex-1 text-[12.5px] text-slate-300 leading-relaxed">
                                   <span className="font-bold text-white block mb-0.5">{cond.label}</span>
                                   {cond.detail}
-                                </p>
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -919,10 +919,10 @@ const GuidePage = () => {
                             {activeTopic.content.academicHonors.qualifications.map((qual, idx) => (
                               <div key={idx} className="flex items-start gap-3 text-[12px]">
                                 <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 shrink-0" />
-                                <p className="text-slate-700 leading-snug">
+                                <div className="flex-1 text-slate-700 leading-snug">
                                   <span className="font-bold mr-1">{qual.label}:</span>
                                   <span className="text-slate-500 block mt-0.5">{qual.detail}</span>
-                                </p>
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -973,46 +973,82 @@ const GuidePage = () => {
                         
                         <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
                           <h5 className="text-[11px] font-bold text-handy-dark-red uppercase tracking-widest mb-4">Application Details</h5>
-                          <div className="space-y-4 mb-6">
+                          <div className="space-y-4">
                             {activeTopic.content.loa.processDuration.map((item, idx) => (
                               <div key={idx} className="flex items-start gap-3">
-                                <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 shrink-0" />
-                                <p className="text-[12px] text-slate-600 leading-relaxed">
+                                <div className="w-1.5 h-1.5 rounded-full bg-handy-dark-red mt-1.5 shrink-0" />
+                                <div className="flex-1 text-[12px] text-slate-600 leading-relaxed">
                                   <span className="font-bold text-slate-800 mr-1">{item.label}:</span>{item.detail}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-                          
-                          {/* Approval Routing */}
-                          <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Approval Routing</h5>
-                          <div className="flex items-center flex-wrap gap-2.5">
-                            {activeTopic.content.loa.routing.map((step, idx) => (
-                              <React.Fragment key={idx}>
-                                <div className="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-[10.5px] font-bold text-slate-700">
-                                  {step}
                                 </div>
-                                {idx !== activeTopic.content.loa.routing.length - 1 && <ChevronRight size={14} className="text-slate-300 mx-1" />}
-                              </React.Fragment>
+                              </div>
                             ))}
                           </div>
                         </div>
 
-                        {/* Timing Constraints (Warning) */}
-                        <div className="bg-red-50 border border-red-100 rounded-xl p-5">
-                          <h5 className="text-[11px] font-bold text-red-600 uppercase tracking-widest mb-3">Timing Constraints & Emergencies</h5>
-                          <div className="space-y-3 text-[12px] text-red-900/80 leading-relaxed">
-                            <p><span className="font-bold text-red-700">Blackout Period: </span>{activeTopic.content.loa.constraints.blackout}</p>
-                            <p><span className="font-bold text-red-700">Emergency Exception: </span>{activeTopic.content.loa.constraints.emergency}</p>
+                        {/* LOA APPROVAL WORKFLOW STEP BOX */}
+                        <div className="bg-slate-900 rounded-3xl p-7 text-white shadow-2xl relative overflow-hidden mt-6">
+                          <div className="flex items-center justify-between mb-8">
+                            <div className="flex items-center gap-3">
+                              <div className="bg-red-600/20 p-2 rounded-lg">
+                                <Settings className="text-red-500" size={18} />
+                              </div>
+                              <h5 className="text-sm font-extrabold tracking-tight">LOA Approval Workflow</h5>
+                            </div>
+                            <span className="text-[10px] text-white/60 font-bold uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
+                              Official Routing
+                            </span>
+                          </div>
+
+                          <div className="space-y-8 relative">
+                            {activeTopic.content.loa.routing.map((stepContent, idx) => (
+                              <div key={idx} className="flex items-start gap-6 relative">
+                                <div className="flex flex-col items-center">
+                                  <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center text-[13px] font-black text-white z-10 border-4 border-slate-900 shadow-lg">
+                                    {idx + 1}
+                                  </div>
+                                  {idx !== activeTopic.content.loa.routing.length - 1 && (
+                                    <div className="w-0.5 h-full bg-red-900/30 absolute top-9" />
+                                  )}
+                                </div>
+                                <div className="pb-4 pt-1.5 flex-1">
+                                  <p className="text-[13.5px] font-bold text-white mb-1.5 tracking-tight group-hover:text-red-400 transition-colors">
+                                    <span className="font-medium text-slate-300 group-hover:text-red-400 transition-colors">{stepContent}</span>
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* TIMING CONSTRAINTS & EMERGENCIES BOX */}
+                        <div className="bg-white/60 border border-slate-100 rounded-xl p-5 mt-6 hover:shadow-md transition-shadow">
+                          <h5 className="text-[11px] font-bold text-handy-dark-red uppercase tracking-widest mb-3 flex items-center gap-2">
+                            <Clock size={14} className="text-handy-dark-red"/> Timing Constraints & Emergencies
+                          </h5>
+                          <div className="space-y-4 text-[12.5px] text-slate-600 leading-relaxed font-medium">
+                            <div className="flex items-start gap-3">
+                              <div className="w-1.5 h-1.5 rounded-full bg-handy-dark-red mt-1.5 shrink-0" />
+                              <div className="flex-1"><span className="font-bold text-slate-800">Blackout Period: </span>{activeTopic.content.loa.constraints.blackout}</div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                              <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0" />
+                              <div className="flex-1"><span className="font-bold text-slate-800">Emergency Exception: </span>{activeTopic.content.loa.constraints.emergency}</div>
+                            </div>
                           </div>
                         </div>
 
                         {/* AWOL Policy */}
-                        <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 shadow-sm">
-                          <h5 className="text-[11px] font-bold text-amber-700 uppercase tracking-widest mb-3">Returning Without Official Leave (AWOL)</h5>
-                          <div className="space-y-3 text-[12px] text-amber-900/80 leading-relaxed">
-                            <p><span className="font-bold text-amber-800">Policy: </span>{activeTopic.content.loa.awol.policy}</p>
-                            <p><span className="font-bold text-amber-800">Condition: </span>{activeTopic.content.loa.awol.condition}</p>
+                        <div className="bg-white/60 border border-slate-100 rounded-xl p-5 shadow-sm mt-6 hover:shadow-md transition-shadow">
+                          <h5 className="text-[11px] font-bold text-handy-dark-red uppercase tracking-widest mb-3">Returning Without Official Leave (AWOL)</h5>
+                          <div className="space-y-4 text-[12.5px] text-slate-600 leading-relaxed font-medium">
+                            <div className="flex items-start gap-3">
+                              <div className="w-1.5 h-1.5 rounded-full bg-handy-dark-red mt-1.5 shrink-0" />
+                              <div className="flex-1"><span className="font-bold text-slate-800">Policy: </span>{activeTopic.content.loa.awol.policy}</div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                              <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0" />
+                              <div className="flex-1"><span className="font-bold text-slate-800">Condition: </span>{activeTopic.content.loa.awol.condition}</div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1020,15 +1056,15 @@ const GuidePage = () => {
                       {/* Readmission & Graduation Grid */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
-                          <h4 className="text-sm font-bold text-slate-800 border-b pb-2 mb-4">Readmission Policy</h4>
+                          <h4 className="text-sm font-bold text-handy-dark-red border-b pb-2 mb-4">Readmission Policy</h4>
                           <p className="text-[11px] text-slate-600 leading-relaxed italic mb-4">{activeTopic.content.readmission.general}</p>
                           
                           <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Evaluation Process</h5>
                           <ul className="space-y-3 mb-4">
                             {activeTopic.content.readmission.evaluation.map((evalStep, idx) => (
-                              <li key={idx} className="flex gap-3 text-[12px] text-slate-600 leading-snug">
-                                <div className="w-1 h-1 bg-red-400 rounded-full mt-1.5 shrink-0" />
-                                {evalStep}
+                              <li key={idx} className="flex items-start gap-3 text-[12px] text-slate-600 leading-snug">
+                                <div className="w-1 h-1 bg-handy-dark-red rounded-full mt-1.5 shrink-0" />
+                                <div className="flex-1">{evalStep}</div>
                               </li>
                             ))}
                           </ul>
@@ -1039,14 +1075,14 @@ const GuidePage = () => {
                         </div>
 
                         <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
-                          <h4 className="text-sm font-bold text-slate-800 border-b pb-2 mb-4">Graduation Application</h4>
+                          <h4 className="text-sm font-bold text-handy-dark-red border-b pb-2 mb-4">Graduation Application</h4>
                           
                           <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Eligibility</h5>
                           <ul className="space-y-3 mb-6">
                             {activeTopic.content.graduation.requirements.map((req, idx) => (
-                              <li key={idx} className="flex gap-3 text-[12px] text-slate-600 leading-snug">
+                              <li key={idx} className="flex items-start gap-3 text-[12px] text-slate-600 leading-snug">
                                 <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
-                                {req}
+                                <div className="flex-1">{req}</div>
                               </li>
                             ))}
                           </ul>
@@ -1060,15 +1096,15 @@ const GuidePage = () => {
 
                       {/* Application for Clearance Section */}
                       <div className="space-y-6">
-                        <h4 className="text-md font-bold text-slate-800 border-b pb-2">Application for Clearance</h4>
+                        <h4 className="text-md font-bold text-handy-dark-red border-b pb-2">Application for Clearance</h4>
                         
                         <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
                           <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Who Needs to File?</h5>
                           <ul className="space-y-2 mb-6">
                             {activeTopic.content.clearance.whoNeeds.map((person, idx) => (
-                              <li key={idx} className="flex gap-3 text-[12px] text-slate-700 font-medium">
+                              <li key={idx} className="flex items-start gap-3 text-[12px] text-slate-700 font-medium">
                                 <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 shrink-0" />
-                                {person}
+                                <div className="flex-1">{person}</div>
                               </li>
                             ))}
                           </ul>
@@ -1088,7 +1124,7 @@ const GuidePage = () => {
 
                           <div className="space-y-8 relative">
                             {activeTopic.content.clearance.process.map((step, stIdx) => (
-                              <div key={stIdx} className="flex gap-6 relative">
+                              <div key={stIdx} className="flex items-start gap-6 relative">
                                 <div className="flex flex-col items-center">
                                   <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center text-[13px] font-black text-white z-10 border-4 border-slate-900 shadow-lg">
                                     {stIdx + 1}
@@ -1109,21 +1145,21 @@ const GuidePage = () => {
 
                       {/* Fees and Refunds Section */}
                       <div className="space-y-6">
-                        <h4 className="text-md font-bold text-slate-800 border-b pb-2">Fees & Refunds</h4>
+                        <h4 className="text-md font-bold text-handy-dark-red border-b pb-2">Fees & Refunds</h4>
                         
                         <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
                           <div className="space-y-4">
                             <div className="flex items-start gap-3">
-                              <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-2 shrink-0" />
-                              <p className="text-[12px] text-slate-600 leading-relaxed font-medium">
+                              <div className="w-1.5 h-1.5 rounded-full bg-handy-dark-red mt-1.5 shrink-0" />
+                              <div className="flex-1 text-[12px] text-slate-600 leading-relaxed font-medium">
                                 <span className="font-bold text-slate-800">Authorized Fees: </span>{activeTopic.content.feesAndRefunds.fees.authorized}
-                              </p>
+                              </div>
                             </div>
                             <div className="flex items-start gap-3">
-                              <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-2 shrink-0" />
-                              <p className="text-[12px] text-slate-600 leading-relaxed font-medium">
+                              <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0" />
+                              <div className="flex-1 text-[12px] text-slate-600 leading-relaxed font-medium">
                                 <span className="font-bold text-slate-800">Matriculation & Regular Fees: </span>{activeTopic.content.feesAndRefunds.fees.matriculation}
-                              </p>
+                              </div>
                             </div>
                           </div>
                         </div>
