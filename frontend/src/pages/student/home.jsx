@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StudentLayout from '../../layouts/studentLayout';
+import HelpBanner from '../../components/common/helpBanner';
 import { 
   Sparkles, 
   ChevronRight, 
@@ -25,7 +26,7 @@ const Home = () => {
 
   return (
     <StudentLayout activePage="home">
-      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 animate-in fade-in duration-500">
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 animate-in fade-in duration-500 pb-10">
         
         {/* 1. HERO SECTION */}
         <section className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -104,7 +105,7 @@ const Home = () => {
         </section>
 
         {/* 3. BOTTOM GRID (Trending & FAQs) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 pb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6">
           
           {/* Trending Suggestions */}
           <section className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm">
@@ -207,6 +208,10 @@ const Home = () => {
           </section>
 
         </div>
+
+        {/* REPLACED: BOTTOM CTA CARD */}
+        <HelpBanner />
+        
       </div>
     </StudentLayout>
   );
