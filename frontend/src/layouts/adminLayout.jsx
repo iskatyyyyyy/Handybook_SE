@@ -77,14 +77,14 @@ const AdminLayout = ({ children, activePage }) => {
                   <span>Inquiries</span>
                 </button>
 
-                <button onClick={() => navigate('/admin/chat')} className={actionLinkClass}>
+                <button onClick={() => navigate('/admin/chat')} className={`w-full ${getSidebarLinkClass('chat')}`}>
                   <Sparkles className="w-[18px] h-[18px]" />
                   <span>Ask Hance</span>
                 </button>
                 
-                <button onClick={() => navigate('/admin/preview-handbook')} className={actionLinkClass}>
+                <button onClick={() => navigate('/admin/preview-handbook')} className={`w-full ${getSidebarLinkClass('preview-handbook')}`}>
                   <BookOpen className="w-[18px] h-[18px]" />
-                  <span>Download Handbook</span>
+                  <span>View Handbook</span>
                 </button>
               </nav>
             </div>
