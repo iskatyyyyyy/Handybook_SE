@@ -1,124 +1,210 @@
 import React, { useState } from 'react';
 import StudentLayout from '../../layouts/studentLayout';
+import { DisciplinaryOffenses } from '../../constants/handbookPolicies';
 import { 
-  ClipboardList, 
   MessageSquare, 
-  ConciergeBell 
+  ConciergeBell,
+  Scale,
+  Filter
 } from 'lucide-react';
 
 const RulesOnConduct = () => {
-  // Combined offenses for the unified table and filtering
-  const allOffenses = [
-    { category: "Minor Offense", title: "Liquor and Prohibited Drugs", first: "15 days Suspension", second: "30 days Suspension", third: "1 semester suspension" },
-    { category: "Major Offense", title: "Possession of Prohibited Drugs", first: "Dismissal", second: "-", third: "-" },
-    { category: "Minor Offense", title: "Loitering/Disturbance", first: "Warning/Apology", second: "10-20 hrs Community Service", third: "30-50 hrs Community Service" },
-    { category: "Major Offense", title: "Illegal Assemblies/Rallies", first: "15 days Suspension", second: "30 days Suspension", third: "1 sem Suspension" },
-    { category: "Minor Offense", title: "Dress Code Violation", first: "Warning/Apology", second: "10-20 hrs Community Service", third: "30-50 hrs Community Service" },
-    // Replicating a few to demonstrate the scrolling behavior seen in the mockup
-    { category: "Major Offense", title: "Vandalism of Property", first: "15 days Suspension", second: "30 days Suspension", third: "Dismissal" },
-    { category: "Minor Offense", title: "Littering on Campus", first: "Warning/Apology", second: "10 hrs Community Service", third: "20 hrs Community Service" },
-  ];
+  // Dual-filter state
+  const [severityFilter, setSeverityFilter] = useState("All");
+  const [scopeFilter, setScopeFilter] = useState("All");
 
-  const [filter, setFilter] = useState("All Categories");
+  // Extract unique scopes dynamically from the data, sort them, THEN put "All" at the front
+  const uniqueScopes = [...new Set(DisciplinaryOffenses.map(o => o.type))].sort();
+  const scopes = ["All", ...uniqueScopes];
 
-  // Filter logic
-  const filteredOffenses = allOffenses.filter(offense => {
-    if (filter === "All Categories") return true;
-    return offense.category === filter;
+  // Dual-Filter Logic
+  const filteredOffenses = DisciplinaryOffenses.filter(offense => {
+    const matchSeverity = severityFilter === "All" || offense.category === severityFilter;
+    const matchScope = scopeFilter === "All" || offense.type === scopeFilter;
+    return matchSeverity && matchScope;
   });
 
   return (
     <StudentLayout activePage="rules">
-      <div className="max-w-7xl mx-auto animate-in fade-in duration-500">
+      <div className="max-w-7xl mx-auto animate-in fade-in duration-500 pb-10">
         
-        {/* BEGIN: Main Disciplinary Guidelines Card */}
-        <section className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-100 mb-6">
-          
-          {/* Header Area */}
-          <div className="flex items-start gap-4 mb-6">
-            <div className="bg-red-50 text-handy-dark-red p-3 rounded-xl shrink-0">
-              <ClipboardList size={24} />
+        {/* HEADER & DUAL-FILTER SECTION */}
+        <section className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-100 mb-6 flex flex-col gap-6">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+            <div className="flex items-start gap-4">
+              <div className="bg-red-50 text-handy-dark-red p-3 rounded-xl shrink-0">
+                <Scale size={24} />
+              </div>
+              <div>
+                <h2 className="text-xl font-extrabold text-slate-900 tracking-tight mb-1">Rules on Conduct</h2>
+                <p className="text-[13px] font-medium text-slate-500 max-w-2xl leading-relaxed">
+                  Explore disciplinary guidelines and sanction timelines. Use the filters below to narrow down offenses by severity or specific topic.
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-xl font-extrabold text-slate-900 tracking-tight mb-1">Disciplinary Guidelines</h2>
-              <p className="text-[13px] font-medium text-slate-500 max-w-4xl leading-relaxed">
-                A comprehensive guide to student discipline and behavioral expectations. These rules ensure a safe and productive learning environment for all members of the academic community at TUP.
-              </p>
+
+            {/* Severity Filters (Primary) */}
+            <div className="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200 shrink-0 h-fit">
+              {['All', 'Major', 'Minor'].map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setSeverityFilter(f)}
+                  className={`px-5 py-2 text-[12px] font-bold rounded-lg transition-all ${
+                    severityFilter === f 
+                      ? 'bg-handy-dark-red text-white shadow-md' 
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                  }`}
+                >
+                  {f === 'All' ? 'All Severities' : `${f} Offenses`}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Filter Dropdown */}
-          <div className="flex items-center gap-3 mb-4">
-            <label className="text-[13px] font-bold text-slate-900">Filter:</label>
-            <select 
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              className="bg-white border border-slate-200 text-slate-700 text-[13px] font-semibold rounded-lg py-1.5 px-3 focus:outline-none focus:ring-2 focus:ring-handy-dark-red/20 focus:border-handy-dark-red cursor-pointer"
-            >
-              <option value="All Categories">All Categories</option>
-              <option value="Minor Offense">Minor Offenses</option>
-              <option value="Major Offense">Major Offenses</option>
-            </select>
-          </div>
-
-          {/* Table Container with internal scroll */}
-          <div className="border border-slate-100 rounded-xl overflow-hidden shadow-sm">
-            <div className="max-h-[400px] overflow-y-auto custom-scrollbar relative">
-              <table className="w-full text-left border-collapse min-w-[800px]">
-                
-                {/* Sticky Red Header */}
-                <thead className="sticky top-0 z-10 bg-handy-dark-red shadow-sm">
-                  <tr>
-                    <th className="px-6 py-4 text-[10px] font-extrabold text-white uppercase tracking-widest">Category</th>
-                    <th className="px-6 py-4 text-[10px] font-extrabold text-white uppercase tracking-widest">Offense</th>
-                    <th className="px-6 py-4 text-[10px] font-extrabold text-white uppercase tracking-widest">1st Sanction</th>
-                    <th className="px-6 py-4 text-[10px] font-extrabold text-white uppercase tracking-widest">2nd Sanction</th>
-                    <th className="px-6 py-4 text-[10px] font-extrabold text-white uppercase tracking-widest">3rd Sanction</th>
-                  </tr>
-                </thead>
-                
-                <tbody className="divide-y divide-slate-100 bg-white">
-                  {filteredOffenses.length > 0 ? (
-                    filteredOffenses.map((offense, index) => (
-                      <tr key={index} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="px-6 py-4 text-[13px] font-extrabold text-slate-900 whitespace-nowrap">
-                          {offense.category}
-                        </td>
-                        <td className="px-6 py-4 text-[13px] font-medium text-slate-700">
-                          {offense.title}
-                        </td>
-                        <td className="px-6 py-4 text-[12px] font-medium text-slate-600">
-                          {offense.first}
-                        </td>
-                        <td className="px-6 py-4 text-[12px] font-medium text-slate-600">
-                          {offense.second}
-                        </td>
-                        <td className="px-6 py-4 text-[12px] font-medium text-slate-600">
-                          {offense.third}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="5" className="px-6 py-8 text-center text-sm font-medium text-slate-400">
-                        No offenses found for this category.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+          {/* Scope Filters (Secondary) */}
+          <div className="pt-4 border-t border-slate-100">
+            <div className="flex items-center gap-3">
+              <Filter size={16} className="text-slate-400 shrink-0" />
+              <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-2 w-full">
+                {scopes.map((scope) => (
+                  <button
+                    key={scope}
+                    onClick={() => setScopeFilter(scope)}
+                    className={`shrink-0 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-lg border transition-all ${
+                      scopeFilter === scope
+                        ? 'bg-slate-800 text-white border-slate-800 shadow-sm'
+                        : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-700'
+                    }`}
+                  >
+                    {scope === "All" ? "All Topics" : scope}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </section>
-        {/* END: Main Disciplinary Guidelines Card */}
 
-        {/* BEGIN: Bottom Info Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
+        {/* STATIC TABLE LIST */}
+        <div className="mb-8 bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden">
+          
+          {/* Table Headers (Hidden on Mobile) */}
+          <div className="hidden lg:grid grid-cols-12 gap-4 bg-handy-dark-red text-white p-4 text-[11px] font-bold uppercase tracking-widest border-b border-red-900 z-10 relative shadow-sm">
+            <div className="col-span-2 pl-2">Category</div>
+            <div className="col-span-4">Offense Description</div>
+            <div className="col-span-2">1st Sanction</div>
+            <div className="col-span-2">2nd Sanction</div>
+            <div className="col-span-2">3rd Sanction</div>
+          </div>
+
+          {/* Table Body */}
+          <div className="flex flex-col divide-y divide-slate-100">
+            {filteredOffenses.map((offense) => {
+              const isMajor = offense.category === "Major";
+
+              return (
+                /* ADDED HOVER LOGIC TO THIS WRAPPER */
+                <div key={offense.id} className="group relative flex flex-col bg-white hover:bg-red-50/20 transition-all duration-300">
+                  
+                  {/* Interactive Left Highlight Bar */}
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-handy-dark-red scale-y-0 group-hover:scale-y-100 transition-transform origin-center duration-300 z-10" />
+
+                  {/* DESKTOP ROW VIEW - Added group-hover:translate-x-1 */}
+                  <div className="hidden lg:grid grid-cols-12 gap-4 p-4 items-center text-left transform transition-transform duration-300 group-hover:translate-x-1">
+                    
+                    {/* Category */}
+                    <div className="col-span-2 flex items-center pl-2">
+                      <div className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md shadow-sm ${
+                        isMajor ? 'bg-handy-dark-red text-white' : 'bg-slate-800 text-white'
+                      }`}>
+                        {isMajor ? 'Major' : 'Minor'}
+                      </div>
+                    </div>
+
+                    {/* Offense Title & Scope Tag */}
+                    <div className="col-span-4 pr-4 py-2">
+                      <h3 className="text-[13px] font-bold text-slate-900 leading-snug group-hover:text-handy-dark-red transition-colors">{offense.title}</h3>
+                      <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest group-hover:text-slate-500 transition-colors">{offense.type}</p>
+                    </div>
+
+                    {/* 1st Sanction */}
+                    <div className="col-span-2 py-2">
+                      <p className="text-[11.5px] font-medium text-slate-600 pr-2 leading-relaxed">
+                        {offense.sanctions[0]}
+                      </p>
+                    </div>
+
+                    {/* 2nd Sanction */}
+                    <div className="col-span-2 py-2">
+                      <p className="text-[11.5px] font-medium text-slate-600 pr-2 leading-relaxed">
+                        {offense.sanctions[1] === "None" || offense.sanctions[1] === "-" ? <span className="text-slate-300 italic group-hover:text-slate-400 transition-colors">Dismissed previously</span> : offense.sanctions[1]}
+                      </p>
+                    </div>
+
+                    {/* 3rd Sanction */}
+                    <div className="col-span-2 py-2">
+                      <p className="text-[11.5px] font-medium text-slate-600 pr-2 leading-relaxed">
+                        {offense.sanctions[2] === "None" || offense.sanctions[2] === "-" ? <span className="text-slate-300 italic group-hover:text-slate-400 transition-colors">Dismissed previously</span> : offense.sanctions[2]}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* MOBILE/TABLET CARD VIEW - Added group-hover:translate-x-1 */}
+                  <div className="flex lg:hidden flex-col p-5 gap-4 transform transition-transform duration-300 group-hover:translate-x-1">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-fit px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md shadow-sm ${
+                          isMajor ? 'bg-handy-dark-red text-white' : 'bg-slate-800 text-white'
+                        }`}>
+                          {isMajor ? 'Major' : 'Minor'}
+                        </div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-slate-500 transition-colors">{offense.type}</span>
+                      </div>
+                      <h3 className="text-[14px] font-bold text-slate-900 leading-snug group-hover:text-handy-dark-red transition-colors">{offense.title}</h3>
+                    </div>
+                    
+                    <div className="flex flex-col gap-3 bg-slate-50/80 rounded-xl p-4 border border-slate-100 group-hover:bg-white group-hover:border-red-100 transition-colors">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">1st Sanction</span>
+                        <span className="text-[12px] font-medium text-slate-700">{offense.sanctions[0]}</span>
+                      </div>
+                      <div className="flex flex-col gap-0.5 border-t border-slate-200/60 pt-3">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">2nd Sanction</span>
+                        <span className="text-[12px] font-medium text-slate-700">
+                          {offense.sanctions[1] === "None" || offense.sanctions[1] === "-" ? <span className="text-slate-400 italic">Dismissed</span> : offense.sanctions[1]}
+                        </span>
+                      </div>
+                      <div className="flex flex-col gap-0.5 border-t border-slate-200/60 pt-3">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">3rd Sanction</span>
+                        <span className="text-[12px] font-medium text-slate-700">
+                          {offense.sanctions[2] === "None" || offense.sanctions[2] === "-" ? <span className="text-slate-400 italic">Dismissed</span> : offense.sanctions[2]}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              );
+            })}
+            
+            {filteredOffenses.length === 0 && (
+              <div className="text-center py-12 bg-white flex flex-col items-center justify-center">
+                <div className="bg-slate-50 p-4 rounded-full mb-3">
+                  <Filter size={24} className="text-slate-300" />
+                </div>
+                <p className="text-slate-600 font-bold text-[14px]">No offenses match your filters.</p>
+                <p className="text-slate-400 text-[12px] mt-1">Try adjusting the severity or topic scope above.</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom Info Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Appeal Process Card */}
-          <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-4 hover:shadow-md transition-shadow">
+          <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4 hover:border-slate-300 transition-colors group">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-red-50 text-handy-dark-red rounded-xl shrink-0">
+              <div className="p-2.5 bg-slate-900 text-white rounded-xl shrink-0 shadow-md transition-transform group-hover:scale-105">
                 <MessageSquare size={20} />
               </div>
               <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">Appeal Process</h3>
@@ -129,9 +215,9 @@ const RulesOnConduct = () => {
           </div>
           
           {/* Counseling Services Card */}
-          <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-4 hover:shadow-md transition-shadow">
+          <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4 hover:border-slate-300 transition-colors group">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-red-50 text-handy-dark-red rounded-xl shrink-0">
+              <div className="p-2.5 bg-handy-dark-red text-white rounded-xl shrink-0 shadow-md shadow-red-900/20 transition-transform group-hover:scale-105">
                 <ConciergeBell size={20} />
               </div>
               <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">Counseling Services</h3>
@@ -142,7 +228,6 @@ const RulesOnConduct = () => {
           </div>
           
         </div>
-        {/* END: Bottom Info Cards Grid */}
 
       </div>
     </StudentLayout>
