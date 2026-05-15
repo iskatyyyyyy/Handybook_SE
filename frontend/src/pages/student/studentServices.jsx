@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import StudentLayout from '../../layouts/studentLayout';
 import HelpBanner from '../../components/common/helpBanner';
 import { Check, Building2, ConciergeBell, FileText, AlertCircle } from 'lucide-react';
@@ -6,6 +7,7 @@ import SubmitInquiryModal from '../../components/inquiry/submitInquiryModal';
 
 // --- DATA DICTIONARY (Transcribed from Handbook Screenshots) ---
 const servicesData = {
+  
   'Office of the University Registrar': [
     {
       id: 'grad-clearance',
@@ -295,6 +297,7 @@ const StudentServices = () => {
   const [activeOffice, setActiveOffice] = useState('Office of the University Registrar');
   const [activeServiceId, setActiveServiceId] = useState('grad-clearance');
   const [currentStep, setCurrentStep] = useState(1);
+  const location = useLocation();
 
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
 
@@ -318,6 +321,24 @@ const StudentServices = () => {
       setActiveServiceId(null);
     }
   };
+
+  // --- NEW: SILENT ANALYTICS LOGGER ---
+  useEffect(() => {
+    const logPageView = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        // Silently insert the page view. We don't need to await or check for errors
+        // because we don't want to interrupt the user's experience if logging fails.
+        supabase.from('page_views').insert({
+          user_id: session.user.id,
+          page_name: "Student Services",
+          page_path: location.pathname
+        }).then(); 
+      }
+    };
+
+    logPageView();
+  }, [location.pathname]); // Re-run if the path changes
 
   const handleStepClick = (index) => {
     if (index === currentStep) {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import StudentLayout from '../../layouts/studentLayout';
 import { GeneralInfoTopics } from '../../constants/handbookData';
 import HelpBanner from '../../components/common/helpBanner';
@@ -12,6 +12,7 @@ import {
 
 const GuidePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   
   // STATEFUL REDIRECTION
   const [searchParams, setSearchParams] = useSearchParams();
@@ -56,6 +57,24 @@ const GuidePage = () => {
       navigate('/chat');
     }
   };
+
+  // --- NEW: SILENT ANALYTICS LOGGER ---
+  useEffect(() => {
+    const logPageView = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        // Silently insert the page view. We don't need to await or check for errors
+        // because we don't want to interrupt the user's experience if logging fails.
+        supabase.from('page_views').insert({
+          user_id: session.user.id,
+          page_name: "General Information",
+          page_path: location.pathname
+        }).then(); 
+      }
+    };
+
+    logPageView();
+  }, [location.pathname]); // Re-run if the path changes
 
   return (
     <>

@@ -1,4 +1,5 @@
 import React, { useState, Suspense, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Stage, PerspectiveCamera, Html } from '@react-three/drei';
 import * as THREE from 'three'; // Required for tone mapping constants
@@ -7,6 +8,25 @@ import StudentLayout from '../../layouts/studentLayout';
 // Component for the individual floating markers
 const BuildingMarker = ({ position, label, buildingName }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const location = useLocation();
+
+  // --- NEW: SILENT ANALYTICS LOGGER ---
+  useEffect(() => {
+    const logPageView = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        // Silently insert the page view. We don't need to await or check for errors
+        // because we don't want to interrupt the user's experience if logging fails.
+        supabase.from('page_views').insert({
+          user_id: session.user.id,
+          page_name: "Campus Life",
+          page_path: location.pathname
+        }).then(); 
+      }
+    };
+
+    logPageView();
+  }, [location.pathname]); // Re-run if the path changes
 
   return (
     <Html position={position} center>

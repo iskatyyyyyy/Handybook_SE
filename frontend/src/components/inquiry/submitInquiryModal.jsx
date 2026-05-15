@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { X, Send, AlertCircle, CheckCircle2 } from 'lucide-react';
 
-const SubmitInquiryModal = ({ isOpen, onClose, source }) => {
+const SubmitInquiryModal = ({ isOpen, onClose, source, chatSessionId }) => {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   
@@ -33,6 +33,7 @@ const SubmitInquiryModal = ({ isOpen, onClose, source }) => {
           subject: subject,
           escalation_message: message,
           source: source,
+          chat_session_id: chatSessionId || null
           // status and severity will automatically default to 'Pending' and 'Low' per our SQL schema!
         });
 
@@ -47,7 +48,7 @@ const SubmitInquiryModal = ({ isOpen, onClose, source }) => {
         setMessage("");
         setIsSuccess(false);
         onClose();
-      }, 2000);
+      }, 5000);
 
     } catch (err) {
       console.error(err);

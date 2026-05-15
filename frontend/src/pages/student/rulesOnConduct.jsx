@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import StudentLayout from '../../layouts/studentLayout';
+import { useLocation } from 'react-router-dom';
 import { DisciplinaryOffenses } from '../../constants/handbookPolicies';
 import HelpBanner from '../../components/common/helpBanner';
 import SubmitInquiryModal from '../../components/inquiry/submitInquiryModal';
@@ -13,6 +14,7 @@ import {
 
 const RulesOnConduct = () => {
   // Dual-filter state
+  const location = useLocation();
   const [severityFilter, setSeverityFilter] = useState("All");
   const [scopeFilter, setScopeFilter] = useState("All");
 
@@ -28,6 +30,24 @@ const RulesOnConduct = () => {
     const matchScope = scopeFilter === "All" || offense.type === scopeFilter;
     return matchSeverity && matchScope;
   });
+
+  // --- NEW: SILENT ANALYTICS LOGGER ---
+  useEffect(() => {
+    const logPageView = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        // Silently insert the page view. We don't need to await or check for errors
+        // because we don't want to interrupt the user's experience if logging fails.
+        supabase.from('page_views').insert({
+          user_id: session.user.id,
+          page_name: "Rules on Conduct",
+          page_path: location.pathname
+        }).then(); 
+      }
+    };
+
+    logPageView();
+  }, [location.pathname]); // Re-run if the path changes
 
   return (
     <>

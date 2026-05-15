@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; // <-- Added useLocation
 import { supabase } from '../../lib/supabase';
 import StudentLayout from '../../layouts/studentLayout';
 import HelpBanner from '../../components/common/helpBanner';
@@ -23,6 +23,7 @@ import Registration from '../../assets/stock/registration.svg';
 
 const Home = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // <-- Get current URL path
   
   // COMBINED STATES
   const [openFaq, setOpenFaq] = useState(null); 
@@ -83,6 +84,24 @@ const Home = () => {
 
     fetchUserProfile();
   }, []);
+
+  // --- NEW: SILENT ANALYTICS LOGGER ---
+  useEffect(() => {
+    const logPageView = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        // Silently insert the page view. We don't need to await or check for errors
+        // because we don't want to interrupt the user's experience if logging fails.
+        supabase.from('page_views').insert({
+          user_id: session.user.id,
+          page_name: "Dashboard",
+          page_path: location.pathname
+        }).then(); 
+      }
+    };
+
+    logPageView();
+  }, [location.pathname]); // Re-run if the path changes
 
   return (
     <>
