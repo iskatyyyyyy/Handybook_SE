@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../layouts/adminLayout';
+import { supabase } from '../../lib/supabase'; // <-- Import your Supabase client
 import { 
   Search, 
   MessageSquare, 
@@ -9,66 +10,52 @@ import {
   Sparkles,
   Send,
   MoreVertical,
-  MapPin // Imported MapPin for the Source indicator
+  MapPin
 } from 'lucide-react';
 
 const AdminInquiries = () => {
-  // 1. Mock Data Setup (Including Source & AI Chat Context)
-  const initialInquiries = [
-    {
-      id: "INQ-2026-089",
-      studentName: "Andrea Gomez",
-      studentId: "TUPM-24-1029",
-      time: "10 mins ago",
-      status: "Pending",
-      severity: "Critical",
-      subject: "Grade modification appeal missing deadline",
-      source: "Handybook AI", // Source tracking
-      aiContext: [
-        { sender: "user", text: "How do I appeal a failing grade?" },
-        { sender: "ai", text: "According to the 2013 Handbook, grade appeals must be submitted to the Dean's Office within 1 week of the grade posting." },
-        { sender: "user", text: "But my professor was on leave and just posted it today, which is exactly 8 days late! Can I still appeal?" },
-        { sender: "ai", text: "The handbook strictly states a 1-week deadline. For exceptions regarding professor leave, I recommend speaking to the Registrar." }
-      ],
-      escalationMessage: "I need human assistance. The AI says the deadline passed but it wasn't my fault the grade was posted late. Who do I talk to?",
-    },
-    {
-      id: "INQ-2026-088",
-      studentName: "Juno Assidons",
-      studentId: "TUPM-23-0411",
-      time: "1 hr ago",
-      status: "Pending",
-      severity: "Medium",
-      subject: "Shifting requirements for BSET",
-      source: "Handybook AI",
-      aiContext: [
-        { sender: "user", text: "What are the requirements to shift to BSET?" },
-        { sender: "ai", text: "To shift to the Bachelor of Science in Engineering Technology (BSET) program, you must have a minimum GPA of 2.0 and no failing grades in math courses." }
-      ],
-      escalationMessage: "I have a 2.1 GPA but I dropped a math class last year. Does a 'Dropped' status count as a failing grade for shifting?",
-    },
-    {
-      id: "INQ-2026-085",
-      studentName: "Marcus Reyes",
-      studentId: "TUPM-25-8821",
-      time: "2 hrs ago",
-      status: "Resolved",
-      severity: "Low",
-      subject: "Lost ID Replacement form",
-      source: "Student Services Page", // Direct page source
-      aiContext: [], // Empty context because it bypassed the AI!
-      escalationMessage: "Where can I download the exact PDF form for a lost ID replacement? The link on the website is broken.",
-    }
-  ];
-
-  // 2. State Management
-  const [inquiries, setInquiries] = useState(initialInquiries);
-  const [activeId, setActiveId] = useState("INQ-2026-089"); // Default active
+  // State Management
+  const [inquiries, setInquiries] = useState([]);
+  const [activeId, setActiveId] = useState(null); 
   const [statusFilter, setStatusFilter] = useState("Pending");
   const [severityFilter, setSeverityFilter] = useState("All");
   const [replyText, setReplyText] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
-  // 3. Derived State & Helpers
+  // Initial Data Fetch
+  useEffect(() => {
+    fetchInquiries();
+  }, []);
+
+  const fetchInquiries = async () => {
+    setIsLoading(true);
+    
+    // Fetch inquiries AND the connected user profile data in one query
+    const { data, error } = await supabase
+      .from('inquiries')
+      .select(`
+        *,
+        profiles (
+          first_name,
+          last_name
+        )
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error("Error fetching inquiries:", error);
+    } else if (data) {
+      setInquiries(data);
+      // Auto-select the first inquiry if available
+      if (data.length > 0 && !activeId) {
+        setActiveId(data[0].id);
+      }
+    }
+    
+    setIsLoading(false);
+  };
+
+  // Derived State & Helpers
   const activeInquiry = inquiries.find(inq => inq.id === activeId);
 
   const filteredInquiries = inquiries.filter(inq => {
@@ -87,17 +74,61 @@ const AdminInquiries = () => {
     }
   };
 
-  const handleResolve = () => {
-    setInquiries(inquiries.map(inq => 
-      inq.id === activeId ? { ...inq, status: "Resolved" } : inq
-    ));
-    setReplyText("");
+  const formatTimestamp = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   };
 
-  const handleSeverityChange = (newSeverity) => {
-    setInquiries(inquiries.map(inq => 
-      inq.id === activeId ? { ...inq, severity: newSeverity } : inq
-    ));
+  // REAL SUPABASE HANDLERS
+  const handleResolve = async () => {
+    if (!replyText.trim()) return;
+
+    // Update the database
+    const { error } = await supabase
+      .from('inquiries')
+      .update({ status: 'Resolved', admin_reply: replyText })
+      .eq('id', activeId);
+
+    if (error) {
+      console.error("Error resolving inquiry:", error);
+      alert("Failed to resolve inquiry. Please try again.");
+    } else {
+      // Update local state to reflect the change immediately
+      setInquiries(inquiries.map(inq => 
+        inq.id === activeId ? { ...inq, status: "Resolved", admin_reply: replyText } : inq
+      ));
+      setReplyText("");
+    }
+  };
+
+  const handleSeverityChange = async (newSeverity) => {
+    // Update the database
+    const { error } = await supabase
+      .from('inquiries')
+      .update({ severity: newSeverity })
+      .eq('id', activeId);
+
+    if (error) {
+      console.error("Error updating severity:", error);
+    } else {
+      // Update local state
+      setInquiries(inquiries.map(inq => 
+        inq.id === activeId ? { ...inq, severity: newSeverity } : inq
+      ));
+    }
+  };
+
+  const handleReopen = async () => {
+    const { error } = await supabase
+      .from('inquiries')
+      .update({ status: 'Pending' })
+      .eq('id', activeId);
+
+    if (!error) {
+      setInquiries(inquiries.map(inq => 
+        inq.id === activeId ? { ...inq, status: "Pending" } : inq
+      ));
+    }
   };
 
   return (
@@ -118,7 +149,7 @@ const AdminInquiries = () => {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-3.5 h-3.5" />
                 <input 
                   type="text" 
-                  placeholder="Search students or IDs..." 
+                  placeholder="Search students..." 
                   className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-[12px] font-medium text-slate-700 focus:ring-2 focus:ring-handy-dark-red/20 focus:border-handy-dark-red outline-none transition-all placeholder:font-normal placeholder:text-slate-400"
                 />
               </div>
@@ -150,7 +181,11 @@ const AdminInquiries = () => {
 
           {/* Inbox List */}
           <div className="flex-1 overflow-y-auto custom-scrollbar">
-            {filteredInquiries.length === 0 ? (
+            {isLoading ? (
+              <div className="p-8 text-center text-slate-400 text-[13px] font-medium animate-pulse">
+                Loading inquiries...
+              </div>
+            ) : filteredInquiries.length === 0 ? (
               <div className="p-8 text-center text-slate-400 text-[13px] font-medium">
                 No inquiries match your filters.
               </div>
@@ -158,6 +193,8 @@ const AdminInquiries = () => {
               <div className="divide-y divide-slate-50">
                 {filteredInquiries.map((inq) => {
                   const isActive = inq.id === activeId;
+                  const fullName = inq.profiles ? `${inq.profiles.first_name} ${inq.profiles.last_name}` : 'Unknown User';
+                  
                   return (
                     <div 
                       key={inq.id}
@@ -170,8 +207,8 @@ const AdminInquiries = () => {
                       {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-handy-dark-red rounded-r-md"></div>}
                       
                       <div className="flex justify-between items-start mb-1.5 pl-1.5">
-                        <span className="text-[13px] font-extrabold text-slate-900 truncate pr-2">{inq.studentName}</span>
-                        <span className="text-[10px] font-semibold text-slate-400 shrink-0">{inq.time}</span>
+                        <span className="text-[13px] font-extrabold text-slate-900 truncate pr-2">{fullName}</span>
+                        <span className="text-[10px] font-semibold text-slate-400 shrink-0">{formatTimestamp(inq.created_at)}</span>
                       </div>
                       
                       <div className="pl-1.5 mb-2.5">
@@ -222,9 +259,14 @@ const AdminInquiries = () => {
                   
                   {/* Detailed Metadata Row */}
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] font-medium text-slate-500">
-                    <span className="flex items-center gap-1.5"><User size={14} className="text-slate-400"/> <span className="font-semibold text-slate-700">{activeInquiry.studentName}</span> ({activeInquiry.studentId})</span>
+                    <span className="flex items-center gap-1.5">
+                      <User size={14} className="text-slate-400"/> 
+                      <span className="font-semibold text-slate-700">
+                        {activeInquiry.profiles ? `${activeInquiry.profiles.first_name} ${activeInquiry.profiles.last_name}` : 'Unknown'}
+                      </span>
+                    </span>
                     <span className="hidden sm:flex items-center gap-1.5 text-slate-200">|</span>
-                    <span className="flex items-center gap-1.5"><Clock size={14} className="text-slate-400"/> {activeInquiry.time}</span>
+                    <span className="flex items-center gap-1.5"><Clock size={14} className="text-slate-400"/> {formatTimestamp(activeInquiry.created_at)}</span>
                     <span className="hidden sm:flex items-center gap-1.5 text-slate-200">|</span>
                     
                     {/* Source Indicator */}
@@ -233,7 +275,7 @@ const AdminInquiries = () => {
                     </span>
                     
                     <span className="hidden sm:flex items-center gap-1.5 text-slate-200">|</span>
-                    <span className="flex items-center gap-1.5 font-mono text-[11px]">ID: {activeInquiry.id}</span>
+                    <span className="flex items-center gap-1.5 font-mono text-[11px]">ID: {activeInquiry.id.split('-')[0]}...</span>
                   </div>
                 </div>
 
@@ -266,13 +308,14 @@ const AdminInquiries = () => {
                   <div className="absolute -top-3 left-6 bg-slate-800 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-md shadow-sm">
                     Student Inquiry
                   </div>
-                  <p className="text-[14px] text-slate-800 font-medium leading-relaxed mt-1">
-                    "{activeInquiry.escalationMessage}"
+                  <p className="text-[14px] text-slate-800 font-medium leading-relaxed mt-1 whitespace-pre-wrap">
+                    "{activeInquiry.escalation_message}"
                   </p>
                 </div>
 
-                {/* 2. AI Context Transcript (Conditionally Renders if context exists) */}
-                {activeInquiry.aiContext && activeInquiry.aiContext.length > 0 && (
+                {/* Placeholder for AI Context Transcript once Chat Logs are implemented */}
+                {/* We will wire this up later when we link chat_session_id! */}
+                {activeInquiry.chat_session_id && (
                   <div className="mb-4">
                     <div className="flex items-center gap-2 mb-5 px-2">
                       <Sparkles size={14} className="text-slate-400" />
@@ -281,17 +324,7 @@ const AdminInquiries = () => {
                     </div>
                     
                     <div className="space-y-4 px-2">
-                      {activeInquiry.aiContext.map((msg, idx) => (
-                        <div key={idx} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                          <div className={`max-w-[85%] sm:max-w-[75%] p-3.5 rounded-2xl text-[13px] font-medium leading-relaxed ${
-                            msg.sender === 'user' 
-                            ? 'bg-[#E2E8F0] text-slate-800 rounded-tr-sm' 
-                            : 'bg-white border border-slate-200 text-slate-600 rounded-tl-sm shadow-sm'
-                          }`}>
-                            {msg.text}
-                          </div>
-                        </div>
-                      ))}
+                       <p className="text-[12px] font-medium text-slate-500 italic">Chat transcript will appear here (linked via {activeInquiry.chat_session_id})...</p>
                     </div>
                   </div>
                 )}
@@ -302,9 +335,15 @@ const AdminInquiries = () => {
               <div className="p-5 sm:p-6 bg-white border-t border-slate-100 shrink-0">
                 {activeInquiry.status === 'Resolved' ? (
                   <div className="bg-slate-50 border border-slate-100 rounded-xl p-5 text-center">
-                    <p className="text-[13px] font-bold text-slate-600">This inquiry has been marked as resolved.</p>
+                    <p className="text-[13px] font-bold text-slate-600 mb-2">This inquiry has been marked as resolved.</p>
+                    {activeInquiry.admin_reply && (
+                       <div className="bg-white border border-slate-200 rounded-lg p-4 text-left mb-4 shadow-sm">
+                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Your Reply:</span>
+                         <p className="text-[13px] text-slate-700">{activeInquiry.admin_reply}</p>
+                       </div>
+                    )}
                     <button 
-                      onClick={() => setInquiries(inquiries.map(inq => inq.id === activeId ? { ...inq, status: "Pending" } : inq))}
+                      onClick={handleReopen}
                       className="text-[12px] font-extrabold text-handy-dark-red mt-2 hover:underline hover:text-red-900 transition-colors outline-none"
                     >
                       Reopen Inquiry
@@ -326,7 +365,8 @@ const AdminInquiries = () => {
                       <div className="flex w-full sm:w-auto gap-3">
                         <button 
                           onClick={handleResolve}
-                          className="flex-1 sm:flex-none px-4 py-2.5 border border-slate-200 text-slate-700 text-[12px] font-bold rounded-lg hover:bg-slate-50 transition-colors outline-none"
+                          disabled={!replyText.trim()}
+                          className="flex-1 sm:flex-none px-4 py-2.5 border border-slate-200 text-slate-700 text-[12px] font-bold rounded-lg hover:bg-slate-50 transition-colors outline-none disabled:opacity-50"
                         >
                           Mark as Resolved
                         </button>

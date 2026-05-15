@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import StudentLayout from '../../layouts/studentLayout';
 import { DisciplinaryOffenses } from '../../constants/handbookPolicies';
 import HelpBanner from '../../components/common/helpBanner';
+import SubmitInquiryModal from '../../components/inquiry/submitInquiryModal';
 import { 
   Building2,
   Scale,
@@ -15,6 +16,8 @@ const RulesOnConduct = () => {
   const [severityFilter, setSeverityFilter] = useState("All");
   const [scopeFilter, setScopeFilter] = useState("All");
 
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
+
   // Extract unique scopes dynamically from the data, sort them, THEN put "All" at the front
   const uniqueScopes = [...new Set(DisciplinaryOffenses.map(o => o.type))].sort();
   const scopes = ["All", ...uniqueScopes];
@@ -27,6 +30,7 @@ const RulesOnConduct = () => {
   });
 
   return (
+    <>
     <StudentLayout activePage="rules">
       <div className="max-w-7xl mx-auto animate-in fade-in duration-500 pb-10">
         
@@ -338,10 +342,17 @@ const RulesOnConduct = () => {
         {/* END: Bottom Info Cards Grid */}
 
         {/* HELP BANNER */}
-        <HelpBanner />
+        <HelpBanner onOpenInquiry={() => setIsInquiryModalOpen(true)} />
 
       </div>
     </StudentLayout>
+    {/* The Reusable Modal! */}
+    <SubmitInquiryModal 
+      isOpen={isInquiryModalOpen}
+      onClose={() => setIsInquiryModalOpen(false)}
+      source="Rules on Conduct"
+    />
+    </>
   );
 };
 

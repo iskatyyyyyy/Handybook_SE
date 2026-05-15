@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, BookOpen, Scale, Building2, ArrowRight } from 'lucide-react';
+import { supabase } from '../lib/supabase'; // <-- Combined Import
 
 import handybookLogoExtd from '../assets/images/Group_44.svg';
 
@@ -57,6 +58,38 @@ const StudentLayout = ({ children, activePage }) => {
     navigate(path);
     setIsSearchOpen(false);
     setSearchQuery('');
+  };
+
+  // --- SUPABASE DYNAMIC USER DATA ---
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  // Fetch the user's profile data on component mount
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('first_name, last_name')
+          .eq('id', session.user.id)
+          .single();
+
+        if (data && !error) {
+          setFirstName(data.first_name);
+          setLastName(data.last_name);
+        }
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  // Real Supabase Logout function
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/login');
   };
 
   // TIGHTER LINKS: Reduced padding (py-2), smaller text (text-[13px])
@@ -145,9 +178,10 @@ const StudentLayout = ({ children, activePage }) => {
         {/* MAIN CONTENT AREA */}
         <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
           
+          {/* COMBINED: Search Bar (Left) & Dynamic Profile (Right) */}
           <header className="h-14 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between px-5 shrink-0 mb-3 sm:mb-4 relative z-50">
             
-            {/* UPDATED: INTERACTIVE SEARCH BAR */}
+            {/* INTERACTIVE SEARCH BAR */}
             <div className="relative w-full max-w-lg" ref={searchRef}>
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
                 <Search size={16} />
@@ -209,13 +243,15 @@ const StudentLayout = ({ children, activePage }) => {
               )}
             </div>
             
-            {/* Simplified User Profile */}
-            <div className="flex items-center space-x-3 ml-4">
+            {/* Dynamic User Profile */}
+            <div className="flex items-center space-x-3 ml-4 shrink-0">
               <div className="hidden sm:block text-right">
-                <p className="text-[13px] font-semibold text-slate-900 leading-tight">Juno Assidons</p>
+                <p className="text-[13px] font-semibold text-slate-900 leading-tight">
+                  {firstName ? `${firstName} ${lastName}` : "Student"}
+                </p>
               </div>
               <div className="h-8 w-8 overflow-hidden rounded-full border-2 border-red-100 bg-red-50 shrink-0 cursor-pointer hover:ring-2 hover:ring-red-200 transition-all">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Juno" alt="Profile" className="w-full h-full object-cover" />
+                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${firstName || 'Student'}`} alt="Profile" className="w-full h-full object-cover" />
               </div>
             </div>
           </header>
@@ -237,7 +273,31 @@ const StudentLayout = ({ children, activePage }) => {
       {/* LOGOUT CONFIRMATION MODAL */}
       {isLogoutModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] animate-in fade-in duration-200 p-4" style={{ fontFamily: "'Poppins', sans-serif" }}>
-          {/* ... Modal content ... */}
+          <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-6 text-center">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-50 mb-4">
+                <svg className="w-6 h-6 text-handy-dark-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+              </div>
+              <h2 className="text-lg font-extrabold text-slate-900 mb-2">Sign Out</h2>
+              <p className="text-[13px] font-medium text-slate-500 mb-6 leading-relaxed">
+                Are you sure you want to sign out of your account? You will need to log in again to access the dashboard.
+              </p>
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => setIsLogoutModalOpen(false)}
+                  className="flex-1 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 text-[13px] font-bold rounded-xl transition-colors border border-slate-200"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleLogout}
+                  className="flex-1 py-2.5 bg-handy-dark-red hover:bg-red-900 text-white text-[13px] font-bold rounded-xl transition-colors shadow-sm"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </>
