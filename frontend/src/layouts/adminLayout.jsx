@@ -8,7 +8,8 @@ import {
   User,
   LogOut,
   Search,
-  Bell
+  Bell,
+  Inbox // Added Inbox icon for Inquiries
 } from 'lucide-react';
 
 // Import the extended Handybook logo for the sidebar
@@ -70,6 +71,12 @@ const AdminLayout = ({ children, activePage }) => {
               <nav className="space-y-0.5">
                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-3 mb-2">Resources</p>
                 
+                {/* NEW: Inquiries Button */}
+                <button onClick={() => navigate('/admin/inquiries')} className={`w-full ${getSidebarLinkClass('inquiries')}`}>
+                  <Inbox className="w-[18px] h-[18px]" />
+                  <span>Inquiries</span>
+                </button>
+
                 <button onClick={() => navigate('/admin/chat')} className={actionLinkClass}>
                   <Sparkles className="w-[18px] h-[18px]" />
                   <span>Ask Hance</span>
@@ -86,6 +93,12 @@ const AdminLayout = ({ children, activePage }) => {
             <nav className="space-y-0.5 mt-auto pt-6">
               <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-3 mb-2">Account Settings</p>
               
+              <button onClick={() => navigate('/admin/profile')} className={`w-full ${getSidebarLinkClass('profile')}`}>
+                <User className="w-[18px] h-[18px]" />
+                <span>User Profile</span>
+              </button>
+              
+              {/* Changed from navigate to opening the Settings Modal */}
               <button onClick={() => setIsSettingsModalOpen(true)} className={actionLinkClass}>
                 <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 <span>Settings</span>

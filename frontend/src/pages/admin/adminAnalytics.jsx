@@ -186,51 +186,52 @@ const AdminAnalytics = () => {
             <div className="bg-red-50 text-handy-dark-red p-1.5 rounded-md">
               <TrendingUp size={18} />
             </div>
-            <h3 className="font-extrabold text-[15px] text-slate-900 tracking-tight">Recent Escalations & Unanswered</h3>
+            <h3 className="font-extrabold text-[15px] text-slate-900 tracking-tight">Recent Inquiries</h3>
           </div>
           
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
+            {/* Added table-fixed to strictly enforce our custom column widths */}
+            <table className="w-full text-left table-fixed">
               <thead>
                 <tr className="border-b border-slate-100">
-                  <th className="px-6 py-4 text-[10px] font-extrabold text-slate-900 uppercase tracking-widest">Query Message</th>
-                  <th className="px-6 py-4 text-[10px] font-extrabold text-slate-900 uppercase tracking-widest">Time</th>
-                  <th className="px-6 py-4 text-[10px] font-extrabold text-slate-900 uppercase tracking-widest">Status</th>
-                  <th className="px-6 py-4 text-[10px] font-extrabold text-slate-900 uppercase tracking-widest text-right">Action</th>
+                  {/* Query Message takes all remaining space (w-full) */}
+                  <th className="w-full px-6 py-4 text-[10px] font-extrabold text-slate-900 uppercase tracking-widest">Query Message</th>
+                  
+                  {/* Status gets a strict, non-collapsing width (w-32 is 128px) */}
+                  <th className="w-32 px-6 py-4 text-[10px] font-extrabold text-slate-900 uppercase tracking-widest text-left">Status</th>
+                  
+                  {/* Action is now CENTERED and slightly wider (w-32) to fit the button perfectly */}
+                  <th className="w-32 px-6 py-4 text-[10px] font-extrabold text-slate-900 uppercase tracking-widest text-center">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {/* Row 1 */}
                 <tr className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-5 text-[12px] font-semibold text-slate-600">
+                  <td className="px-6 py-5 text-[12px] font-semibold text-slate-600 pr-10">
                     How do I appeal for a grade modification after the deadline?
                   </td>
-                  <td className="px-6 py-5 text-[11px] font-medium text-slate-500 whitespace-nowrap">
-                    12 mins ago
-                  </td>
                   <td className="px-6 py-5 whitespace-nowrap">
-                    <span className="text-slate-700 text-[11px] font-semibold">Critical</span>
+                    <span className="text-slate-700 text-[11px] font-semibold">Pending</span>
                   </td>
-                  <td className="px-6 py-5 text-right whitespace-nowrap">
-                     <button className="bg-handy-dark-red text-white px-5 py-1.5 rounded-md text-[11px] font-bold hover:bg-red-900 transition-colors shadow-sm">
-                       Respond
+                  {/* Text-center added here to perfectly center the button */}
+                  <td className="px-6 py-5 text-center whitespace-nowrap">
+                     {/* Removed w-full, added w-20 to keep buttons uniform size */}
+                     <button className="bg-handy-dark-red text-white w-20 py-1.5 rounded-md text-[11px] font-bold hover:bg-red-900 transition-colors shadow-sm">
+                       Review
                      </button>
                   </td>
                 </tr>
                 
                 {/* Row 2 */}
                 <tr className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-5 text-[12px] font-semibold text-slate-600">
-                    Is the 2013 Student Handbook still valid for graduation requirements?
-                  </td>
-                  <td className="px-6 py-5 text-[11px] font-medium text-slate-500 whitespace-nowrap">
-                    1hr ago
+                  <td className="px-6 py-5 text-[12px] font-semibold text-slate-600 pr-10">
+                    Is the 2013 Student Handbook still valid for graduation requirements? what the hell my brother mane are you forking alright okie my dude?
                   </td>
                   <td className="px-6 py-5 whitespace-nowrap">
-                    <span className="text-slate-700 text-[11px] font-semibold">Escalated</span>
+                    <span className="text-slate-700 text-[11px] font-semibold">Successful</span>
                   </td>
-                  <td className="px-6 py-5 text-right whitespace-nowrap">
-                     <button className="bg-handy-dark-red text-white px-5 py-1.5 rounded-md text-[11px] font-bold hover:bg-red-900 transition-colors shadow-sm">
+                  <td className="px-6 py-5 text-center whitespace-nowrap">
+                     <button className="bg-handy-dark-red text-white w-20 py-1.5 rounded-md text-[11px] font-bold hover:bg-red-900 transition-colors shadow-sm">
                        Review
                      </button>
                   </td>

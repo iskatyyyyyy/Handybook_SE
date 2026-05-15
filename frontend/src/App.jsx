@@ -22,6 +22,7 @@ import ContentManagement from './pages/admin/contentManagement';
 import AdminChatbotConfig from './pages/admin/adminChatbotConfig';
 import SystemSettings from './pages/admin/systemSettings';
 import AdminTrainingLogs from './pages/admin/adminTrainingLogs';
+import AdminInquiries from './pages/admin/adminInquiries';
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
         <Route path="/admin/settings" element={<SystemSettings />} />
         <Route path="/admin/chat" element={<Chatbot />} />
         <Route path="/admin/preview-handbook" element={<HandbookPreview />} />
+        <Route path="/admin/inquiries" element={<AdminInquiries />} />
 
         {/* Newly added */}
         <Route path="/admin/logs" element={<AdminTrainingLogs />} />
