@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import StudentLayout from '../../layouts/studentLayout';
 import HelpBanner from '../../components/common/helpBanner';
 import { Check, Building2, ConciergeBell, FileText, AlertCircle } from 'lucide-react';
+import SubmitInquiryModal from '../../components/inquiry/submitInquiryModal';
 
 // --- DATA DICTIONARY (Transcribed from Handbook Screenshots) ---
 const servicesData = {
@@ -295,6 +296,8 @@ const StudentServices = () => {
   const [activeServiceId, setActiveServiceId] = useState('grad-clearance');
   const [currentStep, setCurrentStep] = useState(1);
 
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
+
   // Get available services for current office
   const availableServices = servicesData[activeOffice] || [];
   
@@ -325,6 +328,7 @@ const StudentServices = () => {
   };
 
   return (
+    <>
     <StudentLayout activePage="services">
       <div className="max-w-7xl mx-auto animate-in fade-in duration-500 pb-10">
         
@@ -523,10 +527,17 @@ const StudentServices = () => {
         </div>
 
         {/* HELP BANNER */}
-        <HelpBanner />
+        <HelpBanner onOpenInquiry={() => setIsInquiryModalOpen(true)} />
         
       </div>
     </StudentLayout>
+      {/* The Reusable Modal! */}
+          <SubmitInquiryModal 
+            isOpen={isInquiryModalOpen}
+            onClose={() => setIsInquiryModalOpen(false)}
+            source="Student Services"
+      />
+    </>
   );
 };
 

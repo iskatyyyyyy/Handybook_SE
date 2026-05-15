@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Added useEffect
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../lib/supabase'; // Added Supabase import
 import StudentLayout from '../../layouts/studentLayout';
 import HelpBanner from '../../components/common/helpBanner';
+import SubmitInquiryModal from '../../components/inquiry/submitInquiryModal';
 import { 
   Sparkles, 
   ChevronRight, 
@@ -22,9 +24,37 @@ const Home = () => {
   const navigate = useNavigate();
   
   // State to handle the open/close of the FAQ accordion
-  const [openFaq, setOpenFaq] = useState(3); // Defaulting the 4th item to open to match Figma design
+  const [openFaq, setOpenFaq] = useState(3); 
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
+  
+  // New state to hold the user's first name
+  const [firstName, setFirstName] = useState("");
+
+  // Fetch the user's profile data on component mount
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      // 1. Get the active session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
+        // 2. Fetch the first name from the profiles table using their ID
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('first_name')
+          .eq('id', session.user.id)
+          .single();
+
+        if (data && !error) {
+          setFirstName(data.first_name);
+        }
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   return (
+    <>
     <StudentLayout activePage="home">
       <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 animate-in fade-in duration-500 pb-10">
         
@@ -32,7 +62,8 @@ const Home = () => {
         <section className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-1 flex items-center gap-2 tracking-tight">
-              Hello there, Andrea <span className="text-2xl sm:text-3xl">👋</span>
+              {/* REPLACED: Hardcoded name with dynamic state and a fallback */}
+              Hello there, {firstName || "Student"} <span className="text-2xl sm:text-3xl">👋</span>
             </h1>
             <p className="text-sm font-medium text-slate-500">Let's find what you are looking for today!</p>
           </div>
@@ -210,10 +241,17 @@ const Home = () => {
         </div>
 
         {/* REPLACED: BOTTOM CTA CARD */}
-        <HelpBanner />
+        <HelpBanner onOpenInquiry={() => setIsInquiryModalOpen(true)} />
         
       </div>
     </StudentLayout>
+      {/* The Reusable Modal! */}
+        <SubmitInquiryModal 
+          isOpen={isInquiryModalOpen}
+          onClose={() => setIsInquiryModalOpen(false)}
+          source="Dashboard (Home)"
+      />
+    </>
   );
 };
 

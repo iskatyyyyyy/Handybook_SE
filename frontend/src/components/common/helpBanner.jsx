@@ -1,10 +1,9 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+// We can remove useNavigate since this button now opens a modal instead of changing pages!
 import { Sparkles, ArrowRight } from 'lucide-react';
 
-const HelpBanner = () => {
-  const navigate = useNavigate();
-
+// 1. Accept the onOpenInquiry prop
+const HelpBanner = ({ onOpenInquiry }) => {
   return (
     <section className="bg-gradient-to-br from-red-900 to-black rounded-3xl p-8 text-white relative overflow-hidden shadow-md">
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
@@ -17,7 +16,8 @@ const HelpBanner = () => {
           </p>
         </div>
         <button 
-          onClick={() => navigate('/inquiries')}
+          // 2. Trigger the prop function instead of navigating
+          onClick={onOpenInquiry}
           className="bg-white text-black px-8 py-4 rounded-2xl font-bold text-sm hover:bg-red-50 transition-all flex items-center gap-2 shrink-0 shadow-xl active:scale-95"
         >
           Submit Inquiry

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, ShieldAlert, User } from 'lucide-react';
-import { supabase } from '../../lib/supabase'; // <-- Import your Supabase client here!
+import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react'; // Removed ShieldAlert
+import { supabase } from '../../lib/supabase';
 
 // Imported Assets
 import loginIllustration from '../../assets/images/rafiki.svg';
@@ -24,7 +24,7 @@ const LoginPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
-  // REAL SUPABASE HANDLER
+  // REAL SUPABASE HANDLER WITH ROLE-BASED ROUTING
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -33,15 +33,28 @@ const LoginPage = () => {
     try {
       if (isLogin) {
         // --- SIGN IN LOGIC ---
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
           email: email,
           password: password,
         });
 
-        if (error) throw error;
-        
-        // If successful, navigate to the student home dashboard
-        navigate('/home'); 
+        if (authError) throw authError;
+
+        // Fetch the user's profile to check their role
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', authData.user.id)
+          .single();
+
+        if (profileError) throw profileError;
+
+        // Route them based on their secure database role
+        if (profileData.role === 'admin') {
+          navigate('/admin/analytics');
+        } else {
+          navigate('/home'); 
+        }
 
       } else {
         // --- SIGN UP LOGIC ---
@@ -59,13 +72,12 @@ const LoginPage = () => {
 
         if (error) throw error;
 
-        // Supabase returns a null session if email confirmation is required
         if (!data.session) {
           alert("Account created! Please check your email to verify your account before logging in.");
-          setIsLogin(true); // Flips the card back to the Sign In screen
-          setPassword(""); // Clears their password for security
+          setIsLogin(true);
+          setPassword(""); 
         } else {
-          // If email confirmation is off, log them straight in
+          // New signups are always normal users, route to home
           navigate('/home');
         }
       }
@@ -74,12 +86,6 @@ const LoginPage = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleAdminLogin = (e) => {
-    e.preventDefault();
-    // For now, this is still a dummy route until we set up Role-Based routing!
-    navigate('/admin/analytics'); 
   };
 
   return (
@@ -216,17 +222,6 @@ const LoginPage = () => {
               >
                 {isLoading ? "Processing..." : (isLogin ? "Sign In" : "Create Account")}
               </button>
-              
-              {/* Only show Admin Login on the Login screen */}
-              {isLogin && (
-                <button 
-                  type="button" 
-                  onClick={handleAdminLogin} 
-                  className="w-full bg-white text-slate-500 border border-slate-200 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:border-handy-dark-red hover:text-handy-dark-red active:scale-[0.98] transition-all"
-                >
-                  Sign in as Admin <ShieldAlert size={14} />
-                </button>
-              )}
             </div>
           </form>
 

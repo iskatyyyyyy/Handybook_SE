@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import StudentLayout from '../../layouts/studentLayout';
 import { GeneralInfoTopics } from '../../constants/handbookData';
 import HelpBanner from '../../components/common/helpBanner';
+import SubmitInquiryModal from '../../components/inquiry/submitInquiryModal';
 import { 
   Book, History, BookOpen, UserCheck, Timer, 
   Layout, Settings, Clock, BarChart, Award, 
@@ -19,6 +20,8 @@ const GuidePage = () => {
   
   const [activeCampus, setActiveCampus] = useState(0); 
   const [activeCollege, setActiveCollege] = useState(null);
+
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
 
   const iconMap = {
     History: <History size={20} />,
@@ -55,6 +58,7 @@ const GuidePage = () => {
   };
 
   return (
+    <>
     <StudentLayout activePage="guide">
       <div className="relative max-w-7xl mx-auto space-y-6 animate-in fade-in duration-500 pb-10">
         
@@ -1210,7 +1214,7 @@ const GuidePage = () => {
 
         {/* REPLACED: BOTTOM CTA CARD */}
         <div className={`transition-all duration-500 ${selectedTopic ? 'lg:mr-[38%]' : ''}`}>
-          <HelpBanner />
+          <HelpBanner onOpenInquiry={() => setIsInquiryModalOpen(true)} />
         </div>
       </div>
       
@@ -1222,6 +1226,13 @@ const GuidePage = () => {
         />
       )}
     </StudentLayout>
+      {/* The Reusable Modal! */}
+          <SubmitInquiryModal 
+            isOpen={isInquiryModalOpen}
+            onClose={() => setIsInquiryModalOpen(false)}
+            source="General Information"
+      />
+    </>
   );
 };
 

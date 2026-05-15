@@ -309,7 +309,7 @@ const AdminInquiries = () => {
                     Student Inquiry
                   </div>
                   <p className="text-[14px] text-slate-800 font-medium leading-relaxed mt-1 whitespace-pre-wrap">
-                    "{activeInquiry.escalationMessage}"
+                    "{activeInquiry.escalation_message}"
                   </p>
                 </div>
 
