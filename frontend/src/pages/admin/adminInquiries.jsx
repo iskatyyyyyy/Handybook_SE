@@ -81,23 +81,42 @@ const AdminInquiries = () => {
 
   // REAL SUPABASE HANDLERS
   const handleResolve = async () => {
-    if (!replyText.trim()) return;
-
-    // Update the database
+    // 1. Just update the status, leave the admin_reply exactly as it is in the database!
     const { error } = await supabase
       .from('inquiries')
-      .update({ status: 'Resolved', admin_reply: replyText })
+      .update({ status: 'Resolved' }) 
       .eq('id', activeId);
 
     if (error) {
       console.error("Error resolving inquiry:", error);
       alert("Failed to resolve inquiry. Please try again.");
     } else {
-      // Update local state to reflect the change immediately
+      // 2. Update local state 
       setInquiries(inquiries.map(inq => 
-        inq.id === activeId ? { ...inq, status: "Resolved", admin_reply: replyText } : inq
+        inq.id === activeId ? { ...inq, status: "Resolved" } : inq
       ));
-      setReplyText("");
+      setReplyText(""); // Clear any text they might have started typing
+    }
+  };
+
+  const handleSendReply = async () => {
+    if (!replyText.trim()) return;
+
+    // Update the database (but keep status as 'Pending')
+    const { error } = await supabase
+      .from('inquiries')
+      .update({ admin_reply: replyText })
+      .eq('id', activeId);
+
+    if (error) {
+      console.error("Error sending response:", error);
+      alert("Failed to send response. Please try again.");
+    } else {
+      // Update local state to reflect the sent reply
+      setInquiries(inquiries.map(inq => 
+        inq.id === activeId ? { ...inq, admin_reply: replyText } : inq
+      ));
+      setReplyText(""); // Clear the text area so they know it sent
     }
   };
 
@@ -351,10 +370,19 @@ const AdminInquiries = () => {
                   </div>
                 ) : (
                   <div className="space-y-3">
+                    
+                    {/* NEW: Show the sent reply even if the ticket is still Pending */}
+                    {activeInquiry.admin_reply && (
+                       <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-left shadow-sm">
+                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Latest Response Sent:</span>
+                         <p className="text-[13px] text-slate-700">{activeInquiry.admin_reply}</p>
+                       </div>
+                    )}
+
                     <textarea 
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
-                      placeholder="Type your response to the student here..."
+                      placeholder={activeInquiry.admin_reply ? "Type a follow-up response..." : "Type your response to the student here..."}
                       className="w-full bg-[#F4F6F8] border border-slate-200 rounded-xl p-4 text-[13px] font-medium text-slate-800 focus:outline-none focus:border-handy-dark-red focus:ring-1 focus:ring-handy-dark-red resize-none min-h-[120px] transition-all placeholder:text-slate-400 placeholder:font-normal"
                     ></textarea>
                     
@@ -365,12 +393,12 @@ const AdminInquiries = () => {
                       <div className="flex w-full sm:w-auto gap-3">
                         <button 
                           onClick={handleResolve}
-                          disabled={!replyText.trim()}
                           className="flex-1 sm:flex-none px-4 py-2.5 border border-slate-200 text-slate-700 text-[12px] font-bold rounded-lg hover:bg-slate-50 transition-colors outline-none disabled:opacity-50"
                         >
                           Mark as Resolved
                         </button>
                         <button 
+                          onClick={handleSendReply} // <-- ADDED THE MISSING ONCLICK HERE!
                           disabled={!replyText.trim()}
                           className="flex-1 sm:flex-none px-5 py-2.5 bg-handy-dark-red text-white text-[12px] font-bold rounded-lg hover:bg-red-900 transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:active:scale-100 active:scale-95 outline-none"
                         >
