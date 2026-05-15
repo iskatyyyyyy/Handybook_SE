@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabase'; // <-- Added Supabase client
 
 import handybookLogoExtd from '../assets/images/Group_44.svg';
 
@@ -8,6 +9,38 @@ const StudentLayout = ({ children, activePage }) => {
   
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  // New states for dynamic user data
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  // Fetch the user's profile data on component mount
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('first_name, last_name')
+          .eq('id', session.user.id)
+          .single();
+
+        if (data && !error) {
+          setFirstName(data.first_name);
+          setLastName(data.last_name);
+        }
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  // Real Supabase Logout function
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/login');
+  };
 
   // TIGHTER LINKS: Reduced padding (py-2), smaller text (text-[13px])
   const getSidebarLinkClass = (pageName) => {
@@ -113,29 +146,19 @@ const StudentLayout = ({ children, activePage }) => {
         {/* MAIN CONTENT AREA */}
         <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
           
-          {/* TIGHTER TOP HEADER: Shorter height (h-14) */}
-          <header className="h-14 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between px-5 shrink-0 mb-3 sm:mb-4">
-            
-            {/* Search Pill - Slimmer padding and squared-off rounded-lg corners */}
-            <div className="relative w-full max-w-sm">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-              </span>
-              <input 
-                className="block w-full bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-handy-dark-red focus:bg-white rounded-lg py-1.5 pl-9 pr-3 text-[13px] font-medium text-slate-700 transition-all outline-none placeholder:text-slate-400" 
-                placeholder="Search for policies, rules, or guides..." 
-                type="text" 
-              />
-            </div>
+          {/* TIGHTER TOP HEADER: Removed Search Bar, Aligned Right */}
+          <header className="h-14 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-end px-5 shrink-0 mb-3 sm:mb-4">
             
             {/* Simplified User Profile */}
-            <div className="flex items-center space-x-3 ml-4">
+            <div className="flex items-center space-x-3">
               <div className="hidden sm:block text-right">
-                <p className="text-[13px] font-semibold text-slate-900 leading-tight">Juno Assidons</p>
+                <p className="text-[13px] font-semibold text-slate-900 leading-tight">
+                  {firstName ? `${firstName} ${lastName}` : "Student"}
+                </p>
               </div>
-              {/* Tighter Avatar size */}
+              {/* Tighter Avatar size - Now dynamic! */}
               <div className="h-8 w-8 overflow-hidden rounded-full border-2 border-red-100 bg-red-50 shrink-0 cursor-pointer hover:ring-2 hover:ring-red-200 transition-all">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Juno" alt="Profile" className="w-full h-full object-cover" />
+                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${firstName || 'Student'}`} alt="Profile" className="w-full h-full object-cover" />
               </div>
             </div>
           </header>
@@ -199,7 +222,7 @@ const StudentLayout = ({ children, activePage }) => {
                   Cancel
                 </button>
                 <button 
-                  onClick={() => navigate('/login')}
+                  onClick={handleLogout} // <-- Updated to trigger our real Supabase logout function
                   className="flex-1 py-2.5 bg-handy-dark-red hover:bg-red-900 text-white text-[13px] font-bold rounded-xl transition-colors shadow-sm"
                 >
                   Sign Out
