@@ -45,3 +45,15 @@ app.listen(PORT, () => {
   Endpoint: http://localhost:${PORT}/api/chat
   `);
 });
+
+app.post('/api/log-coordinates', (express.json()), (req, res) => {
+  const { x, y, z, label } = req.body;
+  
+  // This is what prints to your VS Code Terminal
+  console.log('-----------------------------------');
+  console.log(`📍 NEW MARKER FOR: ${label || 'Unknown'}`);
+  console.log(`Position: [${x}, ${y}, ${z}]`);
+  console.log('-----------------------------------');
+  
+  res.status(200).send('Logged to terminal');
+});
