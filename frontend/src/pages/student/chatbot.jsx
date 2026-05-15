@@ -23,13 +23,21 @@ const Chatbot = () => {
   const [inputText, setInputText] = useState("");
   const chatEndRef = useRef(null);
 
+  const hasAutoPrompted = useRef(false);
+
   // 2. SMART UX: Pre-fill input based on the Handbook context
   useEffect(() => {
-    // Only pre-fill if they came from a specific topic and haven't sent a message yet
-    if (contextName && messages.length === 0) {
-      setInputText(`Can you explain more about the policies on ${contextName}?`);
+    // We check for length === 1 because Hance initializes with a greeting
+    if (contextName && messages.length === 1 && !hasAutoPrompted.current) {
+      const autoMessage = `Can you explain more about the policies on ${contextName}?`;
+      
+      // Fire the message immediately
+      sendMessage(autoMessage);
+      
+      // Mark as prompted so it doesn't fire again on re-renders
+      hasAutoPrompted.current = true;
     }
-  }, [contextName, messages.length]);
+  }, [contextName, messages.length, sendMessage]);
 
   // Auto-scroll to bottom when new messages arrive or typing status changes
   useEffect(() => {

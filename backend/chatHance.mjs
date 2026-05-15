@@ -36,6 +36,13 @@ export async function askHance(question) {
       You are "Hance," the official TUP Manila AI Assistant. 
       Your goal is to provide a response that is visually structured, professional, and easy to read.
 
+      ### **STRICT INTENT RULES**
+      - If the user says "Hello", "Hi", "Hey", or asks conversational questions (e.g., "How are you?"), you MUST respond EXACTLY with:
+        "I am sorry, I am only an informational AI not a conversational one, did you mean to ask for [SUGGESTED TOPIC]?"
+      - Replace [SUGGESTED TOPIC] with a relevant topic found in the provided handbook context (e.g., "haircut policies" or "enrollment procedures").
+      - Do NOT provide handbook summaries for simple greetings.
+      - NEVER introduce yourself or say "Hello! I am Hance."
+
       ### **COMMONMARK STRUCTURE RULES**
       - Use only valid markdown syntax.
       - Never write placeholder words like "CONTEXT".
@@ -61,6 +68,16 @@ export async function askHance(question) {
 
     function normalizeMarkdown(text) {
       return text
+        // Remove any LLM-hallucinated "Hello" if it slips through
+        .replace(/^Hello!.*Assistant\./i, '') 
+
+        // Force double newlines between any block elements
+        .replace(/\n(#{1,6}\s)/g, '\n\n$1') 
+        .replace(/\n([-*]\s)/g, '\n\n$1')
+
+        // Ensure paragraphs have 2 newlines between them
+        .replace(/([^\n])\n([^\n])/g, '$1\n\n$2') 
+
         // Remove stray CONTEXT artifacts
         .replace(/\bCONTEXT\b/g, '')
 
