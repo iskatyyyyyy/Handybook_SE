@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import StudentLayout from '../../layouts/studentLayout';
 import { GeneralInfoTopics } from '../../constants/handbookData';
+import HelpBanner from '../../components/common/helpBanner';
 import { 
   Book, History, BookOpen, UserCheck, Timer, 
   Layout, Settings, Clock, BarChart, Award, 
@@ -539,7 +540,7 @@ const GuidePage = () => {
                                 <h5 className="text-[11px] font-bold text-handy-dark-red uppercase tracking-widest mb-5 flex items-center gap-2">
                                   <Sparkles size={14} className="text-red-400" />
                                   {section.eligibility ? "Eligibility & General Rules" : "Academic Conditions"}
-                                </h5>
+                                5</h5>
                                 <div className="space-y-4">
                                   {(section.eligibility || section.conditions).map((item, iIdx) => (
                                     <div key={iIdx} className="flex gap-4 items-start">
@@ -567,7 +568,6 @@ const GuidePage = () => {
                             {section.subsections && (
                               <div className="space-y-6">
                                 {section.subsections.map((sub, subIdx) => {
-                                  // If there is a process list, map it to the dark stepper UI
                                   if (sub.process) {
                                     return (
                                       <div key={subIdx} className="bg-slate-900 rounded-3xl p-7 text-white shadow-2xl relative overflow-hidden">
@@ -973,82 +973,46 @@ const GuidePage = () => {
                         
                         <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
                           <h5 className="text-[11px] font-bold text-handy-dark-red uppercase tracking-widest mb-4">Application Details</h5>
-                          <div className="space-y-4">
+                          <div className="space-y-4 mb-6">
                             {activeTopic.content.loa.processDuration.map((item, idx) => (
                               <div key={idx} className="flex items-start gap-3">
-                                <div className="w-1.5 h-1.5 rounded-full bg-handy-dark-red mt-1.5 shrink-0" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 shrink-0" />
                                 <p className="text-[12px] text-slate-600 leading-relaxed">
                                   <span className="font-bold text-slate-800 mr-1">{item.label}:</span>{item.detail}
                                 </p>
                               </div>
                             ))}
                           </div>
-                        </div>
-
-                        {/* LOA APPROVAL WORKFLOW STEP BOX */}
-                        <div className="bg-slate-900 rounded-3xl p-7 text-white shadow-2xl relative overflow-hidden mt-6">
-                          <div className="flex items-center justify-between mb-8">
-                            <div className="flex items-center gap-3">
-                              <div className="bg-red-600/20 p-2 rounded-lg">
-                                <Settings className="text-red-500" size={18} />
-                              </div>
-                              <h5 className="text-sm font-extrabold tracking-tight">LOA Approval Workflow</h5>
-                            </div>
-                            <span className="text-[10px] text-white/60 font-bold uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
-                              Official Routing
-                            </span>
-                          </div>
-
-                          <div className="space-y-8 relative">
-                            {activeTopic.content.loa.routing.map((stepContent, idx) => (
-                              <div key={idx} className="flex gap-6 relative">
-                                <div className="flex flex-col items-center">
-                                  <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center text-[13px] font-black text-white z-10 border-4 border-slate-900 shadow-lg">
-                                    {idx + 1}
-                                  </div>
-                                  {idx !== activeTopic.content.loa.routing.length - 1 && (
-                                    <div className="w-0.5 h-full bg-red-900/30 absolute top-9" />
-                                  )}
+                          
+                          {/* Approval Routing */}
+                          <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Approval Routing</h5>
+                          <div className="flex items-center flex-wrap gap-2.5">
+                            {activeTopic.content.loa.routing.map((step, idx) => (
+                              <React.Fragment key={idx}>
+                                <div className="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-[10.5px] font-bold text-slate-700">
+                                  {step}
                                 </div>
-                                <div className="pb-4 pt-1.5 flex-1">
-                                  <p className="text-[13.5px] font-bold text-white mb-1.5 tracking-tight group-hover:text-red-400 transition-colors">
-                                    <span className="font-medium text-slate-300 group-hover:text-red-400 transition-colors">{stepContent}</span>
-                                  </p>
-                                </div>
-                              </div>
+                                {idx !== activeTopic.content.loa.routing.length - 1 && <ChevronRight size={14} className="text-slate-300 mx-1" />}
+                              </React.Fragment>
                             ))}
                           </div>
                         </div>
 
-                        {/* TIMING CONSTRAINTS & EMERGENCIES BOX */}
-                        <div className="bg-white/60 border border-slate-100 rounded-xl p-5 mt-6 hover:shadow-md transition-shadow">
-                          <h5 className="text-[11px] font-bold text-handy-dark-red uppercase tracking-widest mb-3 flex items-center gap-2">
-                            <Clock size={14} className="text-handy-dark-red"/> Timing Constraints & Emergencies
-                          </h5>
-                          <div className="space-y-4 text-[12.5px] text-slate-600 leading-relaxed font-medium">
-                            <div className="flex gap-3">
-                              <div className="w-1.5 h-1.5 rounded-full bg-handy-dark-red mt-1.5 shrink-0" />
-                              <p><span className="font-bold text-slate-800">Blackout Period: </span>{activeTopic.content.loa.constraints.blackout}</p>
-                            </div>
-                            <div className="flex gap-3">
-                              <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0" />
-                              <p><span className="font-bold text-slate-800">Emergency Exception: </span>{activeTopic.content.loa.constraints.emergency}</p>
-                            </div>
+                        {/* Timing Constraints (Warning) */}
+                        <div className="bg-red-50 border border-red-100 rounded-xl p-5">
+                          <h5 className="text-[11px] font-bold text-red-600 uppercase tracking-widest mb-3">Timing Constraints & Emergencies</h5>
+                          <div className="space-y-3 text-[12px] text-red-900/80 leading-relaxed">
+                            <p><span className="font-bold text-red-700">Blackout Period: </span>{activeTopic.content.loa.constraints.blackout}</p>
+                            <p><span className="font-bold text-red-700">Emergency Exception: </span>{activeTopic.content.loa.constraints.emergency}</p>
                           </div>
                         </div>
 
                         {/* AWOL Policy */}
-                        <div className="bg-white/60 border border-slate-100 rounded-xl p-5 shadow-sm mt-6 hover:shadow-md transition-shadow">
-                          <h5 className="text-[11px] font-bold text-handy-dark-red uppercase tracking-widest mb-3">Returning Without Official Leave (AWOL)</h5>
-                          <div className="space-y-4 text-[12.5px] text-slate-600 leading-relaxed font-medium">
-                            <div className="flex gap-3">
-                              <div className="w-1.5 h-1.5 rounded-full bg-handy-dark-red mt-1.5 shrink-0" />
-                              <p><span className="font-bold text-slate-800">Policy: </span>{activeTopic.content.loa.awol.policy}</p>
-                            </div>
-                            <div className="flex gap-3">
-                              <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0" />
-                              <p><span className="font-bold text-slate-800">Condition: </span>{activeTopic.content.loa.awol.condition}</p>
-                            </div>
+                        <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 shadow-sm">
+                          <h5 className="text-[11px] font-bold text-amber-700 uppercase tracking-widest mb-3">Returning Without Official Leave (AWOL)</h5>
+                          <div className="space-y-3 text-[12px] text-amber-900/80 leading-relaxed">
+                            <p><span className="font-bold text-amber-800">Policy: </span>{activeTopic.content.loa.awol.policy}</p>
+                            <p><span className="font-bold text-amber-800">Condition: </span>{activeTopic.content.loa.awol.condition}</p>
                           </div>
                         </div>
                       </div>
@@ -1056,14 +1020,14 @@ const GuidePage = () => {
                       {/* Readmission & Graduation Grid */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
-                          <h4 className="text-sm font-bold text-handy-dark-red border-b pb-2 mb-4">Readmission Policy</h4>
+                          <h4 className="text-sm font-bold text-slate-800 border-b pb-2 mb-4">Readmission Policy</h4>
                           <p className="text-[11px] text-slate-600 leading-relaxed italic mb-4">{activeTopic.content.readmission.general}</p>
                           
                           <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Evaluation Process</h5>
                           <ul className="space-y-3 mb-4">
                             {activeTopic.content.readmission.evaluation.map((evalStep, idx) => (
                               <li key={idx} className="flex gap-3 text-[12px] text-slate-600 leading-snug">
-                                <div className="w-1 h-1 bg-handy-dark-red rounded-full mt-1.5 shrink-0" />
+                                <div className="w-1 h-1 bg-red-400 rounded-full mt-1.5 shrink-0" />
                                 {evalStep}
                               </li>
                             ))}
@@ -1075,7 +1039,7 @@ const GuidePage = () => {
                         </div>
 
                         <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
-                          <h4 className="text-sm font-bold text-handy-dark-red border-b pb-2 mb-4">Graduation Application</h4>
+                          <h4 className="text-sm font-bold text-slate-800 border-b pb-2 mb-4">Graduation Application</h4>
                           
                           <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Eligibility</h5>
                           <ul className="space-y-3 mb-6">
@@ -1096,7 +1060,7 @@ const GuidePage = () => {
 
                       {/* Application for Clearance Section */}
                       <div className="space-y-6">
-                        <h4 className="text-md font-bold text-handy-dark-red border-b pb-2">Application for Clearance</h4>
+                        <h4 className="text-md font-bold text-slate-800 border-b pb-2">Application for Clearance</h4>
                         
                         <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
                           <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Who Needs to File?</h5>
@@ -1145,12 +1109,12 @@ const GuidePage = () => {
 
                       {/* Fees and Refunds Section */}
                       <div className="space-y-6">
-                        <h4 className="text-md font-bold text-handy-dark-red border-b pb-2">Fees & Refunds</h4>
+                        <h4 className="text-md font-bold text-slate-800 border-b pb-2">Fees & Refunds</h4>
                         
                         <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
                           <div className="space-y-4">
                             <div className="flex items-start gap-3">
-                              <div className="w-1.5 h-1.5 rounded-full bg-handy-dark-red mt-2 shrink-0" />
+                              <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-2 shrink-0" />
                               <p className="text-[12px] text-slate-600 leading-relaxed font-medium">
                                 <span className="font-bold text-slate-800">Authorized Fees: </span>{activeTopic.content.feesAndRefunds.fees.authorized}
                               </p>
@@ -1244,28 +1208,10 @@ const GuidePage = () => {
           </div>
         )}
 
-        {/* BOTTOM CTA CARD */}
-        <section className={`bg-gradient-to-br from-red-900 to-black rounded-3xl p-8 text-white relative overflow-hidden transition-all duration-500 ${selectedTopic ? 'lg:mr-[38%]' : ''}`}>
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="space-y-2 text-center md:text-left">
-              <h2 className="text-xl font-bold flex items-center justify-center md:justify-start gap-2">
-                Still have questions? <Sparkles size={20} className="text-yellow-400" />
-              </h2>
-              <p className="text-red-100/80 text-sm max-w-md font-medium">
-                Our AI-powered chatbot is trained specifically on the student handbook to give you instant, accurate answers.
-              </p>
-            </div>
-            <button 
-              onClick={handleAskHance}
-              className="bg-white text-black px-8 py-4 rounded-2xl font-bold text-sm hover:bg-red-50 transition-all flex items-center gap-2 shrink-0 shadow-xl active:scale-95"
-            >
-              Ask Hance AI
-              <ArrowRight size={18} />
-            </button>
-          </div>
-          <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/4 blur-2xl"></div>
-        </section>
+        {/* REPLACED: BOTTOM CTA CARD */}
+        <div className={`transition-all duration-500 ${selectedTopic ? 'lg:mr-[38%]' : ''}`}>
+          <HelpBanner />
+        </div>
       </div>
       
       {/* Backdrop for mobile */}

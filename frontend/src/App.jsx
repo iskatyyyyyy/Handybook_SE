@@ -14,6 +14,7 @@ import LibraryInfoPage from './pages/student/libraryInfo';
 import StudentServices from './pages/student/studentServices'; 
 import RulesOnConduct from './pages/student/rulesOnConduct';
 import CampusMap from './pages/student/campusMap';
+import StudentInquiries from './pages/student/studentInquiries';
 
 // Admin Pages
 import AdminAnalytics from './pages/admin/adminAnalytics';
@@ -36,6 +37,7 @@ function App() {
         <Route path="/preview-handbook" element={<HandbookPreview />} />
         <Route path="/chat" element={<Chatbot />} />
         <Route path="/guide" element={<GuidePage />} />
+        <Route path="/inquiries" element={<StudentInquiries />} />
         <Route path="/library-info" element={<LibraryInfoPage />} />
         
         {/* Newly added routes as per my trial to adapt the wireframe from figma */}

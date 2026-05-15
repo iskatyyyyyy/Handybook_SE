@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import StudentLayout from '../../layouts/studentLayout';
 import { DisciplinaryOffenses } from '../../constants/handbookPolicies';
+import HelpBanner from '../../components/common/helpBanner';
 import { 
-  MessageSquare, 
-  ConciergeBell,
+  Building2,
   Scale,
-  Filter
+  Filter,
+  ClipboardList,
+  UserCheck
 } from 'lucide-react';
 
 const RulesOnConduct = () => {
@@ -102,13 +104,12 @@ const RulesOnConduct = () => {
               const isMajor = offense.category === "Major";
 
               return (
-                /* ADDED HOVER LOGIC TO THIS WRAPPER */
                 <div key={offense.id} className="group relative flex flex-col bg-white hover:bg-red-50/20 transition-all duration-300">
                   
                   {/* Interactive Left Highlight Bar */}
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-handy-dark-red scale-y-0 group-hover:scale-y-100 transition-transform origin-center duration-300 z-10" />
 
-                  {/* DESKTOP ROW VIEW - Added group-hover:translate-x-1 */}
+                  {/* DESKTOP ROW VIEW */}
                   <div className="hidden lg:grid grid-cols-12 gap-4 p-4 items-center text-left transform transition-transform duration-300 group-hover:translate-x-1">
                     
                     {/* Category */}
@@ -148,7 +149,7 @@ const RulesOnConduct = () => {
                     </div>
                   </div>
 
-                  {/* MOBILE/TABLET CARD VIEW - Added group-hover:translate-x-1 */}
+                  {/* MOBILE/TABLET CARD VIEW */}
                   <div className="flex lg:hidden flex-col p-5 gap-4 transform transition-transform duration-300 group-hover:translate-x-1">
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-2">
@@ -198,36 +199,146 @@ const RulesOnConduct = () => {
           </div>
         </div>
 
-        {/* Bottom Info Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* BEGIN: Bottom Info Cards Grid (2x2 Layout) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 items-stretch">
           
-          {/* Appeal Process Card */}
-          <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4 hover:border-slate-300 transition-colors group">
+          {/* CARD 1: The Appeal Process */}
+          <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-5 hover:border-slate-300 transition-colors group">
             <div className="flex items-center gap-3">
               <div className="p-2.5 bg-slate-900 text-white rounded-xl shrink-0 shadow-md transition-transform group-hover:scale-105">
-                <MessageSquare size={20} />
+                <Scale size={20} />
               </div>
-              <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">Appeal Process</h3>
+              <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">The Appeal Process</h3>
             </div>
-            <p className="text-[13px] font-medium text-slate-500 leading-relaxed">
-              Students have the right to appeal any disciplinary decision within 5 business days of the sanction. Appeals must be submitted in writing to the Office of Student Affairs.
-            </p>
+            
+            <div className="text-[13px] text-slate-600 leading-relaxed space-y-4">
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <span className="font-bold text-slate-900 block mb-1">Minor Offenses:</span> 
+                Decisions by the OSA are final and cannot be appealed.
+              </div>
+              
+              <div>
+                <span className="font-bold text-handy-dark-red block mb-2">Major Offenses (Strict 10-day window):</span>
+                <ul className="space-y-2.5">
+                  <li className="flex gap-3">
+                    <div className="w-1.5 h-1.5 bg-handy-dark-red rounded-full mt-2 shrink-0" /> 
+                    <p><span className="font-bold text-slate-800 block">Up to 30-day suspension:</span> Appeal to the VPAA/Campus Director.</p>
+                  </li>
+                  <li className="flex gap-3">
+                    <div className="w-1.5 h-1.5 bg-handy-dark-red rounded-full mt-2 shrink-0" /> 
+                    <p><span className="font-bold text-slate-800 block">One-semester suspension:</span> Appeal to the University President.</p>
+                  </li>
+                  <li className="flex gap-3">
+                    <div className="w-1.5 h-1.5 bg-handy-dark-red rounded-full mt-2 shrink-0" /> 
+                    <p><span className="font-bold text-slate-800 block">Dismissal or Expulsion:</span> Appeal to the President, then to the Board of Regents (BOR).</p>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
           
-          {/* Counseling Services Card */}
-          <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4 hover:border-slate-300 transition-colors group">
+          {/* CARD 2: Offices in Charge */}
+          <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-5 hover:border-slate-300 transition-colors group">
             <div className="flex items-center gap-3">
               <div className="p-2.5 bg-handy-dark-red text-white rounded-xl shrink-0 shadow-md shadow-red-900/20 transition-transform group-hover:scale-105">
-                <ConciergeBell size={20} />
+                <Building2 size={20} />
               </div>
-              <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">Counseling Services</h3>
+              <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">Offices in Charge</h3>
             </div>
-            <p className="text-[13px] font-medium text-slate-500 leading-relaxed">
-              Corrective actions often involve mandatory counseling. Our aim is restoration and personal growth rather than just punitive measures.
-            </p>
+            
+            <div className="text-[13px] text-slate-600 leading-relaxed space-y-4">
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-slate-200 transition-colors">
+                <p className="font-bold text-slate-900 mb-1.5">Office of Student Affairs (OSA)</p>
+                <p className="text-slate-500 font-medium">Handles all Minor Offenses and is responsible for conducting the preliminary investigations for major cases.</p>
+              </div>
+              
+              <div className="bg-red-50/40 p-4 rounded-xl border border-red-100 hover:border-red-200 transition-colors">
+                <p className="font-bold text-handy-dark-red mb-1.5">Student Disciplinary Tribunal (SDT)</p>
+                <p className="text-slate-600 font-medium">A dedicated committee consisting of four faculty members and one student representative that officially handles Major Offenses.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* CARD 3: The Disciplinary Process (Mini Stepper) */}
+          <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-5 hover:border-slate-300 transition-colors group">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-slate-900 text-white rounded-xl shrink-0 shadow-md transition-transform group-hover:scale-105">
+                  <ClipboardList size={20} />
+                </div>
+                <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">Disciplinary Process</h3>
+              </div>
+              <span className="text-[9px] font-bold text-handy-dark-red bg-red-50 px-2 py-1 rounded uppercase tracking-widest">Major Offenses</span>
+            </div>
+            
+            <div className="text-[12px] text-slate-600 font-medium relative mt-2">
+              <div className="absolute left-[11px] top-2 bottom-2 w-0.5 bg-slate-100 -z-10" />
+              <div className="space-y-4 relative z-0">
+                <div className="flex items-start gap-4">
+                  <div className="w-6 h-6 rounded-full bg-handy-dark-red text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-sm">1</div>
+                  <p className="pt-1"><span className="font-bold text-slate-900">Filing:</span> Aggrieved party files a complaint with the OSA.</p>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-6 h-6 rounded-full bg-handy-dark-red text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-sm">2</div>
+                  <p className="pt-1"><span className="font-bold text-slate-900">Inquiry:</span> OSA conducts preliminary check for prima facie evidence.</p>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-6 h-6 rounded-full bg-handy-dark-red text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-sm">3</div>
+                  <p className="pt-1"><span className="font-bold text-slate-900">Evaluation:</span> SDT determines if the charge is sufficient.</p>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-6 h-6 rounded-full bg-handy-dark-red text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-sm">4</div>
+                  <p className="pt-1"><span className="font-bold text-slate-900">Notice:</span> Respondent is served a "Notice to Answer".</p>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-6 h-6 rounded-full bg-handy-dark-red text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-sm">5</div>
+                  <p className="pt-1"><span className="font-bold text-slate-900">Hearing:</span> SDT holds hearing to receive evidence/testimonies.</p>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-6 h-6 rounded-full bg-handy-dark-red text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-sm">6</div>
+                  <p className="pt-1"><span className="font-bold text-slate-900">Decision:</span> SDT issues written decision within 15 days.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* CARD 4: Daily Norms of Conduct (Static List) */}
+          <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-5 hover:border-slate-300 transition-colors group">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-handy-dark-red text-white rounded-xl shrink-0 shadow-md shadow-red-900/20 transition-transform group-hover:scale-105">
+                <UserCheck size={20} />
+              </div>
+              <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">Daily Norms of Conduct</h3>
+            </div>
+            
+            <div className="text-[13px] text-slate-600 leading-relaxed space-y-4 pt-1">
+              <div className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 shrink-0" /> 
+                <p><span className="font-bold text-slate-900 block mb-0.5">Academic Integrity</span>Maintain high academic standards and intellectual honesty at all times.</p>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 shrink-0" /> 
+                <p><span className="font-bold text-slate-900 block mb-0.5">Prescribed Uniform & ID</span>Official uniform on Mon/Tue/Thu/Fri (Wash day: Wed). Official ID must be worn at all times on campus.</p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 shrink-0" /> 
+                <p><span className="font-bold text-slate-900 block mb-0.5">Grooming strictly enforced</span>Males must have a clean haircut. Hair dyeing is strictly prohibited for all students.</p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 shrink-0" /> 
+                <p><span className="font-bold text-slate-900 block mb-0.5">Attendance</span>Students must attend classes regularly. Absences require an Excuse Letter certified by the OSA.</p>
+              </div>
+            </div>
           </div>
           
         </div>
+        {/* END: Bottom Info Cards Grid */}
+
+        {/* HELP BANNER */}
+        <HelpBanner />
 
       </div>
     </StudentLayout>
