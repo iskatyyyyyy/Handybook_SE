@@ -24,8 +24,8 @@ const AdminAnalytics = () => {
   const [stats, setStats] = useState({
     users: 0,
     escalated: 0,
-    aiToday: 0,  // <-- Defaulted to 0
-    aiTotal: 0   // <-- Defaulted to 0
+    aiToday: 0,
+    aiTotal: 0
   });
   
   const [recentInquiries, setRecentInquiries] = useState([]);
@@ -37,7 +37,6 @@ const AdminAnalytics = () => {
     const fetchDashboardData = async () => {
       setIsLoading(true);
 
-      // --- A. Fetch Admin Profile ---
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         const { data: profile } = await supabase
@@ -52,29 +51,19 @@ const AdminAnalytics = () => {
         }
       }
 
-      // --- B. Fetch QuickStat Counts (Head-only queries for speed) ---
-      const { count: usersCount } = await supabase
-        .from('profiles')
-        .select('*', { count: 'exact', head: true });
+      const { count: usersCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+      const { count: pendingCount } = await supabase.from('inquiries').select('*', { count: 'exact', head: true }).eq('status', 'Pending');
 
-      const { count: pendingCount } = await supabase
-        .from('inquiries')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'Pending');
-
-      // Setup "Today" boundary for the AI query
       const today = new Date();
-      today.setHours(0, 0, 0, 0); // Set to midnight this morning
+      today.setHours(0, 0, 0, 0);
       const todayISO = today.toISOString();
 
-      // Get AI Queries Today (Count user messages sent since midnight)
       const { count: aiTodayCount } = await supabase
         .from('chat_messages')
         .select('*', { count: 'exact', head: true })
         .eq('sender', 'user')
         .gte('created_at', todayISO);
 
-      // Get Total AI Answered (Count all AI responses ever)
       const { count: aiTotalCount } = await supabase
         .from('chat_messages')
         .select('*', { count: 'exact', head: true })
@@ -87,7 +76,6 @@ const AdminAnalytics = () => {
         aiTotal: aiTotalCount || 0
       });
 
-      // --- C. Fetch Recent Inquiries for the table ---
       const { data: recentTickets } = await supabase
         .from('inquiries')
         .select('subject, status')
@@ -98,10 +86,7 @@ const AdminAnalytics = () => {
         setRecentInquiries(recentTickets);
       }
 
-      // --- D. Fetch and Aggregate Page Views ---
-      const { data: pageViews } = await supabase
-        .from('page_views')
-        .select('page_name');
+      const { data: pageViews } = await supabase.from('page_views').select('page_name');
 
       if (pageViews) {
         const counts = pageViews.reduce((acc, curr) => {
@@ -125,6 +110,57 @@ const AdminAnalytics = () => {
     fetchDashboardData();
   }, []);
 
+  // --- NEW: EXPORT REPORT TO CSV FUNCTION ---
+  const handleExportReport = () => {
+    // Construct the CSV data rows
+    const csvRows = [];
+    
+    // Header
+    csvRows.push(["Handybook Admin Analytics Report"]);
+    csvRows.push(["Generated on", new Date().toLocaleString()]);
+    csvRows.push([]); // Empty row for spacing
+
+    // KPIs
+    csvRows.push(["--- KEY PERFORMANCE INDICATORS ---"]);
+    csvRows.push(["Total Active Profiles", stats.users]);
+    csvRows.push(["AI Queries Today", stats.aiToday]);
+    csvRows.push(["Pending Inquiries", stats.escalated]);
+    csvRows.push(["Total AI Answered", stats.aiTotal]);
+    csvRows.push([]);
+
+    // Top Pages
+    csvRows.push(["--- MOST VIEWED SECTIONS ---"]);
+    csvRows.push(["Page Name", "Views"]);
+    topPages.forEach(page => {
+      csvRows.push([`"${page.name}"`, page.count]); // Quotes ensure commas in names don't break columns
+    });
+    csvRows.push([]);
+
+    // Recent Inquiries
+    csvRows.push(["--- RECENT INQUIRIES ---"]);
+    csvRows.push(["Subject", "Status"]);
+    recentInquiries.forEach(inq => {
+      // Escape any inner quotes to prevent breaking the CSV
+      const safeSubject = inq.subject.replace(/"/g, '""');
+      csvRows.push([`"${safeSubject}"`, `"${inq.status}"`]);
+    });
+
+    // Convert array into a CSV string
+    const csvString = csvRows.map(row => row.join(",")).join("\n");
+    
+    // Create a downloadable blob
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
+    // Create a hidden link and trigger the download
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `Handybook_Analytics_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <AdminLayout activePage="analytics">
       <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 animate-in fade-in duration-500">
@@ -138,13 +174,19 @@ const AdminAnalytics = () => {
             <p className="text-[13px] font-medium text-slate-500">Here are the overview for engagements and AI interaction performance.</p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <button className="px-5 py-2.5 bg-white border-2 border-handy-dark-red text-handy-dark-red text-[13px] font-bold rounded-lg hover:bg-red-50 transition-colors shadow-sm flex items-center gap-2">
+            
+            {/* WIRED UP THE EXPORT BUTTON! */}
+            <button 
+              onClick={handleExportReport}
+              className="px-5 py-2.5 bg-white border-2 border-handy-dark-red text-handy-dark-red text-[13px] font-bold rounded-lg hover:bg-red-50 transition-colors shadow-sm flex items-center gap-2 outline-none"
+            >
               <Download size={16} />
               Export Report
             </button>
+
             <button 
               onClick={() => navigate('/admin/chat')}
-              className="px-5 py-2.5 bg-handy-dark-red text-white text-[13px] font-bold rounded-lg hover:bg-red-900 transition-colors shadow-sm flex items-center gap-2"
+              className="px-5 py-2.5 bg-handy-dark-red text-white text-[13px] font-bold rounded-lg hover:bg-red-900 transition-colors shadow-sm flex items-center gap-2 outline-none"
             >
               <Sparkles size={16} />
               Ask Handybook AI
@@ -156,11 +198,8 @@ const AdminAnalytics = () => {
         {/* BEGIN: QuickStats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           
-          {/* Stat Card 1: Total Active Users */}
           <div className="bg-[#3B82F6] p-6 rounded-2xl shadow-sm relative overflow-hidden flex items-center gap-4">
-            <div className="absolute top-4 right-4 bg-white px-2 py-0.5 rounded-md text-[#3B82F6] text-[10px] font-extrabold">
-              Live
-            </div>
+            <div className="absolute top-4 right-4 bg-white px-2 py-0.5 rounded-md text-[#3B82F6] text-[10px] font-extrabold">Live</div>
             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#3B82F6] shrink-0">
               <Users size={24} strokeWidth={2.5} />
             </div>
@@ -172,11 +211,8 @@ const AdminAnalytics = () => {
             </div>
           </div>
           
-          {/* Stat Card 2: AI Queries Today */}
           <div className="bg-[#F59E0B] p-6 rounded-2xl shadow-sm relative overflow-hidden flex items-center gap-4">
-            <div className="absolute top-4 right-4 bg-white px-2 py-0.5 rounded-md text-[#F59E0B] text-[10px] font-extrabold">
-              Live {/* <-- Changed from Mock Data to Live! */}
-            </div>
+            <div className="absolute top-4 right-4 bg-white px-2 py-0.5 rounded-md text-[#F59E0B] text-[10px] font-extrabold">Live</div>
             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#F59E0B] shrink-0">
               <MessageSquare size={24} strokeWidth={2.5} />
             </div>
@@ -188,11 +224,8 @@ const AdminAnalytics = () => {
             </div>
           </div>
           
-          {/* Stat Card 3: Escalated (Pending Tickets) */}
           <div className="bg-[#A855F7] p-6 rounded-2xl shadow-sm relative overflow-hidden flex items-center gap-4">
-            <div className="absolute top-4 right-4 bg-white px-2 py-0.5 rounded-md text-[#A855F7] text-[10px] font-extrabold">
-              Live
-            </div>
+            <div className="absolute top-4 right-4 bg-white px-2 py-0.5 rounded-md text-[#A855F7] text-[10px] font-extrabold">Live</div>
             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#A855F7] shrink-0">
               <AlertCircle size={24} strokeWidth={2.5} />
             </div>
@@ -204,11 +237,8 @@ const AdminAnalytics = () => {
             </div>
           </div>
           
-          {/* Stat Card 4: Total AI Answered */}
           <div className="bg-handy-dark-red p-6 rounded-2xl shadow-sm relative overflow-hidden flex items-center gap-4">
-            <div className="absolute top-4 right-4 bg-white px-2 py-0.5 rounded-md text-handy-dark-red text-[10px] font-extrabold">
-              Live {/* <-- Changed from Mock Data to Live! */}
-            </div>
+            <div className="absolute top-4 right-4 bg-white px-2 py-0.5 rounded-md text-handy-dark-red text-[10px] font-extrabold">Live</div>
             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-handy-dark-red shrink-0">
               <CheckSquare size={24} strokeWidth={2.5} />
             </div>
@@ -226,7 +256,6 @@ const AdminAnalytics = () => {
         {/* BEGIN: ChartsRow */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           
-          {/* Most Viewed Sections */}
           <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col">
             <div className="flex justify-between items-center mb-8">
               <div className="flex items-center gap-3">
@@ -266,7 +295,6 @@ const AdminAnalytics = () => {
             </div>
           </div>
 
-          {/* Frequent AI Queries Chart */}
           <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col">
             <div className="flex justify-between items-center mb-8">
               <div className="flex items-center gap-3">
@@ -282,22 +310,18 @@ const AdminAnalytics = () => {
             </div>
             
             <div className="flex-1 flex items-end justify-around gap-2 px-2 pb-2 min-h-[220px] mt-4">
-              {/* Bar 1 */}
               <div className="flex flex-col items-center gap-3 w-12">
                 <div className="w-full bg-handy-dark-red rounded-t-sm shadow-sm" style={{ height: '140px' }}></div>
                 <span className="text-[9px] font-bold text-slate-800 text-center leading-tight">Wifi Access</span>
               </div>
-              {/* Bar 2 */}
               <div className="flex flex-col items-center gap-3 w-12">
                 <div className="w-full bg-[#A855F7] rounded-t-sm shadow-sm" style={{ height: '160px' }}></div>
                 <span className="text-[9px] font-bold text-slate-800 text-center leading-tight">Grading</span>
               </div>
-              {/* Bar 3 */}
               <div className="flex flex-col items-center gap-3 w-12">
                 <div className="w-full bg-[#F59E0B] rounded-t-sm shadow-sm" style={{ height: '110px' }}></div>
                 <span className="text-[9px] font-bold text-slate-800 text-center leading-tight">Admissions</span>
               </div>
-              {/* Bar 4 */}
               <div className="flex flex-col items-center gap-3 w-12">
                 <div className="w-full bg-[#3B82F6] rounded-t-sm shadow-sm" style={{ height: '90px' }}></div>
                 <span className="text-[9px] font-bold text-slate-800 text-center leading-tight">Dress code</span>

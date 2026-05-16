@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase'; // <-- 1. Import Supabase
+import { supabase } from '../lib/supabase';
 import { 
   BarChart2, 
   Bot, 
@@ -8,8 +8,6 @@ import {
   BookOpen, 
   User,
   LogOut,
-  Search,
-  Bell,
   Inbox
 } from 'lucide-react';
 
@@ -21,11 +19,9 @@ const AdminLayout = ({ children, activePage }) => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  // 2. Add states for dynamic user data
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
-  // 3. Fetch the admin's profile data on component mount
   useEffect(() => {
     const fetchUserProfile = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -47,7 +43,6 @@ const AdminLayout = ({ children, activePage }) => {
     fetchUserProfile();
   }, []);
 
-  // 4. Real Supabase Logout function
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate('/login');
@@ -136,44 +131,22 @@ const AdminLayout = ({ children, activePage }) => {
 
         <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
           
-          <header className="h-14 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between px-5 shrink-0 mb-3 sm:mb-4">
-            
-            <div className="relative w-full max-w-sm">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                <Search className="h-3.5 w-3.5" />
-              </span>
-              <input 
-                className="block w-full bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-handy-dark-red focus:bg-white rounded-lg py-1.5 pl-9 pr-3 text-[13px] font-medium text-slate-700 transition-all outline-none placeholder:text-slate-400" 
-                placeholder="Search for logs, sections, or users..." 
-                type="text"
-              />
-            </div>
-            
-            <div className="flex items-center gap-5 ml-4">
-              
-              <button className="text-slate-400 hover:text-slate-600 relative transition-colors outline-none">
-                <Bell className="w-[18px] h-[18px]" />
-                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-              </button>
-              
-              <div className="flex items-center gap-3 pl-5 border-l border-slate-100">
-                <div className="hidden sm:block text-right">
-                  {/* Dynamic Name Replacement */}
-                  <p className="text-[13px] font-semibold text-slate-900 leading-tight">
-                    {firstName ? `${firstName} ${lastName}` : "Admin"}
-                  </p>
-                  <p className="text-[10px] text-slate-400 font-medium">Super Administrator</p>
-                </div>
-                {/* Dynamic Avatar Replacement */}
-                <div className="h-8 w-8 rounded-full border-2 border-red-100 bg-red-50 overflow-hidden cursor-pointer hover:ring-2 hover:ring-red-200 transition-all shrink-0">
-                  <img 
-                    alt="Admin Avatar" 
-                    className="w-full h-full object-cover" 
-                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${firstName || 'Admin'}`}
-                  />
-                </div>
+          {/* Header updated: justify-end pushed the profile to the right smoothly */}
+          <header className="h-14 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-end px-5 shrink-0 mb-3 sm:mb-4">
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:block text-right">
+                <p className="text-[13px] font-semibold text-slate-900 leading-tight">
+                  {firstName ? `${firstName} ${lastName}` : "Admin"}
+                </p>
+                <p className="text-[10px] text-slate-400 font-medium">Administrator</p>
               </div>
-              
+              <div className="h-8 w-8 rounded-full border-2 border-red-100 bg-red-50 overflow-hidden cursor-pointer hover:ring-2 hover:ring-red-200 transition-all shrink-0">
+                <img 
+                  alt="Admin Avatar" 
+                  className="w-full h-full object-cover" 
+                  src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${firstName || 'Admin'}`}
+                />
+              </div>
             </div>
           </header>
 
@@ -236,7 +209,7 @@ const AdminLayout = ({ children, activePage }) => {
                   Cancel
                 </button>
                 <button 
-                  onClick={handleLogout} // <-- Hooked up to actual logout
+                  onClick={handleLogout}
                   className="flex-1 py-2.5 bg-handy-dark-red hover:bg-red-900 text-white text-[13px] font-bold rounded-xl transition-colors shadow-sm"
                 >
                   Sign Out

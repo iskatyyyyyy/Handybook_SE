@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, BookOpen, Scale, Building2, ArrowRight } from 'lucide-react';
-import { supabase } from '../lib/supabase'; // <-- Combined Import
+import { supabase } from '../lib/supabase';
 
 import handybookLogoExtd from '../assets/images/Group_44.svg';
 
 // --- MOCK GLOBAL SEARCH INDEX ---
-// This acts as the "database" for our search bar.
 const globalSearchIndex = [
   { id: 1, title: 'University History & Expansion', category: 'General Info', path: '/guide?topicId=1', icon: BookOpen },
   { id: 2, title: 'Academic Framework & Degrees', category: 'General Info', path: '/guide?topicId=2', icon: BookOpen },
@@ -35,7 +34,6 @@ const StudentLayout = ({ children, activePage }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchRef = useRef(null);
 
-  // Filter the index based on what the user types
   const searchResults = searchQuery.trim() === '' 
     ? [] 
     : globalSearchIndex.filter(item => 
@@ -43,7 +41,6 @@ const StudentLayout = ({ children, activePage }) => {
         item.category.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
-  // Handle clicking outside the search bar to close the dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -64,7 +61,6 @@ const StudentLayout = ({ children, activePage }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
-  // Fetch the user's profile data on component mount
   useEffect(() => {
     const fetchUserProfile = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -86,13 +82,18 @@ const StudentLayout = ({ children, activePage }) => {
     fetchUserProfile();
   }, []);
 
-  // Real Supabase Logout function
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate('/login');
   };
 
-  // TIGHTER LINKS: Reduced padding (py-2), smaller text (text-[13px])
+  // --- NEW: Download Handbook Function ---
+  const handleDownload = () => {
+    const fileId = "1xDY2-kVcGStG6QVktrHPMs3jv8HPA2p_";
+    const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    window.open(downloadUrl, '_blank');
+  };
+
   const getSidebarLinkClass = (pageName) => {
     const baseClass = "flex items-center space-x-3 px-3 py-2 rounded-lg transition-all cursor-pointer text-[13px] ";
     return activePage === pageName 
@@ -153,7 +154,8 @@ const StudentLayout = ({ children, activePage }) => {
                   <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                   <span>Ask Hance</span>
                 </div>
-                <div className={actionLinkClass}>
+                {/* WIRED UP DOWNLOAD BUTTON */}
+                <div onClick={handleDownload} className={actionLinkClass}>
                   <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                   <span>Download Handbook</span>
                 </div>
@@ -178,10 +180,8 @@ const StudentLayout = ({ children, activePage }) => {
         {/* MAIN CONTENT AREA */}
         <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
           
-          {/* COMBINED: Search Bar (Left) & Dynamic Profile (Right) */}
           <header className="h-14 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between px-5 shrink-0 mb-3 sm:mb-4 relative z-50">
             
-            {/* INTERACTIVE SEARCH BAR */}
             <div className="relative w-full max-w-lg" ref={searchRef}>
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
                 <Search size={16} />
@@ -198,7 +198,6 @@ const StudentLayout = ({ children, activePage }) => {
                 type="text" 
               />
 
-              {/* SEARCH DROPDOWN MENU */}
               {isSearchOpen && searchQuery.trim() !== '' && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-slate-100 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="max-h-[350px] overflow-y-auto custom-scrollbar">
@@ -243,7 +242,6 @@ const StudentLayout = ({ children, activePage }) => {
               )}
             </div>
             
-            {/* Dynamic User Profile */}
             <div className="flex items-center space-x-3 ml-4 shrink-0">
               <div className="hidden sm:block text-right">
                 <p className="text-[13px] font-semibold text-slate-900 leading-tight">
@@ -256,21 +254,18 @@ const StudentLayout = ({ children, activePage }) => {
             </div>
           </header>
 
-          {/* PAGE CONTENT CONTAINER */}
           <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 pb-2">
             {children}
           </div>
         </main>
       </div>
 
-      {/* GLOBAL SETTINGS MODAL */}
       {isSettingsModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] animate-in fade-in duration-200 p-4" style={{ fontFamily: "'Poppins', sans-serif" }}>
-          {/* ... Modal content ... */}
+          {/* ... Settings Modal Content ... */}
         </div>
       )}
 
-      {/* LOGOUT CONFIRMATION MODAL */}
       {isLogoutModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] animate-in fade-in duration-200 p-4" style={{ fontFamily: "'Poppins', sans-serif" }}>
           <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">

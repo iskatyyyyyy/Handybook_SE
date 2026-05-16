@@ -35,6 +35,15 @@ const HandbookPreview = () => {
   // Placeholder Google Drive Preview Link
   const drivePreviewLink = "https://drive.google.com/file/d/1xDY2-kVcGStG6QVktrHPMs3jv8HPA2p_/preview";
 
+  // The magic Google Drive direct download link
+  const handleDownload = () => {
+    const fileId = "1xDY2-kVcGStG6QVktrHPMs3jv8HPA2p_";
+    const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    
+    // Open the download link in a hidden way
+    window.open(downloadUrl, '_blank');
+  };
+
   return (
     <Layout activePage="preview-handbook">
       <div className="h-full flex flex-col pb-4 sm:pb-5 animate-in fade-in duration-500 max-w-7xl mx-auto w-full">
@@ -47,7 +56,10 @@ const HandbookPreview = () => {
           </div>
           
           <div className="flex flex-wrap items-center gap-3">
-            <button className="px-4 py-2 bg-white border border-handy-dark-red text-handy-dark-red text-[12px] font-bold rounded-lg hover:bg-red-50 transition-colors shadow-sm flex items-center gap-2">
+            <button 
+              onClick={handleDownload}
+              className="px-4 py-2 bg-white border border-handy-dark-red text-handy-dark-red text-[12px] font-bold rounded-lg hover:bg-red-50 transition-colors shadow-sm flex items-center gap-2"
+            >
               <Download size={14} />
               Download Handbook
             </button>
