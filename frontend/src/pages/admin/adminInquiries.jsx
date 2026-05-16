@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../layouts/adminLayout';
-import { supabase } from '../../lib/supabase'; // <-- Import your Supabase client
+import { supabase } from '../../lib/supabase';
+import ReactMarkdown from 'react-markdown'; // <-- ADDED: To format the AI's markdown messages!
 import { 
   Search, 
   MessageSquare, 
@@ -21,6 +22,9 @@ const AdminInquiries = () => {
   const [severityFilter, setSeverityFilter] = useState("All");
   const [replyText, setReplyText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  
+  // NEW: State to hold the chat transcript
+  const [chatTranscript, setChatTranscript] = useState([]);
 
   // Initial Data Fetch
   useEffect(() => {
@@ -30,7 +34,6 @@ const AdminInquiries = () => {
   const fetchInquiries = async () => {
     setIsLoading(true);
     
-    // Fetch inquiries AND the connected user profile data in one query
     const { data, error } = await supabase
       .from('inquiries')
       .select(`
@@ -46,7 +49,6 @@ const AdminInquiries = () => {
       console.error("Error fetching inquiries:", error);
     } else if (data) {
       setInquiries(data);
-      // Auto-select the first inquiry if available
       if (data.length > 0 && !activeId) {
         setActiveId(data[0].id);
       }
@@ -57,6 +59,29 @@ const AdminInquiries = () => {
 
   // Derived State & Helpers
   const activeInquiry = inquiries.find(inq => inq.id === activeId);
+
+  // NEW: Fetch the chat transcript whenever the active ticket changes
+  useEffect(() => {
+    const fetchTranscript = async () => {
+      if (activeInquiry && activeInquiry.chat_session_id) {
+        const { data, error } = await supabase
+          .from('chat_messages')
+          .select('*')
+          .eq('session_id', activeInquiry.chat_session_id)
+          .order('created_at', { ascending: true }); // Oldest first (reading order)
+
+        if (data && !error) {
+          setChatTranscript(data);
+        } else {
+          setChatTranscript([]);
+        }
+      } else {
+        setChatTranscript([]); // Clear if no session ID
+      }
+    };
+
+    fetchTranscript();
+  }, [activeId, activeInquiry?.chat_session_id]);
 
   const filteredInquiries = inquiries.filter(inq => {
     const matchStatus = statusFilter === "All" || inq.status === statusFilter;
@@ -81,7 +106,6 @@ const AdminInquiries = () => {
 
   // REAL SUPABASE HANDLERS
   const handleResolve = async () => {
-    // 1. Just update the status, leave the admin_reply exactly as it is in the database!
     const { error } = await supabase
       .from('inquiries')
       .update({ status: 'Resolved' }) 
@@ -91,18 +115,16 @@ const AdminInquiries = () => {
       console.error("Error resolving inquiry:", error);
       alert("Failed to resolve inquiry. Please try again.");
     } else {
-      // 2. Update local state 
       setInquiries(inquiries.map(inq => 
         inq.id === activeId ? { ...inq, status: "Resolved" } : inq
       ));
-      setReplyText(""); // Clear any text they might have started typing
+      setReplyText(""); 
     }
   };
 
   const handleSendReply = async () => {
     if (!replyText.trim()) return;
 
-    // Update the database (but keep status as 'Pending')
     const { error } = await supabase
       .from('inquiries')
       .update({ admin_reply: replyText })
@@ -112,16 +134,14 @@ const AdminInquiries = () => {
       console.error("Error sending response:", error);
       alert("Failed to send response. Please try again.");
     } else {
-      // Update local state to reflect the sent reply
       setInquiries(inquiries.map(inq => 
         inq.id === activeId ? { ...inq, admin_reply: replyText } : inq
       ));
-      setReplyText(""); // Clear the text area so they know it sent
+      setReplyText(""); 
     }
   };
 
   const handleSeverityChange = async (newSeverity) => {
-    // Update the database
     const { error } = await supabase
       .from('inquiries')
       .update({ severity: newSeverity })
@@ -130,7 +150,6 @@ const AdminInquiries = () => {
     if (error) {
       console.error("Error updating severity:", error);
     } else {
-      // Update local state
       setInquiries(inquiries.map(inq => 
         inq.id === activeId ? { ...inq, severity: newSeverity } : inq
       ));
@@ -332,18 +351,41 @@ const AdminInquiries = () => {
                   </p>
                 </div>
 
-                {/* Placeholder for AI Context Transcript once Chat Logs are implemented */}
-                {/* We will wire this up later when we link chat_session_id! */}
+                {/* REPLACED: Live AI Chat Transcript Viewer */}
                 {activeInquiry.chat_session_id && (
-                  <div className="mb-4">
+                  <div className="mb-8">
                     <div className="flex items-center gap-2 mb-5 px-2">
                       <Sparkles size={14} className="text-slate-400" />
                       <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Previous AI Chat Transcript</h4>
                       <div className="flex-1 h-px bg-slate-200 ml-2"></div>
                     </div>
                     
-                    <div className="space-y-4 px-2">
-                       <p className="text-[12px] font-medium text-slate-500 italic">Chat transcript will appear here (linked via {activeInquiry.chat_session_id})...</p>
+                    <div className="space-y-4 px-2 bg-white border border-slate-200 rounded-2xl shadow-sm p-4 sm:p-6">
+                      {chatTranscript.length === 0 ? (
+                        <p className="text-[12px] font-medium text-slate-400 italic text-center py-4">No chat transcript available or loading...</p>
+                      ) : (
+                        chatTranscript.map((msg) => (
+                          <div key={msg.id} className={`flex gap-3 w-full ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
+                            <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 shadow-sm ${msg.sender === 'user' ? 'bg-slate-200 text-slate-500' : 'bg-handy-dark-red text-white'}`}>
+                              {msg.sender === 'user' ? <User size={12} /> : <Sparkles size={12} />}
+                            </div>
+                            
+                            <div className={`max-w-[85%] rounded-2xl p-3 sm:p-4 text-[13px] leading-relaxed shadow-sm ${
+                              msg.sender === 'user' 
+                                ? 'bg-[#E2E8F0] text-slate-800 rounded-tr-sm' 
+                                : 'bg-slate-50 border border-slate-100 text-slate-700 rounded-tl-sm'
+                            }`}>
+                              {msg.sender === 'ai' ? (
+                                <div className="prose prose-slate prose-sm max-w-none prose-headings:text-handy-dark-red prose-a:text-blue-600 prose-p:leading-snug">
+                                  <ReactMarkdown>{msg.message}</ReactMarkdown>
+                                </div>
+                              ) : (
+                                msg.message
+                              )}
+                            </div>
+                          </div>
+                        ))
+                      )}
                     </div>
                   </div>
                 )}
@@ -371,7 +413,6 @@ const AdminInquiries = () => {
                 ) : (
                   <div className="space-y-3">
                     
-                    {/* NEW: Show the sent reply even if the ticket is still Pending */}
                     {activeInquiry.admin_reply && (
                        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-left shadow-sm">
                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Latest Response Sent:</span>
@@ -393,12 +434,12 @@ const AdminInquiries = () => {
                       <div className="flex w-full sm:w-auto gap-3">
                         <button 
                           onClick={handleResolve}
-                          className="flex-1 sm:flex-none px-4 py-2.5 border border-slate-200 text-slate-700 text-[12px] font-bold rounded-lg hover:bg-slate-50 transition-colors outline-none disabled:opacity-50"
+                          className="flex-1 sm:flex-none px-4 py-2.5 border border-slate-200 text-slate-700 text-[12px] font-bold rounded-lg hover:bg-slate-50 transition-colors outline-none"
                         >
                           Mark as Resolved
                         </button>
                         <button 
-                          onClick={handleSendReply} // <-- ADDED THE MISSING ONCLICK HERE!
+                          onClick={handleSendReply}
                           disabled={!replyText.trim()}
                           className="flex-1 sm:flex-none px-5 py-2.5 bg-handy-dark-red text-white text-[12px] font-bold rounded-lg hover:bg-red-900 transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:active:scale-100 active:scale-95 outline-none"
                         >
